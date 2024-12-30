@@ -8,7 +8,7 @@ export function LinkedinBadge() {
       target="_blank"
       className="hover:opacity-90 transition-opacity"
     >
-      <div className="items-center flex gap-2 md:gap-4 px-4 md:px-8 py-1.5 md:py-2 rounded-xl bg-black md:bg-[#1A0A0A] text-white mb-8 md:mb-12 border border-[#800020]/20 w-fit mx-auto">
+      <div className="items-center flex gap-4 px-8 py-2 rounded-xl bg-[#1A0A0A] text-white mb-12 border border-[#800020]/20 w-fit mx-auto">
         <div>
           <Image
             alt="Linkedin Badge"

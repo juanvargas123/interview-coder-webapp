@@ -29,6 +29,13 @@ export const BackgroundBeamsWithCollision = ({
       delay: 4
     },
     {
+      initialX: 100,
+      translateX: 100,
+      duration: 7,
+      repeatDelay: 7,
+      className: "h-6"
+    },
+    {
       initialX: 400,
       translateX: 400,
       duration: 5,
@@ -41,6 +48,13 @@ export const BackgroundBeamsWithCollision = ({
       duration: 11,
       repeatDelay: 2,
       className: "h-20"
+    },
+    {
+      initialX: 1000,
+      translateX: 1000,
+      duration: 4,
+      repeatDelay: 2,
+      className: "h-12"
     },
     {
       initialX: 1200,
@@ -59,6 +73,14 @@ export const BackgroundBeamsWithCollision = ({
       className: "h-16"
     },
     {
+      initialX: 700,
+      translateX: 700,
+      duration: 6,
+      repeatDelay: 4,
+      delay: 3,
+      className: "h-8"
+    },
+    {
       initialX: 1100,
       translateX: 1100,
       duration: 9,
@@ -66,11 +88,34 @@ export const BackgroundBeamsWithCollision = ({
       className: "h-24"
     },
     {
+      initialX: 200,
+      translateX: 200,
+      duration: 5,
+      repeatDelay: 5,
+      delay: 2,
+      className: "h-10"
+    },
+    {
       initialX: 900,
       translateX: 900,
       duration: 7,
       repeatDelay: 3,
       className: "h-16"
+    },
+    {
+      initialX: 1300,
+      translateX: 1300,
+      duration: 4,
+      repeatDelay: 6,
+      delay: 1,
+      className: "h-8"
+    },
+    {
+      initialX: 50,
+      translateX: 50,
+      duration: 10,
+      repeatDelay: 2,
+      className: "h-20"
     },
     {
       initialX: 150,
@@ -81,12 +126,49 @@ export const BackgroundBeamsWithCollision = ({
       className: "h-12"
     },
     {
+      initialX: 450,
+      translateX: 450,
+      duration: 8,
+      repeatDelay: 3,
+      className: "h-16"
+    },
+    {
       initialX: 750,
       translateX: 750,
       duration: 5,
       repeatDelay: 5,
       delay: 2,
       className: "h-8"
+    },
+    {
+      initialX: 1050,
+      translateX: 1050,
+      duration: 7,
+      repeatDelay: 2,
+      className: "h-24"
+    },
+    {
+      initialX: 1350,
+      translateX: 1350,
+      duration: 9,
+      repeatDelay: 3,
+      delay: 1,
+      className: "h-10"
+    },
+    {
+      initialX: 250,
+      translateX: 250,
+      duration: 6,
+      repeatDelay: 4,
+      className: "h-16"
+    },
+    {
+      initialX: 550,
+      translateX: 550,
+      duration: 8,
+      repeatDelay: 2,
+      delay: 3,
+      className: "h-12"
     }
   ]
 
