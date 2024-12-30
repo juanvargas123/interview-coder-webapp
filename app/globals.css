@@ -45,6 +45,18 @@
 }
 
 /* Hero gradient */
-.hero-gradient {
-  background: linear-gradient(to bottom, rgb(15, 15, 15) 0%, rgb(0, 0, 0) 100%);
+@media (max-width: 768px) {
+  .hero-gradient {
+    background: black;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-gradient {
+    background: linear-gradient(
+      to bottom,
+      rgb(22, 22, 22) 0%,
+      rgb(0, 0, 0) 100%
+    );
+  }
 }

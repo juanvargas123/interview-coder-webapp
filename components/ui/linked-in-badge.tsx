@@ -8,21 +8,23 @@ export function LinkedinBadge() {
       target="_blank"
       className="hover:opacity-90 transition-opacity"
     >
-      <div className="items-center flex gap-4 px-8 py-2 rounded-xl bg-[#1A0A0A] text-white mb-12 border border-[#800020]/20 w-fit mx-auto">
+      <div className="items-center flex gap-2 md:gap-4 px-4 md:px-8 py-1.5 md:py-2 rounded-xl bg-black md:bg-[#1A0A0A] text-white mb-8 md:mb-12 border border-[#800020]/20 w-fit mx-auto">
         <div>
           <Image
             alt="Linkedin Badge"
             src="/linked-in.svg"
             width="10"
             height="10"
-            className="w-8 h-8"
+            className="w-6 h-6 md:w-8 md:h-8"
           />
         </div>
         <div className="flex-col flex text-start h-fit">
-          <span className="text-[10px] font-extrabold text-white/90">
+          <span className="text-[8px] md:text-[10px] font-extrabold text-white/90">
             LINKEDIN
           </span>
-          <span className="text-xl font-bold text-white">400k Impressions</span>
+          <span className="text-lg md:text-xl font-bold text-white">
+            400k Impressions
+          </span>
         </div>
       </div>
     </Link>

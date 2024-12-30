@@ -35,7 +35,7 @@ export default function Navbar() {
 
   return (
     <div className="fixed top-0 w-full z-50 flex justify-center pt-6">
-      <nav className="mx-6 w-full max-w-[90rem] rounded-[20px] border-[1px] border-white/30  bg-black shadow-lg shadow-black/10">
+      <nav className="mx-6 w-full max-w-[90rem] rounded-[20px] border-[1px] border-white/30 bg-black/50 backdrop-blur-md shadow-lg shadow-black/10">
         <div className="px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link
