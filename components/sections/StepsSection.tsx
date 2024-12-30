@@ -3,9 +3,9 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import { HowToUseHeader } from "./HowToUseHeader"
 import ApiKey from "../ui/steps/apiKey"
-import Queue from "../ui/Queue"
-import SolutionsView from "../ui/SolutionsView"
-import DebugView from "../ui/DebugView"
+import Queue from "../ui/steps/Queue"
+import SolutionsView from "../ui/steps/SolutionsView"
+import DebugView from "../ui/steps/DebugView"
 
 const steps = [
   {

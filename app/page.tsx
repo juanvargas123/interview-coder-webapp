@@ -7,6 +7,8 @@ import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams"
 import { motion } from "framer-motion"
 import { HeroVideo } from "@/components/ui/hero-video"
 import { StepsSection } from "@/components/sections/StepsSection"
+import { FaqSection } from "@/components/sections/FaqSection"
+import { Footer } from "@/components/sections/Footer"
 
 export default function Home() {
   return (
@@ -83,6 +85,9 @@ export default function Home() {
       </main>
       {/* Steps Section */}
       <StepsSection />
+      {/* FAQ Section */}
+      <FaqSection />
+      <Footer />
       {/* </BackgroundBeamsWithCollision> */}
     </div>
   )
