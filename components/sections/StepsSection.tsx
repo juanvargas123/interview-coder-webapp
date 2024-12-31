@@ -1,5 +1,6 @@
 "use client"
 import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
 
 import { HowToUseHeader } from "./HowToUseHeader"
 import ApiKey from "../ui/steps/apiKey"
@@ -17,28 +18,44 @@ const steps = [
   },
   {
     id: "interview",
-    subtitle: "Get Started",
+    subtitle: "Capture the Problem",
     title: "Start taking screenshots",
     description:
-      "Use cmd + h to capture the problem. Up to 5 screenshots will be saved and shown on the application."
+      "Use ⌘ + h to capture the problem. Up to 5 screenshots will be saved and shown on the application."
   },
   {
     id: "solutions",
-    subtitle: "Get Started",
-    title: "Process your solutions",
+    subtitle: "Solve",
+    title: "Get your solutions",
     description:
-      "Once you've captured your screenshots, press cmd + return to generate solutions. We'll analyze the problem and provide detailed explanations."
+      "Once you've captured your screenshots, press ⌘ + return to generate solutions. We'll analyze the problem and provide a solution with detailed explanations."
   },
   {
     id: "debug",
-    subtitle: "Get Started",
+    subtitle: "Debug and Optimize",
     title: "Debug your solutions",
     description:
-      "If the solutions are incorrect or you need an optimization, take extra screenshots of your code with cmd + h. Press cmd + return again and we'll debug and optimize your code, with before and after comparisons."
+      "If the solutions are incorrect or you need an optimization, take extra screenshots of your code with ⌘ + h. Press ⌘ + return again and we'll debug and optimize your code, with before and after comparisons."
   }
 ]
 
 export const StepsSection = () => {
+  const [pathCoords, setPathCoords] = useState({ x1: 90, x2: 95 })
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      setPathCoords({
+        x1: width < 1200 ? 70 : 90,
+        x2: width < 1200 ? 75 : 95
+      })
+    }
+
+    handleResize() // Initial call
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   const handleApiKeySubmit = (apiKey: string) => {
     // Handle API key submission
     console.log("API key submitted")
@@ -50,10 +67,10 @@ export const StepsSection = () => {
 
       <section className="relative">
         {steps.map((step, index) => (
-          <div key={step.id} className={`py-32`}>
+          <div key={step.id} className={`py-12 lg:py-32`}>
             <div className="max-w-[1400px] mx-auto px-6">
               <div
-                className={`ml-[10%] relative ${
+                className={`lg:ml-[10%] relative ${
                   index === 3
                     ? "bg-gradient-to-br from-gray-900/50 via-gray-900/30 to-black/50 backdrop-blur-xl rounded-xl p-12 pt-16 pb-16 border border-white/[0.08] shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] backdrop-saturate-150"
                     : ""
@@ -63,10 +80,11 @@ export const StepsSection = () => {
                 {index === 0 && (
                   <>
                     {/* 1) SVG version for lg and above */}
-                    <div className="absolute -left-[10%] top-24 -bottom-28 hidden lg:block">
+                    <div className="absolute -left-[9%] w-[60%] top-24 -bottom-28 hidden lg:block">
                       <motion.svg
-                        className="h-[150%]"
-                        viewBox="-0.2 -0.2 10.4 8.4"
+                        className="h-[150%] w-[95%]"
+                        viewBox="0 0 100 80"
+                        preserveAspectRatio="none"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                       >
@@ -110,9 +128,9 @@ export const StepsSection = () => {
 
                         {/* --- 2) MAIN GRADIENT STROKE (ANIMATED) --- */}
                         <motion.path
-                          d="M 0 0 V 4 L 1 5 L 9 5 L 10 6 L 10 8"
+                          d={`M 0 0 V 40 L 10 50 L ${pathCoords.x1} 50 L ${pathCoords.x2} 60 L ${pathCoords.x2} 80`}
                           stroke="url(#verticalGradient)"
-                          strokeWidth="0.02"
+                          strokeWidth="0.15"
                           filter="url(#glow)"
                           initial={{ pathLength: 0 }}
                           whileInView={{ pathLength: 1 }}
@@ -122,10 +140,10 @@ export const StepsSection = () => {
 
                         {/* --- 3) FAINT RED BEHIND-PATH FOR EXTRA BLUR LAYER --- */}
                         <motion.path
-                          d="M 0 0 V 4 L 1 5 L 9 5 L 10 6 L 10 8"
+                          d={`M 0 0 V 40 L 10 50 L ${pathCoords.x1} 50 L ${pathCoords.x2} 60 L ${pathCoords.x2} 80`}
                           stroke="#FF1A1A"
-                          strokeWidth="0.05"
-                          strokeOpacity="0.1"
+                          strokeWidth="1"
+                          strokeOpacity="0.01"
                           filter="url(#glow)"
                           initial={{ pathLength: 0 }}
                           whileInView={{ pathLength: 1 }}
@@ -277,8 +295,8 @@ export const StepsSection = () => {
                     className={index === 1 ? "lg:order-2" : ""}
                   >
                     <div
-                      className={`${index === 3 ? "ml-12" : ""} ${
-                        index === 2 || index === 3 ? "max-w-[80%]" : ""
+                      className={`${index === 3 ? "lg:ml-6" : ""} ${
+                        index === 2 || index === 3 ? "max-w-[100%]" : ""
                       }`}
                     >
                       <div

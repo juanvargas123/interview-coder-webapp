@@ -122,8 +122,7 @@ export function FaqSection() {
       <div className="container px-4 mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4 tracking-tight">
-            <span className="white-gradient">Frequently Asked</span>{" "}
-            <span className="infernal-gradient">Questions</span>
+            <span className="white-gradient font-inter">Common Questions</span>
           </h2>
           <p className="text-neutral-400 max-w-2xl mx-auto">
             Everything you need to know about Interview Coder.

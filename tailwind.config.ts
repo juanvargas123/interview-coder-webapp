@@ -71,8 +71,36 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)"
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))"
+      },
+      keyframes: {
+        shake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-5px)" },
+          "75%": { transform: "translateX(5px)" }
+        },
+        expandFromTopLeft: {
+          "0%": {
+            transform: "scale(0.3)",
+            transformOrigin: "top left",
+            opacity: "0"
+          },
+          "100%": {
+            transform: "scale(1)",
+            transformOrigin: "top left",
+            opacity: "1"
+          }
+        }
+      },
+      animation: {
+        shake: "shake 0.5s ease-in-out",
+        expandFromTopLeft: "expandFromTopLeft 0.5s ease-out forwards"
       }
     }
   },
-  plugins: [require("tailwindcss-animate"), "addVariablesForColors"]
+  plugins: [require("tailwindcss-animate"), addVariablesForColors]
 } satisfies Config
