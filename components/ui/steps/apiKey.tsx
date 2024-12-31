@@ -41,12 +41,15 @@ const ApiKey: React.FC<ApiKeyProps> = ({ onApiKeySubmit }) => {
                 placeholder="sk-..."
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="w-full"
+                className="w-full placeholder:text-black/50 text-black border-none"
               />
             </div>
 
             <Button
               type="submit"
+              onClick={(e: any) => {
+                e.preventDefault()
+              }}
               className="w-full font-medium text-gray-800 border shadow-md"
               variant="ghost"
               disabled={!apiKey.trim()}
