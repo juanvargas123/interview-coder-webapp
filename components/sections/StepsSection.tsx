@@ -50,56 +50,131 @@ export const StepsSection = () => {
 
       <section className="relative">
         {steps.map((step, index) => (
-          <div key={step.id} className="py-32">
+          <div key={step.id} className={`py-32`}>
             <div className="max-w-[1400px] mx-auto px-6">
               <div
                 className={`ml-[10%] relative ${
-                  index === 1 || index === 3
-                    ? "bg-gradient-to-br from-gray-900/50 via-gray-900/30 to-black/50 backdrop-blur-xl rounded-xl p-12 border border-white/[0.08] shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] backdrop-saturate-150"
+                  index === 3
+                    ? "bg-gradient-to-br from-gray-900/50 via-gray-900/30 to-black/50 backdrop-blur-xl rounded-xl p-12 pt-16 pb-16 border border-white/[0.08] shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] backdrop-saturate-150"
                     : ""
                 }`}
               >
                 {/* Timelines */}
-                {/* First Timeline */}
-                {index == 0 && (
-                  <div className="absolute -left-[15%] -top-20 bottom-0">
-                    <motion.div
-                      initial={{ height: "0%" }}
-                      whileInView={{ height: "100%" }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                      className="absolute w-[2px] bg-gradient-to-b from-transparent via-[#FF1A1A]/40 to-transparent"
-                    />
-                    <div className="absolute w-[2px] h-full bg-[#FF1A1A]/20 blur-[4px]" />
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.4, duration: 0.4 }}
-                      className="absolute top-[45%] -left-[6px]"
-                    >
-                      <div className="relative">
-                        <div className="absolute h-4 w-4 -left-[1px] -top-[1px] bg-[#FF1A1A]/30 rounded-full blur-[10px]" />
-                        <div
-                          className="h-3 w-3 bg-[#FF1A1A] rounded-full relative"
-                          style={{
-                            boxShadow:
-                              "0 0 10px #FF1A1A, 0 0 20px rgba(255, 26, 26, 0.5)"
-                          }}
+                {index === 0 && (
+                  <>
+                    {/* 1) SVG version for lg and above */}
+                    <div className="absolute -left-[10%] top-24 -bottom-28 hidden lg:block">
+                      <motion.svg
+                        className="h-[150%]"
+                        viewBox="-0.2 -0.2 10.4 8.4"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        {/* --- 1) DEFINES FOR GRADIENT + GLOW FILTER --- */}
+                        <defs>
+                          <linearGradient
+                            id="verticalGradient"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop offset="0%" stopColor="transparent" />
+                            <stop
+                              offset="50%"
+                              stopColor="#FF1A1A"
+                              stopOpacity="0.8"
+                            />
+                            <stop offset="100%" stopColor="transparent" />
+                          </linearGradient>
+
+                          <filter
+                            id="glow"
+                            x="-50%"
+                            y="-50%"
+                            width="200%"
+                            height="200%"
+                          >
+                            {/* Gaussian blur for a glowing/blurred look */}
+                            <feGaussianBlur
+                              in="SourceGraphic"
+                              stdDeviation="2"
+                              result="blur"
+                            />
+                            <feMerge>
+                              <feMergeNode in="blur" />
+                              <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                          </filter>
+                        </defs>
+
+                        {/* --- 2) MAIN GRADIENT STROKE (ANIMATED) --- */}
+                        <motion.path
+                          d="M 0 0 V 4 L 1 5 L 9 5 L 10 6 L 10 8"
+                          stroke="url(#verticalGradient)"
+                          strokeWidth="0.02"
+                          filter="url(#glow)"
+                          initial={{ pathLength: 0 }}
+                          whileInView={{ pathLength: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
                         />
-                      </div>
-                    </motion.div>
-                  </div>
+
+                        {/* --- 3) FAINT RED BEHIND-PATH FOR EXTRA BLUR LAYER --- */}
+                        <motion.path
+                          d="M 0 0 V 4 L 1 5 L 9 5 L 10 6 L 10 8"
+                          stroke="#FF1A1A"
+                          strokeWidth="0.05"
+                          strokeOpacity="0.1"
+                          filter="url(#glow)"
+                          initial={{ pathLength: 0 }}
+                          whileInView={{ pathLength: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
+                        />
+                      </motion.svg>
+                    </div>
+
+                    {/* 2) Old multi-div version for smaller screens */}
+                    <div className="absolute -left-[10%] -top-20 bottom-0">
+                      <motion.div
+                        initial={{ height: "0%" }}
+                        whileInView={{ height: "100%" }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="absolute w-[2px] bg-gradient-to-b from-transparent  via-[#FF1A1A]/40 to-transparent"
+                      />
+                      <div className="absolute w-[2px] h-full bg-[#FF1A1A]/20 blur-[4px]" />
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.4, duration: 0.4 }}
+                        className="absolute top-[45%] -left-[6px]"
+                      >
+                        <div className="relative">
+                          <div className="absolute h-4 w-4 -left-[1px] -top-[1px] bg-[#FF1A1A]/30 rounded-full blur-[10px]" />
+                          <div
+                            className="h-3 w-3 bg-[#FF1A1A]  rounded-full relative"
+                            style={{
+                              boxShadow:
+                                "0 0 10px #FF1A1A, 0 0 20px rgba(255, 26, 26, 0.5)"
+                            }}
+                          />
+                        </div>
+                      </motion.div>
+                    </div>
+                  </>
                 )}
 
                 {/* Second Timeline (inside card) */}
                 {index === 1 && (
-                  <div className="absolute left-6 top-12 bottom-12">
+                  <div className="absolute -left-[10%] lg:left-[43%] lg:-translate-x-1/2 -top-20 bottom-0">
                     <motion.div
                       initial={{ height: "0%" }}
                       whileInView={{ height: "100%" }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      transition={{ duration: 0.8, ease: "easeOut", delay: 1 }}
                       className="absolute w-[2px] bg-gradient-to-b from-transparent via-[#4F46E5]/40 to-transparent"
                     />
                     <div className="absolute w-[2px] h-full bg-[#4F46E5]/20 blur-[4px]" />
@@ -126,7 +201,7 @@ export const StepsSection = () => {
 
                 {/* Third Timeline */}
                 {index === 2 && (
-                  <div className="absolute -left-[15%] -top-20 bottom-0">
+                  <div className="absolute -left-[10%] -top-20 bottom-0">
                     <motion.div
                       initial={{ height: "0%" }}
                       whileInView={{ height: "100%" }}
@@ -199,11 +274,12 @@ export const StepsSection = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
+                    className={index === 1 ? "lg:order-2" : ""}
                   >
                     <div
-                      className={`${
-                        index === 1 || index === 3 ? "ml-12" : ""
-                      } ${index === 2 || index === 3 ? "max-w-[80%]" : ""}`}
+                      className={`${index === 3 ? "ml-12" : ""} ${
+                        index === 2 || index === 3 ? "max-w-[80%]" : ""
+                      }`}
                     >
                       <div
                         className={`text-xl font-medium mb-4 ${
@@ -219,8 +295,12 @@ export const StepsSection = () => {
                         {step.subtitle}
                       </div>
                       <h2
-                        className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-tight leading-[1.1] bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70 ${
-                          index === 2 ? "max-w-full" : ""
+                        className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50 py-2
+                          index === 2 || index === 3
+                            ? "max-w-full"
+                            : "max-w-[800px]"
+                        } ${index === 1 ? "lg:pr-12" : ""} ${
+                          index === 3 ? "leading-[1.6]" : "leading-[1.1]"
                         }`}
                       >
                         {step.title}
@@ -267,9 +347,9 @@ export const StepsSection = () => {
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 }}
                     className={`relative w-full ${
-                      index === 2 ? "col-span-1" : ""
-                    } ${
-                      index === 1 || index === 3
+                      index === 1 ? "lg:order-1" : ""
+                    } ${index === 2 ? "col-span-1" : ""} ${
+                      index === 3
                         ? "backdrop-blur-sm rounded-lg overflow-hidden"
                         : ""
                     }`}

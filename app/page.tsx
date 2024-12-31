@@ -33,7 +33,11 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-400/80 text-xl md:text-3xl lg:text-4xl mb-6 font-semibold"
+            className="mb-6 text-center text-[24px] font-medium text-[#B3B3B3] font-['Inter']"
+            style={{
+              fontFamily: '"Inter", "Inter Placeholder", sans-serif',
+              fontWeight: 500
+            }}
           >
             Meet Interview Coder
           </motion.h2>

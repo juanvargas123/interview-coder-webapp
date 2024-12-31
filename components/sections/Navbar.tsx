@@ -57,7 +57,7 @@ export default function Navbar() {
                 alt="Github"
                 width={20}
                 height={20}
-                className="w-5 h-5"
+                className="w-6 h-6"
               />
               <span className="font-medium text-white/70 text-base">
                 {stars}
