@@ -119,12 +119,12 @@ export function Footer() {
                   className="w-48 bg-black border-[#800020]/20"
                 >
                   <DropdownMenuItem asChild className="py-2 cursor-pointer">
-                    <Link href="https://tinyurl.com/mbcskt83">
+                    <Link href="https://tinyurl.com/bdemcvx2">
                       Download for Intel Mac
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="py-2 cursor-pointer">
-                    <Link href="https://tinyurl.com/mbcskt83">
+                    <Link href="https://tinyurl.com/yfsnn5dd">
                       Download for Silicon Mac
                     </Link>
                   </DropdownMenuItem>

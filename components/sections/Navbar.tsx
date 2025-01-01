@@ -95,7 +95,7 @@ export default function Navbar() {
                   asChild
                   className="py-2 sm:py-3 cursor-pointer text-sm sm:text-base"
                 >
-                  <Link href="https://tinyurl.com/mbcskt83">
+                  <Link href="https://tinyurl.com/bdemcvx2">
                     Download for Intel Mac {!isSilicon && "(Detected)"}
                   </Link>
                 </DropdownMenuItem>
@@ -103,7 +103,7 @@ export default function Navbar() {
                   asChild
                   className="py-2 sm:py-3 cursor-pointer text-sm sm:text-base"
                 >
-                  <Link href="https://tinyurl.com/mbcskt83">
+                  <Link href="https://tinyurl.com/yfsnn5dd">
                     Download for Silicon Mac {isSilicon && "(Detected)"}
                   </Link>
                 </DropdownMenuItem>

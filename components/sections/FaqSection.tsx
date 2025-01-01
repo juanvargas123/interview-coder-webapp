@@ -177,7 +177,7 @@ export function FaqSection() {
                   asChild
                   className="py-3 cursor-pointer text-base"
                 >
-                  <Link href="https://tinyurl.com/mbcskt83">
+                  <Link href="https://tinyurl.com/bdemcvx2">
                     Download for Intel Mac
                   </Link>
                 </DropdownMenuItem>
@@ -185,7 +185,7 @@ export function FaqSection() {
                   asChild
                   className="py-3 cursor-pointer text-base"
                 >
-                  <Link href="https://tinyurl.com/mbcskt83">
+                  <Link href="https://tinyurl.com/yfsnn5dd">
                     Download for Silicon Mac
                   </Link>
                 </DropdownMenuItem>

@@ -61,7 +61,7 @@ export default function Home() {
             className="flex flex-col md:flex-row gap-4 md:gap-12 w-full justify-center items-center md:text-medium text-sm"
           >
             <Button className="bg-primary w-full md:w-auto max-w-[280px]">
-              <Link href="https://tinyurl.com/mbcskt83" className="flex gap-3">
+              <Link href="https://tinyurl.com/bdemcvx2" className="flex gap-3">
                 <Image
                   src="/apple.svg"
                   alt="Apple"
@@ -77,7 +77,7 @@ export default function Home() {
               className="w-full md:w-auto max-w-[280px]"
             >
               <Link
-                href="https://tinyurl.com/mbcskt83"
+                href="https://tinyurl.com/yfsnn5dd"
                 className="flex gap-3 text-white"
               >
                 <Image
