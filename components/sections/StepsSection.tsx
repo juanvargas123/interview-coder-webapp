@@ -28,14 +28,14 @@ const steps = [
     subtitle: "Solve",
     title: "Get your solutions",
     description:
-      "Once you've captured your screenshots, press ⌘ + return to generate solutions. We'll analyze the problem and provide a solution with detailed explanations."
+      "Once you've captured your screenshots, press ⌘ + ↵ to generate solutions. We'll analyze the problem and provide a solution with detailed explanations."
   },
   {
     id: "debug",
     subtitle: "Debug and Optimize",
     title: "Debug your solutions",
     description:
-      "If the solutions are incorrect or you need an optimization, take extra screenshots of your code with ⌘ + h. Press ⌘ + return again and we'll debug and optimize your code, with before and after comparisons."
+      "If the solutions are incorrect or you need an optimization, take extra screenshots of your code with ⌘ + H. Press ⌘ + ↵ again and we'll debug and optimize your code, with before and after comparisons."
   }
 ]
 
