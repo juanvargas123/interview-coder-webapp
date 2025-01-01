@@ -119,12 +119,12 @@ export function Footer() {
                   className="w-48 bg-black border-[#800020]/20"
                 >
                   <DropdownMenuItem asChild className="py-2 cursor-pointer">
-                    <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                    <Link href="https://tinyurl.com/mbcskt83">
                       Download for Intel Mac
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="py-2 cursor-pointer">
-                    <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                    <Link href="https://tinyurl.com/mbcskt83">
                       Download for Silicon Mac
                     </Link>
                   </DropdownMenuItem>

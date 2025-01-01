@@ -177,7 +177,7 @@ export function FaqSection() {
                   asChild
                   className="py-3 cursor-pointer text-base"
                 >
-                  <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                  <Link href="https://tinyurl.com/mbcskt83">
                     Download for Intel Mac
                   </Link>
                 </DropdownMenuItem>
@@ -185,7 +185,7 @@ export function FaqSection() {
                   asChild
                   className="py-3 cursor-pointer text-base"
                 >
-                  <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                  <Link href="https://tinyurl.com/mbcskt83">
                     Download for Silicon Mac
                   </Link>
                 </DropdownMenuItem>

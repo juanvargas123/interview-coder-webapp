@@ -95,7 +95,7 @@ export default function Navbar() {
                   asChild
                   className="py-2 sm:py-3 cursor-pointer text-sm sm:text-base"
                 >
-                  <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                  <Link href="https://tinyurl.com/mbcskt83">
                     Download for Intel Mac {!isSilicon && "(Detected)"}
                   </Link>
                 </DropdownMenuItem>
@@ -103,7 +103,7 @@ export default function Navbar() {
                   asChild
                   className="py-2 sm:py-3 cursor-pointer text-sm sm:text-base"
                 >
-                  <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                  <Link href="https://tinyurl.com/mbcskt83">
                     Download for Silicon Mac {isSilicon && "(Detected)"}
                   </Link>
                 </DropdownMenuItem>
