@@ -61,6 +61,12 @@ const commands = [
     key: "reset",
     title: "⌘ + R",
     description: "Reset everything to start fresh with a new problem."
+  },
+  {
+    key: "quit",
+    title: "⌘ + Q",
+    description:
+      "Quit the application to remove the functionality of all keyboard commands."
   }
 ]
 
