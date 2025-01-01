@@ -15,13 +15,13 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Left Column */}
           <div className="md:col-span-5 flex flex-col gap-6">
-            <div className="flex items-center justify-left">
+            <div className="flex items-center justify-left gap-6">
               <Image
                 src="/logo.svg"
                 alt="Interview Coder"
                 width={24}
                 height={24}
-                className="w-24 h-24"
+                className="w-6 h-6 rounded-full "
               />
               <span className="text-neutral-400 font-bold text-xl">
                 INTERVIEW CODER
@@ -103,7 +103,7 @@ export function Footer() {
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className=" text-white gap-2 text-sm font-medium px-6 h-10">
+                  <Button className=" text-black gap-2 text-sm font-medium px-6 h-10">
                     <Image
                       src="/apple.svg"
                       alt="Apple"

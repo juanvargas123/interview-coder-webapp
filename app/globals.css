@@ -5,21 +5,21 @@
 @layer base {
   :root {
     /* Core brand colors */
-    --burgundy: 345 75% 30%; /* Deep, rich burgundy */
-    --burgundy-light: 345 70% 40%;
-    --burgundy-dark: 345 80% 20%;
+    --burgundy: 45 100% 50%; /* Bright yellow */
+    --burgundy-light: 45 100% 60%; /* Lighter yellow */
+    --burgundy-dark: 45 100% 40%; /* Darker yellow */
 
     /* Theme colors */
     --background: 0 0% 0%; /* #0f0f0f - rgb(15,15,15) */
     --foreground: 0 0% 100%;
-    --primary: 0 100% 27%;
-    --primary-foreground: 0 0% 100%;
-    --muted: 345 20% 40%;
+    --primary: 45 100% 50%; /* Matching bright yellow */
+    --primary-foreground: 0 0% 0%; /* Black text for contrast */
+    --muted: 45 30% 50%;
 
     /* Accent colors */
-    --accent-gold: 35 95% 50%;
-    --accent-red: 355 95% 40%;
-    --accent-dark: 345 30% 15%;
+    --accent-gold: 45 100% 50%; /* Bright yellow */
+    --accent-red: 45 100% 60%; /* Lighter yellow for accent */
+    --accent-dark: 45 30% 15%;
   }
 }
 
@@ -31,7 +31,7 @@
 
 /* Custom gradient for highlights */
 .infernal-gradient {
-  @apply bg-gradient-to-r from-[#8B0000] via-[#800020] to-[#CC1100];
+  @apply bg-gradient-to-r from-[#FFD700] via-[#FFC000] to-[#FFB000];
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
@@ -62,7 +62,7 @@
 }
 
 .glow-sm {
-  box-shadow: 0 0 20px 2px #8b0000;
+  box-shadow: 0 0 20px 2px #ffd700;
 }
 
 @keyframes fadeIn {

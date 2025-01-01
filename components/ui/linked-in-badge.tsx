@@ -9,7 +9,7 @@ export function LinkedinBadge() {
         target="_blank"
         className="hover:opacity-90 transition-opacity"
       >
-        <div className="items-center flex gap-4 px-8 py-2 rounded-xl bg-[#1A0A0A] text-white mb-12 border border-[#800020]/20 w-fit mx-auto">
+        <div className="items-center flex gap-4 px-8 py-2 rounded-xl bg-[#FFD700]/10 text-[#FFD700] mb-12 border border-[#FFD700]/40 shadow-[0_0_15px_rgba(255,215,0,0.3)] w-fit mx-auto">
           <div>
             <Image
               alt="Linkedin Badge"
@@ -20,10 +20,10 @@ export function LinkedinBadge() {
             />
           </div>
           <div className="flex-col flex text-start h-fit">
-            <span className="text-[8px] md:text-[10px] font-extrabold text-white/90">
+            <span className="text-[8px] md:text-[10px] font-extrabold text-[#FFD700]/90">
               LINKEDIN
             </span>
-            <span className="text-lg md:text-xl font-bold text-white">
+            <span className="text-lg md:text-xl font-bold text-[#FFD700]">
               400k Impressions
             </span>
           </div>

@@ -158,7 +158,7 @@ export function FaqSection() {
           <div className="flex justify-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="text-white gap-2 text-xl font-semibold px-12 h-14 w-[280px] md:w-[320px]">
+                <Button className="text-black gap-2 text-xl font-semibold px-12 h-14 w-[280px] md:w-[320px]">
                   <Image
                     src="/apple.svg"
                     alt="Apple"

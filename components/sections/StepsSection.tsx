@@ -100,7 +100,7 @@ export const StepsSection = () => {
                             <stop offset="0%" stopColor="transparent" />
                             <stop
                               offset="50%"
-                              stopColor="#FF1A1A"
+                              stopColor="#FFD700"
                               stopOpacity="0.8"
                             />
                             <stop offset="100%" stopColor="transparent" />
@@ -138,10 +138,10 @@ export const StepsSection = () => {
                           transition={{ duration: 0.8, ease: "easeOut" }}
                         />
 
-                        {/* --- 3) FAINT RED BEHIND-PATH FOR EXTRA BLUR LAYER --- */}
+                        {/* --- 3) FAINT YELLOW BEHIND-PATH FOR EXTRA BLUR LAYER --- */}
                         <motion.path
                           d={`M 0 0 V 40 L 10 50 L ${pathCoords.x1} 50 L ${pathCoords.x2} 60 L ${pathCoords.x2} 80`}
-                          stroke="#FF1A1A"
+                          stroke="#FFD700"
                           strokeWidth="1"
                           strokeOpacity="0.01"
                           filter="url(#glow)"
@@ -160,9 +160,9 @@ export const StepsSection = () => {
                         whileInView={{ height: "100%" }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="absolute w-[2px] bg-gradient-to-b from-transparent  via-[#FF1A1A]/40 to-transparent"
+                        className="absolute w-[2px] bg-gradient-to-b from-transparent via-[#FFD700]/40 to-transparent"
                       />
-                      <div className="absolute w-[2px] h-full bg-[#FF1A1A]/20 blur-[4px]" />
+                      <div className="absolute w-[2px] h-full bg-[#FFD700]/20 blur-[4px]" />
                       <motion.div
                         initial={{ scale: 0, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
@@ -171,12 +171,12 @@ export const StepsSection = () => {
                         className="absolute top-[45%] -left-[6px]"
                       >
                         <div className="relative">
-                          <div className="absolute h-4 w-4 -left-[1px] -top-[1px] bg-[#FF1A1A]/30 rounded-full blur-[10px]" />
+                          <div className="absolute h-4 w-4 -left-[1px] -top-[1px] bg-[#FFD700]/30 rounded-full blur-[10px]" />
                           <div
-                            className="h-3 w-3 bg-[#FF1A1A]  rounded-full relative"
+                            className="h-3 w-3 bg-[#FFD700] rounded-full relative"
                             style={{
                               boxShadow:
-                                "0 0 10px #FF1A1A, 0 0 20px rgba(255, 26, 26, 0.5)"
+                                "0 0 10px #FFD700, 0 0 20px rgba(255,215,0,0.5)"
                             }}
                           />
                         </div>
@@ -307,7 +307,7 @@ export const StepsSection = () => {
                             ? "bg-gradient-to-r from-[#10B981] to-[#059669] text-transparent bg-clip-text"
                             : index === 3
                             ? "bg-gradient-to-r from-[#8B5CF6] to-[#6D28D9] text-transparent bg-clip-text"
-                            : "bg-gradient-to-r from-[#FF1A1A] to-[#DC2626] text-transparent bg-clip-text"
+                            : "bg-gradient-to-r from-[#FFD700] to-[#FFC000] text-transparent bg-clip-text"
                         }`}
                       >
                         {step.subtitle}
@@ -337,7 +337,7 @@ export const StepsSection = () => {
                           rel="noopener noreferrer"
                           className="text-white inline-flex items-center hover:opacity-80 transition-all group"
                         >
-                          <span className="bg-gradient-to-r from-[#FF1A1A] to-[#DC2626] bg-clip-text text-transparent text-lg">
+                          <span className="bg-gradient-to-r from-[#FFD700] to-[#FFC000] bg-clip-text text-transparent text-lg">
                             Get an API Key
                           </span>
                           <svg

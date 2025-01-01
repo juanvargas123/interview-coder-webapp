@@ -39,16 +39,16 @@ export default function Navbar() {
           <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
             <Link
               href="/"
-              className="text-white hover:text-white/80 transition-colors flex items-center justify-center"
+              className="text-white hover:text-white/80 transition-colors flex items-center justify-center gap-4"
             >
               <Image
                 src="/logo.svg"
                 alt="Interview Coder"
                 width={24}
                 height={24}
-                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mt-2"
+                className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mt-1 rounded-full"
               />
-              <span className="lg:text-xl lg:display-block hidden font-extrabold -ml-3 tracking-tighter">
+              <span className="hidden lg:block text-xl font-extrabold tracking-tighter">
                 Interview Coder
               </span>
             </Link>
@@ -75,7 +75,7 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <Link
                   href="#"
-                  className="flex items-center gap-1 sm:gap-2 bg-[#8B0000] hover:bg-[#8B0000]/90 text-white transition-all px-3 sm:px-4 md:px-6 h-8 sm:h-10 md:h-11 rounded-full border border-white/20 hover:shadow-sm font-semibold text-xs sm:text-sm md:text-base"
+                  className="flex items-center gap-1 sm:gap-2 bg-[#FFD700] hover:bg-[#FFD700]/90 text-black transition-all px-3 sm:px-4 md:px-6 h-8 sm:h-10 md:h-11 rounded-full border border-black/20 hover:shadow-sm font-semibold text-xs sm:text-sm md:text-base"
                 >
                   <Image
                     src="/apple.svg"

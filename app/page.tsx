@@ -84,7 +84,7 @@ export default function Home() {
                 className="flex gap-3 text-white"
               >
                 <Image
-                  src="/apple.svg"
+                  src="/apple_white.svg"
                   alt="Apple"
                   width={16}
                   height={16}
