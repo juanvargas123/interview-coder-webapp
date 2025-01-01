@@ -33,9 +33,9 @@ export default function Navbar() {
   }, [])
 
   return (
-    <div className="fixed top-0 w-full z-50 flex justify-center h-[72px]">
-      <nav className="mx-2 sm:mx-4 md:mx-6 mt-2 sm:mt-4 md:mt-6 w-full h-fit max-w-screen rounded-[20px] border-[1px] border-white/30 bg-black/50 backdrop-blur-md shadow-lg shadow-black/10">
-        <div className="px-3 sm:px-6 md:pr-8 h-12 sm:h-14 md:h-16 flex items-center justify-between">
+    <div className="fixed left-0 top-0 w-screen z-50 flex justify-center h-[72px] px-4 sm:px-6 md:px-8">
+      <nav className="w-full mt-2 sm:mt-4 md:mt-6 h-fit rounded-[20px] border-[1px] border-white/30 bg-black/50 backdrop-blur-md shadow-lg shadow-black/10">
+        <div className="h-12 sm:h-14 md:h-16 flex items-center justify-between px-4 sm:px-6 md:px-8">
           <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
             <Link
               href="/"
