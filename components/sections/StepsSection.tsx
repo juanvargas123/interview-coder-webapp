@@ -68,7 +68,7 @@ export const StepsSection = () => {
       <section className="relative">
         {steps.map((step, index) => (
           <div key={step.id} className={`py-12 lg:py-32`}>
-            <div className="max-w-[1400px] mx-auto px-6">
+            <div className="max-w-none mx-auto px-6">
               <div
                 className={`lg:ml-[10%] relative ${
                   index === 3
@@ -284,7 +284,7 @@ export const StepsSection = () => {
                 <div
                   className={`grid grid-cols-1 ${
                     index !== 2 && index !== 3 ? "lg:grid-cols-2" : ""
-                  } gap-16 items-center`}
+                  }  items-center justify-left`}
                 >
                   {/* Content */}
                   <motion.div
@@ -373,7 +373,7 @@ export const StepsSection = () => {
                     }`}
                   >
                     {index === 0 ? (
-                      <ApiKey onApiKeySubmit={handleApiKeySubmit} />
+                      <ApiKey />
                     ) : index === 1 ? (
                       <Queue />
                     ) : index === 2 ? (

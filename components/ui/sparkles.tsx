@@ -1,5 +1,5 @@
 "use client"
-import React, { useId, useMemo } from "react"
+import React, { useId } from "react"
 import { useEffect, useState } from "react"
 import Particles, { initParticlesEngine } from "@tsparticles/react"
 import type { Container, SingleOrMultiple } from "@tsparticles/engine"
@@ -18,6 +18,13 @@ type ParticlesProps = {
   particleColor?: string
   particleDensity?: number
 }
+
+interface SparkleInstanceProps {
+  color: string
+  size: number
+  style: React.CSSProperties
+}
+
 export const SparklesCore = (props: ParticlesProps) => {
   const {
     id,

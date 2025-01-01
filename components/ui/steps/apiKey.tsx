@@ -47,6 +47,11 @@ const ApiKey: React.FC = () => {
     }
   }, [])
 
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setShakeKey((prev) => prev + 1)
+  }
+
   return (
     <motion.div
       key={shakeKey}
@@ -91,10 +96,7 @@ const ApiKey: React.FC = () => {
 
             <Button
               type="submit"
-              onClick={(e: any) => {
-                e.preventDefault()
-                setShakeKey((prev) => prev + 1)
-              }}
+              onClick={handleSubmit}
               className="w-full font-medium text-gray-800 border shadow-md"
               variant="ghost"
               disabled={!apiKey.trim()}

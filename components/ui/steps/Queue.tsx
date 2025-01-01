@@ -2,7 +2,11 @@ import React, { useState, useRef, useEffect } from "react"
 import QueueCommands from "./QueueCommands"
 import Image from "next/image"
 
-const Queue = () => {
+export default function Queue() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [solution, setSolution] = useState("")
+  const [error, setError] = useState("")
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [isTooltipVisible, setIsTooltipVisible] = useState(false)
   const [tooltipHeight, setTooltipHeight] = useState(0)
   const [isHighlighted, setIsHighlighted] = useState(false)
@@ -174,5 +178,3 @@ const Queue = () => {
     </div>
   )
 }
-
-export default Queue

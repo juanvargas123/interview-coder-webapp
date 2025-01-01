@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Cover } from "../ui/cover"
 import { FlipWords } from "../ui/flip-words"
 import Link from "next/link"
 

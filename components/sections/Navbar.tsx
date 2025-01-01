@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
 
 export default function Navbar() {
   const [stars, setStars] = useState("")
