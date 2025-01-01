@@ -88,7 +88,7 @@ export function Footer() {
           >
             <div className="flex flex-col gap-2">
               <Link
-                href="https://github.com/roylee0912/interview-coder"
+                href="https://github.com/ibttf/interview-coder"
                 target="_blank"
                 className="flex items-center gap-2 text-neutral-400 hover:text-neutral-300 text-sm"
               >
