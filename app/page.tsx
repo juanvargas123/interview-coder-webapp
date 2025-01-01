@@ -7,8 +7,10 @@ import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams"
 import { motion } from "framer-motion"
 import { HeroVideo } from "@/components/ui/hero-video"
 import { StepsSection } from "@/components/sections/StepsSection"
+import { CommandsSection } from "@/components/sections/CommandsSection"
 import { FaqSection } from "@/components/sections/FaqSection"
 import { Footer } from "@/components/sections/Footer"
+import Link from "next/link"
 
 export default function Home() {
   return (
@@ -59,28 +61,38 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="flex flex-col md:flex-row gap-4 md:gap-12 w-full justify-center items-center md:text-medium text-sm"
           >
-            <Button className="bg-[#8B0000] w-full md:w-auto max-w-[280px]">
-              <Image
-                src="/apple.svg"
-                alt="Apple"
-                width={16}
-                height={16}
-                className="w-5 h-5"
-              />
-              Download (Intel Mac)
+            <Button className="bg-primary w-full md:w-auto max-w-[280px]">
+              <Link
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg"
+                className="flex gap-3"
+              >
+                <Image
+                  src="/apple.svg"
+                  alt="Apple"
+                  width={16}
+                  height={16}
+                  className="w-5 h-5"
+                />
+                Download for Intel Mac
+              </Link>
             </Button>
             <Button
               variant="highlight"
               className="w-full md:w-auto max-w-[280px]"
             >
-              <Image
-                src="/apple_red.svg"
-                alt="Apple"
-                width={16}
-                height={16}
-                className="w-5 h-5"
-              />
-              Download (Apple Silicon)
+              <Link
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg"
+                className="flex gap-3 text-white"
+              >
+                <Image
+                  src="/apple.svg"
+                  alt="Apple"
+                  width={16}
+                  height={16}
+                  className="w-5 h-5"
+                />
+                Download (Apple Silicon)
+              </Link>
             </Button>
           </motion.div>
 
@@ -89,6 +101,7 @@ export default function Home() {
       </main>
       {/* Steps Section */}
       <StepsSection />
+      <CommandsSection />
       {/* FAQ Section */}
       <FaqSection />
       <Footer />

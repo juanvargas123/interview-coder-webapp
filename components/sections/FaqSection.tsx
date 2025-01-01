@@ -9,7 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { Cover } from "../ui/cover"
+import { FlipWords } from "../ui/flip-words"
+import Link from "next/link"
 
+const words = ["kill Leetcode", "fix Technical", "change Coding"]
 const faqs = [
   {
     question: "Is Interview Coder free?",
@@ -149,12 +153,13 @@ export function FaqSection() {
         {/* Call to Action */}
         <div className="text-center">
           <h2 className="text-5xl font-bold mb-12">
-            Help us kill Leetcode interviews.
+            Help us <FlipWords words={words} />
+            interviews.
           </h2>
           <div className="flex justify-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="bg-[#800020] text-white hover:bg-[#9A0025] gap-2 text-xl font-semibold px-12 h-14 w-[280px] md:w-[320px]">
+                <Button className="text-white gap-2 text-xl font-semibold px-12 h-14 w-[280px] md:w-[320px]">
                   <Image
                     src="/apple.svg"
                     alt="Apple"
@@ -169,11 +174,21 @@ export function FaqSection() {
                 align="end"
                 className="w-[280px] md:w-[320px] bg-black border-[#800020]/20"
               >
-                <DropdownMenuItem className="py-3 cursor-pointer text-base">
-                  Download for Intel Mac
+                <DropdownMenuItem
+                  asChild
+                  className="py-3 cursor-pointer text-base"
+                >
+                  <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                    Download for Intel Mac
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-3 cursor-pointer text-base">
-                  Download for Silicon Mac
+                <DropdownMenuItem
+                  asChild
+                  className="py-3 cursor-pointer text-base"
+                >
+                  <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                    Download for Silicon Mac
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

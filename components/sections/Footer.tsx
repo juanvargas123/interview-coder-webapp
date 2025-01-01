@@ -15,15 +15,15 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Left Column */}
           <div className="md:col-span-5 flex flex-col gap-6">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-left">
               <Image
                 src="/logo.svg"
                 alt="Interview Coder"
                 width={24}
                 height={24}
-                className="w-6 h-6"
+                className="w-24 h-24"
               />
-              <span className="text-neutral-400 font-medium text-sm">
+              <span className="text-neutral-400 font-bold text-xl">
                 INTERVIEW CODER
               </span>
             </div>
@@ -103,7 +103,7 @@ export function Footer() {
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="bg-[#800020] text-white hover:bg-[#9A0025] gap-2 text-sm font-medium px-6 h-10">
+                  <Button className=" text-white gap-2 text-sm font-medium px-6 h-10">
                     <Image
                       src="/apple.svg"
                       alt="Apple"
@@ -118,11 +118,15 @@ export function Footer() {
                   align="end"
                   className="w-48 bg-black border-[#800020]/20"
                 >
-                  <DropdownMenuItem className="py-2 cursor-pointer">
-                    Download for Intel Mac
+                  <DropdownMenuItem asChild className="py-2 cursor-pointer">
+                    <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                      Download for Intel Mac
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="py-2 cursor-pointer">
-                    Download for Silicon Mac
+                  <DropdownMenuItem asChild className="py-2 cursor-pointer">
+                    <Link href="https://github.com/ibttf/interview-coder/releases/download/v1.0.3/Interview.Coder-1.0.0-arm64.dmg">
+                      Download for Silicon Mac
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
