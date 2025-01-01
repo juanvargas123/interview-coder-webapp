@@ -84,3 +84,7 @@
     opacity: 1;
   }
 }
+
+.tight-text {
+  letter-spacing: -0.05em;
+}

@@ -49,7 +49,7 @@ export default function Navbar() {
                 height={24}
                 className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mt-2"
               />
-              <span className="text-sm sm:text-base md:text-lg">
+              <span className="lg:text-xl md:text-lg text-md font-extrabold -ml-3 tracking-tighter">
                 Interview Coder
               </span>
             </Link>
