@@ -34,7 +34,7 @@ export default function Navbar() {
 
   return (
     <div className="fixed top-0 w-full z-50 flex justify-center pt-2 sm:pt-4 md:pt-6">
-      <nav className="mx-2 sm:mx-4 md:mx-6 w-full max-w-[90rem] rounded-[20px] border-[1px] border-white/30 bg-black/50 backdrop-blur-md shadow-lg shadow-black/10">
+      <nav className="mx-2 sm:mx-4 md:mx-6 w-full max-w-screen rounded-[20px] border-[1px] border-white/30 bg-black/50 backdrop-blur-md shadow-lg shadow-black/10">
         <div className="px-3 sm:px-6 md:pr-8 h-12 sm:h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
             <Link
@@ -48,7 +48,7 @@ export default function Navbar() {
                 height={24}
                 className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mt-2"
               />
-              <span className="lg:text-xl md:text-lg text-md font-extrabold -ml-3 tracking-tighter">
+              <span className="lg:text-xl lg:display-block hidden font-extrabold -ml-3 tracking-tighter">
                 Interview Coder
               </span>
             </Link>

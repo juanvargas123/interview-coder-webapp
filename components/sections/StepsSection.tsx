@@ -21,7 +21,7 @@ const steps = [
     subtitle: "Capture the Problem",
     title: "Start taking screenshots",
     description:
-      "Use ⌘ + h to capture the problem. Up to 5 screenshots will be saved and shown on the application."
+      "Use ⌘ + H to capture the problem. Up to 5 screenshots will be saved and shown on the application."
   },
   {
     id: "solutions",
@@ -72,7 +72,7 @@ export const StepsSection = () => {
               <div
                 className={`lg:ml-[10%] relative ${
                   index === 3
-                    ? "bg-gradient-to-br from-gray-900/50 via-gray-900/30 to-black/50 backdrop-blur-xl rounded-xl p-12 pt-16 pb-16 border border-white/[0.08] shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] backdrop-saturate-150"
+                    ? "lg:bg-gradient-to-br lg:from-gray-900/50 lg:via-gray-900/30 lg:to-black/50 lg:backdrop-blur-xl lg:rounded-xl lg:p-12 lg:pt-16 lg:pb-16 lg:border lg:border-white/[0.08] lg:shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] lg:backdrop-saturate-150"
                     : ""
                 }`}
               >
@@ -251,7 +251,7 @@ export const StepsSection = () => {
 
                 {/* Fourth Timeline */}
                 {index === 3 && (
-                  <div className="absolute left-6 top-12 bottom-12">
+                  <div className="absolute -left-[10%] lg:left-6 -top-20 lg:top-12 bottom-0 lg:bottom-12">
                     <motion.div
                       initial={{ height: "0%" }}
                       whileInView={{ height: "100%" }}
@@ -282,7 +282,7 @@ export const StepsSection = () => {
                 )}
 
                 <div
-                  className={`grid grid-cols-1 ${
+                  className={`grid grid-cols-1 gap-12 ${
                     index !== 2 && index !== 3 ? "lg:grid-cols-2" : ""
                   }  items-center justify-left`}
                 >
@@ -292,7 +292,7 @@ export const StepsSection = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
-                    className={index === 1 ? "lg:order-2" : ""}
+                    className={index === 1 ? "lg:order-2 lg:pl-12" : ""}
                   >
                     <div
                       className={`${index === 3 ? "lg:ml-6" : ""} ${
@@ -364,8 +364,10 @@ export const StepsSection = () => {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 }}
-                    className={`relative w-full ${
-                      index === 1 ? "lg:order-1" : ""
+                    className={`relative ${
+                      index === 1
+                        ? "lg:order-1 w-full max-w-[100vw] lg:-ml-[10%] overflow-hidden"
+                        : "w-full"
                     } ${index === 2 ? "col-span-1" : ""} ${
                       index === 3
                         ? "backdrop-blur-sm rounded-lg overflow-hidden"

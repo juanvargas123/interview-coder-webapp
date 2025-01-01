@@ -14,10 +14,9 @@ import Link from "next/link"
 
 export default function Home() {
   return (
-    <div className="relative w-full hero-gradient">
+    <div className="relative w-full hero-gradient lg:px-0 px-4">
       {/* Navigation */}
 
-      {/* <BackgroundBeamsWithCollision className="min-h-screen"> */}
       <Navbar />
       {/* Hero Section */}
       <main className="relative overflow-hidden  flex flex-col items-center justify-center md:pt-36">

@@ -80,10 +80,13 @@ export default function Queue() {
   }, [])
 
   return (
-    <div ref={contentRef} className="bg-transparent w-1/2 lg:pt-0 pt-24">
+    <div
+      ref={contentRef}
+      className="bg-transparent w-full lg:w-full lg:pt-0 pt-24"
+    >
       {showScreenshot && (
         <div
-          className={`absolute left-2 lg:-top-28 top-0 w-[160px] aspect-video bg-gray-800 rounded-lg shadow-2xl border border-white transition-opacity duration-200 ${
+          className={`absolute left-2 lg:-top-28 top-0 w-[120px] lg:w-[150px] aspect-video bg-gray-800 rounded-lg shadow-2xl border border-white transition-opacity duration-200 ${
             isHovered ? "opacity-50" : "opacity-100"
           }`}
         >
@@ -91,7 +94,7 @@ export default function Queue() {
             src="/fake-screenshot.jpg"
             alt="Screenshot preview"
             fill
-            className="object-cover rounded-lg"
+            className="w-[25%] rounded-lg"
           />
           {isHovered && (
             <div
@@ -112,39 +115,41 @@ export default function Queue() {
       )}
 
       <div className="px-4 py-3">
-        <div className="space-y-3 w-fit">
-          <div className="pt-2 w-fit">
-            <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-4 flex items-center justify-center gap-4">
+        <div className="space-y-3 w-full">
+          <div className="pt-2 w-full">
+            <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-4 whitespace-nowrap">
               {/* Show/Hide */}
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] leading-none">Show/Hide</span>
-                <div className="flex gap-1">
-                  <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <span className="text-[9px] sm:text-[11px] leading-none">
+                  Show/Hide
+                </span>
+                <div className="flex gap-0.5 sm:gap-1">
+                  <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1 sm:px-1.5 py-1 text-[9px] sm:text-[11px] leading-none text-white/70">
                     ⌘
                   </button>
-                  <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
+                  <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1 sm:px-1.5 py-1 text-[9px] sm:text-[11px] leading-none text-white/70">
                     B
                   </button>
                 </div>
               </div>
 
               {/* Screenshot */}
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] leading-none truncate">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <span className="text-[9px] sm:text-[11px] leading-none truncate">
                   {showScreenshot ? "Screenshot" : "Take first screenshot"}
                 </span>
-                <div className="flex gap-1">
+                <div className="flex gap-0.5 sm:gap-1">
                   <button
                     className={`${
                       isHighlighted ? "bg-white/30" : "bg-white/10"
-                    } transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70`}
+                    } transition-colors rounded-[5px] px-1 sm:px-1.5 py-1 text-[9px] sm:text-[11px] leading-none text-white/70`}
                   >
                     ⌘
                   </button>
                   <button
                     className={`${
                       isHighlighted ? "bg-white/30" : "bg-white/10"
-                    } transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70`}
+                    } transition-colors rounded-[5px] px-1 sm:px-1.5 py-1 text-[9px] sm:text-[11px] leading-none text-white/70`}
                   >
                     H
                   </button>
@@ -153,20 +158,22 @@ export default function Queue() {
 
               {/* Solve Command */}
               {showScreenshot && (
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] leading-none">Solve</span>
-                  <div className="flex gap-1">
-                    <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <span className="text-[9px] sm:text-[11px] leading-none">
+                    Solve
+                  </span>
+                  <div className="flex gap-0.5 sm:gap-1">
+                    <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1 sm:px-1.5 py-1 text-[9px] sm:text-[11px] leading-none text-white/70">
                       ⌘
                     </button>
-                    <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
+                    <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1 sm:px-1.5 py-1 text-[9px] sm:text-[11px] leading-none text-white/70">
                       ↵
                     </button>
                   </div>
                 </div>
               )}
 
-              <div className="mx-2 h-4 bg-white/20" />
+              <div className="mx-1 sm:mx-2 h-4 bg-white/20" />
 
               <QueueCommands
                 onTooltipVisibilityChange={handleTooltipVisibilityChange}
