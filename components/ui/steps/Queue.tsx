@@ -82,12 +82,12 @@ export default function Queue() {
   return (
     <div
       ref={contentRef}
-      className="bg-transparent w-full relative min-h-[180px]"
+      className="bg-transparent w-full max-w-[600px] lg:max-w-[800px] mx-auto relative  lg:min-h-[180px] aspect-video"
     >
       <div className="absolute inset-0">
         {showScreenshot && (
           <div
-            className={`absolute left-2 top-2 w-[120px] h-[67.5px] lg:w-[150px] lg:h-[84.375px] bg-gray-800 rounded-lg shadow-2xl border border-white transition-opacity duration-200 ${
+            className={`absolute left-4 bottom-[70px] w-[90px] h-[50.625px] lg:w-[180px] lg:h-[101.25px] bg-gray-800 rounded-lg shadow-2xl border border-white transition-opacity duration-200 ${
               isHovered ? "opacity-50" : "opacity-100"
             }`}
           >
@@ -116,7 +116,7 @@ export default function Queue() {
         )}
 
         <div className="absolute bottom-4 left-4">
-          <div className="min-w-fit">
+          <div className="min-w-fit scale-90 lg:scale-100 origin-bottom-left">
             <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-4 flex items-center gap-4 whitespace-nowrap">
               {/* Show/Hide */}
               <div className="flex items-center gap-2">

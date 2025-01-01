@@ -67,10 +67,10 @@ export const StepsSection = () => {
 
       <section className="relative">
         {steps.map((step, index) => (
-          <div key={step.id} className={`py-12 lg:py-32`}>
+          <div key={step.id} className={`py-6 lg:py-32`}>
             <div className="max-w-none mx-auto px-6">
               <div
-                className={`lg:ml-[10%] relative ${
+                className={`lg:ml-[10%] relative h-fit ${
                   index === 3
                     ? "lg:bg-gradient-to-br lg:from-gray-900/50 lg:via-gray-900/30 lg:to-black/50 lg:backdrop-blur-xl lg:rounded-xl lg:p-12 lg:pt-16 lg:pb-16 lg:border lg:border-white/[0.08] lg:shadow-[0_0_1px_1px_rgba(0,0,0,0.3)] lg:backdrop-saturate-150"
                     : ""
@@ -283,8 +283,10 @@ export const StepsSection = () => {
 
                 <div
                   className={`grid grid-cols-1 gap-12 ${
-                    index !== 2 && index !== 3 ? "lg:grid-cols-2" : ""
-                  }  items-center justify-left`}
+                    index !== 2 && index !== 3
+                      ? "lg:grid-cols-2 lg:items-center"
+                      : ""
+                  } justify-left`}
                 >
                   {/* Content */}
                   <motion.div
