@@ -80,43 +80,40 @@ export default function Queue() {
   }, [])
 
   return (
-    <div
-      ref={contentRef}
-      className="bg-transparent w-full lg:w-full lg:pt-0 pt-24"
-    >
-      {showScreenshot && (
-        <div
-          className={`absolute left-2 lg:-top-28 top-0 w-[120px] lg:w-[150px] aspect-video bg-gray-800 rounded-lg shadow-2xl border border-white transition-opacity duration-200 ${
-            isHovered ? "opacity-50" : "opacity-100"
-          }`}
-        >
-          <Image
-            src="/fake-screenshot.jpg"
-            alt="Screenshot preview"
-            fill
-            className="w-[25%] rounded-lg"
-          />
-          {isHovered && (
-            <div
-              className={`absolute top-2 left-2 w-5 h-5 rounded-full ${
-                isXHighlighted ? "bg-white/40" : "bg-black/60"
-              } flex items-center justify-center cursor-pointer z-[90] transition-colors duration-150`}
-            >
-              <span
-                className={`${
-                  isXHighlighted ? "text-black" : "text-white/70"
-                } text-xs transition-colors duration-150`}
+    <div ref={contentRef} className="bg-transparent w-full h-[180px] relative">
+      <div className="absolute inset-0">
+        {showScreenshot && (
+          <div
+            className={`absolute left-2 top-2 w-[120px] h-[67.5px] lg:w-[150px] lg:h-[84.375px] bg-gray-800 rounded-lg shadow-2xl border border-white transition-opacity duration-200 ${
+              isHovered ? "opacity-50" : "opacity-100"
+            }`}
+          >
+            <Image
+              src="/fake-screenshot.jpg"
+              alt="Screenshot preview"
+              fill
+              className="rounded-lg object-cover"
+            />
+            {isHovered && (
+              <div
+                className={`absolute top-2 left-2 w-5 h-5 rounded-full ${
+                  isXHighlighted ? "bg-white/40" : "bg-black/60"
+                } flex items-center justify-center cursor-pointer z-[90] transition-colors duration-150`}
               >
-                ×
-              </span>
-            </div>
-          )}
-        </div>
-      )}
+                <span
+                  className={`${
+                    isXHighlighted ? "text-black" : "text-white/70"
+                  } text-xs transition-colors duration-150`}
+                >
+                  ×
+                </span>
+              </div>
+            )}
+          </div>
+        )}
 
-      <div className="px-4 py-3">
-        <div className="space-y-3 w-full">
-          <div className="pt-2 w-full">
+        <div className="absolute bottom-4 left-4 right-4">
+          <div className="w-full">
             <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-4 whitespace-nowrap">
               {/* Show/Hide */}
               <div className="flex items-center gap-1 sm:gap-2">

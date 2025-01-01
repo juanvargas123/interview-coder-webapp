@@ -34,7 +34,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-6 text-center text-[24px] font-medium text-[#B3B3B3] font-['Inter']"
+            className="mb-6 text-center text-md lg:text-[24px] font-medium text-[#B3B3B3] font-['Inter']"
             style={{
               fontFamily: '"Inter", "Inter Placeholder", sans-serif',
               fontWeight: 500
@@ -46,7 +46,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-[3.5rem] mb-10  text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1] max-w-4xl mx-auto"
+            className="mb-10  text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] max-w-4xl mx-auto"
           >
             <span className="white-gradient">Invisible AI for </span>{" "}
             <span className="infernal-gradient">Technical</span>{" "}
