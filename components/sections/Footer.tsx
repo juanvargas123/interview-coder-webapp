@@ -14,14 +14,14 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Left Column */}
-          <div className="md:col-span-5 flex flex-col gap-6">
+          <div className="md:col-span-4 flex flex-col gap-6">
             <div className="flex items-center justify-left gap-6">
               <Image
                 src="/logo.svg"
                 alt="Interview Coder"
                 width={24}
                 height={24}
-                className="w-6 h-6 rounded-full "
+                className="w-6 h-6 rounded-full"
               />
               <span className="text-neutral-400 font-bold text-xl">
                 INTERVIEW CODER
@@ -44,49 +44,35 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Middle Column */}
-          <div
-            className="md:col-span-4 flex flex-col justify-center"
-            style={{ marginTop: "28px" }}
-          >
-            <div className="flex flex-col gap-1">
-              <span className="text-neutral-500 text-sm mb-1">
-                Talk to a creator
-              </span>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() =>
-                    window.open(
-                      "https://www.linkedin.com/in/roy-lee-cs123",
-                      "_blank"
-                    )
-                  }
-                  className="text-neutral-400 hover:text-neutral-300"
-                >
-                  Roy
-                </button>
-                <span className="text-neutral-500">n'</span>
-                <button
-                  onClick={() =>
-                    window.open(
-                      "https://www.linkedin.com/in/neel-shanmugam/",
-                      "_blank"
-                    )
-                  }
-                  className="text-neutral-400 hover:text-neutral-300"
-                >
-                  Neel
-                </button>
-              </div>
+          {/* Middle Column - Support */}
+          <div className="md:col-span-4 flex flex-col gap-4">
+            <h3 className="text-neutral-400 font-semibold">Support</h3>
+            <div className="flex flex-col gap-2">
+              <Link
+                href="/contact"
+                className="text-neutral-500 hover:text-neutral-300 text-sm"
+              >
+                Contact Us
+              </Link>
+              <Link
+                href="/policies"
+                className="text-neutral-500 hover:text-neutral-300 text-sm"
+              >
+                Refund Policy
+              </Link>
+              <Link
+                href="/policies"
+                className="text-neutral-500 hover:text-neutral-300 text-sm"
+              >
+                Cancellation Policy
+              </Link>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div
-            className="md:col-span-3 flex flex-col justify-center"
-            style={{ marginTop: "28px" }}
-          >
-            <div className="flex flex-col gap-2">
+          {/* Right Column - Download */}
+          <div className="md:col-span-4 flex flex-col gap-4">
+            <h3 className="text-neutral-400 font-semibold">Download</h3>
+            <div className="flex flex-col gap-4">
               <Link
                 href="https://github.com/ibttf/interview-coder"
                 target="_blank"
@@ -103,7 +89,7 @@ export function Footer() {
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className=" text-black gap-2 text-sm font-medium px-6 h-10">
+                  <Button className="text-black gap-2 text-sm font-medium px-6 h-10">
                     <Image
                       src="/apple.svg"
                       alt="Apple"
@@ -134,8 +120,11 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Twitter icon in bottom right */}
-        <div className="flex justify-end mt-8">
+        {/* Bottom Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-12 pt-8 border-t border-neutral-800">
+          <p className="text-neutral-500 text-sm mb-4 sm:mb-0">
+            © {new Date().getFullYear()} Interview Coder. All rights reserved.
+          </p>
           <Link href="https://twitter.com/interviewcoder" target="_blank">
             <Image
               src="/twitter.svg"
