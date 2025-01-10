@@ -6,10 +6,12 @@ import { AccountDetails } from "@/components/settings/account-details"
 import { Sidebar } from "@/components/settings/sidebar"
 import { UserHeader } from "@/components/settings/user-header"
 import { SubscriptionActionModal } from "@/components/SubscriptionActionModal"
+import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { useUser } from "@/lib/hooks/use-user"
 import { supabase } from "@/lib/supabase/client"
 import { getCardBrandIcon } from "@/lib/utils"
+import { Lock } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -45,7 +47,7 @@ export default function SettingsPage() {
   const [renewLoading, setRenewLoading] = useState(false)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false)
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+
   const [subscriptionAction, setSubscriptionAction] = useState<
     "cancel" | "resume"
   >("cancel")
@@ -98,16 +100,6 @@ export default function SettingsPage() {
     loadSubscriptionData()
   }, [router])
 
-  const handleSubscribeClick = () => {
-    setIsCheckoutOpen(true)
-  }
-
-  const handleCheckoutSuccess = () => {
-    setIsCheckoutOpen(false)
-    // Refresh subscription data
-    loadSubscriptionData()
-  }
-
   const handleCancel = async () => {
     if (!subscription) return
 
@@ -131,22 +123,24 @@ export default function SettingsPage() {
         })
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error("Failed to cancel subscription")
+        throw new Error(data.error || "Failed to cancel subscription")
       }
 
-      // Refresh subscription data
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .single()
-
-      setSubscription(sub)
+      // Close the modal first
       setIsSubscriptionModalOpen(false)
+
+      // Then refresh the data
+      await loadSubscriptionData()
     } catch (error) {
       console.error("Error:", error)
-      throw new Error("Failed to cancel subscription. Please try again.")
+      if (error instanceof Error) {
+        throw error
+      } else {
+        throw new Error("Failed to cancel subscription. Please try again.")
+      }
     } finally {
       setCancelLoading(false)
     }
@@ -180,13 +174,7 @@ export default function SettingsPage() {
       }
 
       // Refresh subscription data
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .single()
-
-      setSubscription(sub)
+      await loadSubscriptionData()
       setIsSubscriptionModalOpen(false)
     } catch (error) {
       console.error("Error:", error)
@@ -411,12 +399,14 @@ export default function SettingsPage() {
                           <p className="text-[13px] lg:text-[15px] text-gray-400 mt-2 mb-4 lg:mb-6">
                             Subscribe now to get access to all features
                           </p>
-                          <button
-                            onClick={handleSubscribeClick}
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 text-[13px] lg:text-sm rounded-md transition-colors"
+
+                          <Button
+                            onClick={() => router.push("/checkout")}
+                            className="bg-black hover:bg-black/90 text-primary border border-primary transition-all px-5 py-2 text-sm font-semibold h-9 mx-auto"
                           >
-                            Subscribe Now
-                          </button>
+                            <Lock className="w-4 h-4 mr-2 text-primary" />
+                            Subscribe
+                          </Button>
                         </div>
                       </div>
                     </>
@@ -438,18 +428,17 @@ export default function SettingsPage() {
                           {paymentMethods.map((method) => (
                             <div
                               key={method.id}
-                              className="flex items-center justify-between p-4 lg:p-6 flex-wrap gap-4"
+                              className="flex items-center justify-between p-4 lg:p-6"
                             >
                               <div className="flex items-center gap-4 lg:gap-6">
                                 <div className="w-10 h-7 lg:w-12 lg:h-8 flex items-center">
                                   {getCardBrandIcon(method.brand)}
                                 </div>
-                                <div className="grid lg:grid-cols-[1fr_1fr_1fr] gap-4 lg:gap-12 items-center">
+                                <div>
                                   <div className="text-[13px] lg:text-sm">
                                     •••• •••• •••• {method.last4}
                                   </div>
-
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-2 mt-1">
                                     <span className="text-[13px] lg:text-sm text-gray-400">
                                       Expires:
                                     </span>

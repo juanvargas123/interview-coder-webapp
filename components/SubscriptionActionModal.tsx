@@ -28,11 +28,13 @@ export function SubscriptionActionModal({
     try {
       setError(null)
       await onConfirm()
-      window.location.reload() // Force a full page reload to ensure fresh data
+      onClose() // Close the modal after successful confirmation
     } catch (err) {
+      console.error("Error in handleConfirm:", err)
       setError(
         err instanceof Error ? err.message : "An unexpected error occurred"
       )
+      // Don't close the modal on error
     }
   }
 

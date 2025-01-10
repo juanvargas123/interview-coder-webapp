@@ -1,92 +1,39 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { loadStripe } from "@stripe/stripe-js"
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements
-} from "@stripe/react-stripe-js"
+import { useRouter } from "next/navigation"
 import Navbar from "@/components/sections/Navbar"
 import { Button } from "@/components/ui/button"
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-)
+export default function CheckoutPage() {
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
-const CheckoutForm = () => {
-  const stripe = useStripe()
-  const elements = useElements()
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!stripe || !elements) return
-
-    setIsLoading(true)
-    setError(null)
-
+  const handleCheckout = async () => {
     try {
-      const { error: submitError } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/settings`
+      setLoading(true)
+      const response = await fetch("/api/stripe/create-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
         }
       })
 
-      if (submitError) {
-        setError(submitError.message ?? "Something went wrong")
-        setIsLoading(false)
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session")
       }
-    } catch (err) {
-      setError("An unexpected error occurred")
-      setIsLoading(false)
+
+      const { url } = await response.json()
+      if (url) {
+        window.location.href = url
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      alert("Failed to start checkout. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <PaymentElement
-        options={{
-          layout: "tabs",
-          paymentMethodOrder: ["card"],
-          defaultValues: {
-            billingDetails: {
-              name: ""
-            }
-          }
-        }}
-      />
-      {error && (
-        <div className="text-red-500 text-sm bg-red-500/10 p-3 rounded-lg">
-          {error}
-        </div>
-      )}
-      <Button
-        type="submit"
-        disabled={!stripe || isLoading}
-        className="w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-3  text-sm font-semibold disabled:opacity-50"
-      >
-        {isLoading ? "Processing..." : "Subscribe"}
-      </Button>
-    </form>
-  )
-}
-
-export default function CheckoutPage() {
-  const [clientSecret, setClientSecret] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" }
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret))
-      .catch(console.error)
-  }, [])
 
   return (
     <div className="min-h-screen bg-black">
@@ -132,21 +79,19 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Right side - Payment form */}
+          {/* Right side - Checkout button */}
           <div className="bg-transparent border border-gray-700 p-8 rounded-xl">
-            {clientSecret && (
-              <Elements
-                stripe={stripePromise}
-                options={{
-                  clientSecret,
-                  appearance: {
-                    theme: "night"
-                  }
-                }}
-              >
-                <CheckoutForm />
-              </Elements>
-            )}
+            <Button
+              onClick={handleCheckout}
+              disabled={loading}
+              className="w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-3 text-sm font-semibold disabled:opacity-50"
+            >
+              {loading ? "Processing..." : "Subscribe with Stripe"}
+            </Button>
+            <p className="text-sm text-gray-400 mt-4 text-center">
+              You will be redirected to Stripe to complete your purchase
+              securely.
+            </p>
           </div>
         </div>
       </div>

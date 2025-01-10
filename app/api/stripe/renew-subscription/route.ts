@@ -30,9 +30,29 @@ export async function POST(req: Request) {
     }
 
     // Remove the cancellation schedule
-    await stripe.subscriptions.update(subscription.stripe_subscription_id, {
-      cancel_at_period_end: false
-    })
+    const updatedSubscription = await stripe.subscriptions.update(
+      subscription.stripe_subscription_id,
+      {
+        cancel_at_period_end: false
+      }
+    )
+
+    // Update the subscription in our database
+    const { error: updateError } = await supabase
+      .from("subscriptions")
+      .update({
+        cancel_at: null,
+        canceled_at: null
+      })
+      .eq("user_id", userId)
+
+    if (updateError) {
+      console.error("Error updating subscription in database:", updateError)
+      return NextResponse.json(
+        { error: "Failed to update subscription" },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
