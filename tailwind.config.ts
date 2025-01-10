@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss"
-const defaultTheme = require("tailwindcss/defaultTheme")
+import { fontFamily } from "tailwindcss/defaultTheme"
 const colors = require("tailwindcss/colors")
 const {
   default: flattenColorPalette
@@ -25,6 +25,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans]
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

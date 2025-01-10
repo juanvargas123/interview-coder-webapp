@@ -158,19 +158,44 @@ export function FaqSection() {
           <div className="relative w-full h-[600px] overflow-hidden">
             <AnimatedKeyboard />
           </div>
-          <div className="mt-16">
-            <Button className="text-black gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] bg-primary hover:bg-primary/90">
-              <Link href={downloadUrl} className="flex items-center gap-2">
-                <Image
-                  src="/apple.svg"
-                  alt="Apple"
-                  width={16}
-                  height={16}
-                  className="w-4 h-4"
-                />
-                Download
-              </Link>
-            </Button>
+          <div className=" space-y-6">
+            <div className="space-y-4">
+              <h2 className="text-4xl font-bold tracking-tight">
+                Take the short way.
+              </h2>
+              <p className="text-neutral-400">
+                Download and use Interview Coder today.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button className="text-black gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] bg-primary hover:bg-primary/90">
+                <Link href={downloadUrl} className="flex items-center gap-2">
+                  <Image
+                    src="/apple.svg"
+                    alt="Apple"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  Download for Mac
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] border-neutral-700 hover:bg-neutral-800"
+              >
+                <Link href="#" className="flex items-center gap-2">
+                  <Image
+                    src="/windows.svg"
+                    alt="Windows"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  Join Windows waitlist
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

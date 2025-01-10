@@ -36,7 +36,9 @@ export function PaymentMethodModal({
   const handleAddCard = async () => {
     try {
       setLoading(true)
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!)
+      const stripe = await loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+      )
       if (!stripe) throw new Error("Failed to load Stripe")
 
       // Create a Checkout Session for setup

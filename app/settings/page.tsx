@@ -1,17 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useUser } from "@/lib/hooks/use-user"
-import { supabase } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
-import { getCardBrandIcon } from "@/lib/utils"
-import Navbar from "@/components/sections/Navbar"
-import { UserHeader } from "@/components/settings/user-header"
-import { Sidebar } from "@/components/settings/sidebar"
-import { AccountDetails } from "@/components/settings/account-details"
 import { PaymentMethodModal } from "@/components/PaymentMethodModal"
+import Navbar from "@/components/sections/Navbar"
+import { AccountDetails } from "@/components/settings/account-details"
+import { Sidebar } from "@/components/settings/sidebar"
+import { UserHeader } from "@/components/settings/user-header"
 import { SubscriptionActionModal } from "@/components/SubscriptionActionModal"
 import { Progress } from "@/components/ui/progress"
+import { useUser } from "@/lib/hooks/use-user"
+import { supabase } from "@/lib/supabase/client"
+import { getCardBrandIcon } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 interface Subscription {
   status: string
@@ -45,90 +45,67 @@ export default function SettingsPage() {
   const [renewLoading, setRenewLoading] = useState(false)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
   const [subscriptionAction, setSubscriptionAction] = useState<
     "cancel" | "resume"
   >("cancel")
 
-  useEffect(() => {
-    async function loadSubscription() {
-      // Check if user is authenticated
-      const {
-        data: { session }
-      } = await supabase.auth.getSession()
-      if (!session) {
-        router.push("/signin")
-        return
-      }
-
-      // Get user's subscription status
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .single()
-
-      setSubscription(sub)
-
-      // If there's a subscription, fetch the payment methods
-      if (sub?.stripe_customer_id) {
-        try {
-          const response = await fetch("/api/stripe/get-payment-method", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              customerId: sub.stripe_customer_id
-            })
-          })
-
-          if (response.ok) {
-            const data = await response.json()
-            setPaymentMethods(data.paymentMethods || [])
-          }
-        } catch (error) {
-          console.error("Error fetching payment methods:", error)
-        }
-      }
-
-      setLoading(false)
+  async function loadSubscriptionData() {
+    // Check if user is authenticated
+    const {
+      data: { session }
+    } = await supabase.auth.getSession()
+    if (!session) {
+      router.push("/signin")
+      return
     }
 
-    loadSubscription()
+    // Get user's subscription status
+    const { data: sub } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", session.user.id)
+      .single()
+
+    setSubscription(sub)
+
+    // If there's a subscription, fetch the payment methods
+    if (sub?.stripe_customer_id) {
+      try {
+        const response = await fetch("/api/stripe/get-payment-method", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            customerId: sub.stripe_customer_id
+          })
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setPaymentMethods(data.paymentMethods || [])
+        }
+      } catch (error) {
+        console.error("Error fetching payment methods:", error)
+      }
+    }
+
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadSubscriptionData()
   }, [router])
 
-  const handleSubscribe = async () => {
-    try {
-      setLoading(true)
-      const {
-        data: { session }
-      } = await supabase.auth.getSession()
-      if (!session) {
-        router.push("/signin")
-        return
-      }
+  const handleSubscribeClick = () => {
+    setIsCheckoutOpen(true)
+  }
 
-      // Create checkout session
-      const response = await fetch("/api/create-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          userId: session.user.id,
-          email: session.user.email
-        })
-      })
-
-      const { url } = await response.json()
-      if (url) {
-        router.push(url)
-      }
-    } catch (error) {
-      console.error("Error:", error)
-    } finally {
-      setLoading(false)
-    }
+  const handleCheckoutSuccess = () => {
+    setIsCheckoutOpen(false)
+    // Refresh subscription data
+    loadSubscriptionData()
   }
 
   const handleCancel = async () => {
@@ -435,11 +412,10 @@ export default function SettingsPage() {
                             Subscribe now to get access to all features
                           </p>
                           <button
-                            onClick={handleSubscribe}
-                            disabled={loading}
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 text-[13px] lg:text-sm rounded-md transition-colors disabled:opacity-50"
+                            onClick={handleSubscribeClick}
+                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 text-[13px] lg:text-sm rounded-md transition-colors"
                           >
-                            {loading ? "Processing..." : "Subscribe Now"}
+                            Subscribe Now
                           </button>
                         </div>
                       </div>

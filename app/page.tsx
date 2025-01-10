@@ -12,6 +12,7 @@ import { FaqSection } from "@/components/sections/FaqSection"
 import { Footer } from "@/components/sections/Footer"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { PricingSection } from "@/components/sections/PricingSection"
 
 export default function Home() {
   const [isSilicon, setIsSilicon] = useState(false)
@@ -108,9 +109,11 @@ export default function Home() {
       <div id="how-to-use">
         <StepsSection />
       </div>
+      <CommandsSection />
       <div id="pricing">
-        <CommandsSection />
+        <PricingSection />
       </div>
+
       {/* FAQ Section */}
       <div id="faq">
         <FaqSection />

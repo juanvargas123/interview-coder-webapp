@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({
+const font = Inter({
   subsets: ["latin"],
-  variable: "--font-inter"
+  variable: "--font-sans"
 })
 
 export const metadata: Metadata = {
@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
-      <body className="min-h-screen bg-background antialiased max-w-screen overflow-x-hidden">
+    <html lang="en" className={`${font.variable}`}>
+      <body className="min-h-screen bg-background antialiased max-w-screen overflow-x-hidden font-sans">
         {children}
       </body>
     </html>
