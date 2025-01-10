@@ -1,16 +1,10 @@
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { cn } from "@/lib/utils"
+import { AnimatedKeyboard } from "@/components/ui/AnimatedKeyboard"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { FlipWords } from "../ui/flip-words"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 const words = ["kill Leetcode", "fix Technical", "change Coding"]
 const faqs = [
@@ -119,6 +113,16 @@ function FaqItem({
 
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [isSilicon, setIsSilicon] = useState(false)
+
+  useEffect(() => {
+    const platform = navigator.platform.toLowerCase()
+    setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
+  }, [])
+
+  const downloadUrl = isSilicon
+    ? "https://tinyurl.com/yfsnn5dd"
+    : "https://tinyurl.com/bdemcvx2"
 
   return (
     <section className="py-24 relative">
@@ -151,46 +155,22 @@ export function FaqSection() {
 
         {/* Call to Action */}
         <div className="text-center">
-          <h2 className="text-5xl font-bold mb-12">
-            Help us <FlipWords words={words} />
-            interviews.
-          </h2>
-          <div className="flex justify-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="text-black gap-2 text-xl font-semibold px-12 h-14 w-[280px] md:w-[320px]">
-                  <Image
-                    src="/apple.svg"
-                    alt="Apple"
-                    width={16}
-                    height={16}
-                    className="w-6 h-6"
-                  />
-                  Download
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-[280px] md:w-[320px] bg-black border-[#800020]/20"
-              >
-                <DropdownMenuItem
-                  asChild
-                  className="py-3 cursor-pointer text-base"
-                >
-                  <Link href="https://tinyurl.com/bdemcvx2">
-                    Download for Intel Mac
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  asChild
-                  className="py-3 cursor-pointer text-base"
-                >
-                  <Link href="https://tinyurl.com/yfsnn5dd">
-                    Download for Silicon Mac
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="relative w-full h-[600px] overflow-hidden">
+            <AnimatedKeyboard />
+          </div>
+          <div className="mt-16">
+            <Button className="text-black gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] bg-primary hover:bg-primary/90">
+              <Link href={downloadUrl} className="flex items-center gap-2">
+                <Image
+                  src="/apple.svg"
+                  alt="Apple"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4"
+                />
+                Download
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

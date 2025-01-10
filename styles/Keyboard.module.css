@@ -1,0 +1,210 @@
+.container {
+  position: absolute;
+  width: 130%;
+  height: 100%;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  perspective: 2000px;
+  mask-image: radial-gradient(
+    circle at center 120%,
+    black 20%,
+    transparent 80%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle at center 120%,
+    black 20%,
+    transparent 80%
+  );
+  overflow: visible;
+}
+
+.keyboard {
+  position: relative;
+  transform: scale(1.9);
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.keyboardContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 40px 0 80px 0;
+}
+
+.keyboardRow {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.key {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.key:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.glowing {
+  box-shadow: 0 0 30px rgba(255, 238, 0, 0.4), 0 0 60px rgba(255, 238, 0, 0.2),
+    0 0 90px rgba(255, 238, 0, 0.1);
+  border: 1px solid rgba(255, 238, 0, 0.6);
+  background: rgba(255, 238, 0, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+.glowing::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 238, 0, 0.2),
+    transparent 70%
+  );
+  border-radius: 15px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.glowing .primary,
+.glowing .commandKey {
+  color: rgba(255, 238, 0, 1);
+  text-shadow: 0 0 15px rgba(255, 238, 0, 0.9), 0 0 30px rgba(255, 238, 0, 0.6);
+  position: relative;
+  z-index: 3;
+}
+
+.glowing .commandKey .icon {
+  color: rgba(255, 238, 0, 1);
+  text-shadow: 0 0 15px rgba(255, 238, 0, 0.9), 0 0 30px rgba(255, 238, 0, 0.6);
+  position: relative;
+  z-index: 3;
+}
+
+.primary {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  font-family: -apple-system, "SF Pro Text", "SF Pro Icons", "Helvetica Neue",
+    "Helvetica", "Arial", sans-serif;
+}
+
+.alt {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  font-family: -apple-system, "SF Pro Text", "SF Pro Icons", "Helvetica Neue",
+    "Helvetica", "Arial", sans-serif;
+}
+
+.alignCenter {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.commandKey {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10.5px;
+  text-transform: lowercase;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  font-family: -apple-system, "SF Pro Text", "SF Pro Icons", "Helvetica Neue",
+    "Helvetica", "Arial", sans-serif;
+}
+
+.commandKey span:not(.icon) {
+  position: relative;
+  top: 0;
+}
+
+.commandKey .icon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.glowing .commandKey .icon {
+  color: rgba(255, 238, 0, 1);
+  text-shadow: 0 0 15px rgba(255, 238, 0, 0.9), 0 0 30px rgba(255, 238, 0, 0.6);
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 3;
+}
+
+.spaceKey {
+  width: 285px !important;
+}
+
+.fnKey {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10.5px;
+  text-transform: lowercase;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  font-family: -apple-system, "SF Pro Text", "SF Pro Icons", "Helvetica Neue",
+    "Helvetica", "Arial", sans-serif;
+}
+
+.fnKey span:first-child {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.fnKey span:last-child {
+  position: relative;
+  top: 0;
+}
+
+.modifierKey {
+  width: 65px !important;
+}
+
+.bottomRow {
+  padding-left: 0;
+  margin-left: -200px;
+}

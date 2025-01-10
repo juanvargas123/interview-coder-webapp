@@ -11,8 +11,20 @@ import { CommandsSection } from "@/components/sections/CommandsSection"
 import { FaqSection } from "@/components/sections/FaqSection"
 import { Footer } from "@/components/sections/Footer"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 export default function Home() {
+  const [isSilicon, setIsSilicon] = useState(false)
+
+  useEffect(() => {
+    const platform = navigator.platform.toLowerCase()
+    setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
+  }, [])
+
+  const downloadUrl = isSilicon
+    ? "https://tinyurl.com/yfsnn5dd"
+    : "https://tinyurl.com/bdemcvx2"
+
   return (
     <div className="relative w-full hero-gradient lg:px-0 px-4">
       {/* Navigation */}
@@ -60,34 +72,31 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="flex flex-col md:flex-row gap-4 md:gap-12 w-full justify-center items-center md:text-medium text-sm"
           >
-            <Button className="bg-primary w-full md:w-auto max-w-[280px]">
-              <Link href="https://tinyurl.com/bdemcvx2" className="flex gap-3">
+            <Button className="bg-primary w-full md:w-auto max-w-[280px] h-10 text-sm">
+              <Link href={downloadUrl} className="flex gap-2">
                 <Image
                   src="/apple.svg"
                   alt="Apple"
                   width={16}
                   height={16}
-                  className="w-5 h-5"
+                  className="w-4 h-4"
                 />
-                Download for Intel Mac
+                Download for Mac
               </Link>
             </Button>
             <Button
               variant="highlight"
-              className="w-full md:w-auto max-w-[280px]"
+              className="w-full md:w-auto max-w-[280px] h-10 text-sm"
             >
-              <Link
-                href="https://tinyurl.com/yfsnn5dd"
-                className="flex gap-3 text-white"
-              >
+              <Link href="/waitlist" className="flex gap-2 text-white">
                 <Image
-                  src="/apple_white.svg"
-                  alt="Apple"
+                  src="/windows.svg"
+                  alt="Windows"
                   width={16}
                   height={16}
-                  className="w-5 h-5"
+                  className="w-4 h-4"
                 />
-                Download (Apple Silicon)
+                Windows Waitlist
               </Link>
             </Button>
           </motion.div>

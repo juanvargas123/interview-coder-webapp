@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -7,8 +9,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
 
 export function Footer() {
+  const [isSilicon, setIsSilicon] = useState(false)
+
+  useEffect(() => {
+    const platform = navigator.platform.toLowerCase()
+    setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
+  }, [])
+
+  const downloadUrl = isSilicon
+    ? "https://tinyurl.com/yfsnn5dd"
+    : "https://tinyurl.com/bdemcvx2"
+
   return (
     <footer className="border-t border-neutral-800 bg-neutral-900/50 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-12">
@@ -73,49 +88,21 @@ export function Footer() {
           <div className="md:col-span-4 flex flex-col gap-4">
             <h3 className="text-neutral-400 font-semibold">Download</h3>
             <div className="flex flex-col gap-4">
-              <Link
-                href="https://github.com/ibttf/interview-coder"
-                target="_blank"
-                className="flex items-center gap-2 text-neutral-400 hover:text-neutral-300 text-sm"
+              <Button
+                asChild
+                className="text-black gap-2 text-sm font-medium h-10 bg-primary hover:bg-primary/90 w-fit"
               >
-                <Image
-                  src="/github.svg"
-                  alt="GitHub"
-                  width={20}
-                  height={20}
-                  className="opacity-70"
-                />
-                View on GitHub
-              </Link>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="text-black gap-2 text-sm font-medium px-6 h-10">
-                    <Image
-                      src="/apple.svg"
-                      alt="Apple"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4"
-                    />
-                    Download
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="w-48 bg-black border-[#800020]/20"
-                >
-                  <DropdownMenuItem asChild className="py-2 cursor-pointer">
-                    <Link href="https://tinyurl.com/bdemcvx2">
-                      Download for Intel Mac
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="py-2 cursor-pointer">
-                    <Link href="https://tinyurl.com/yfsnn5dd">
-                      Download for Silicon Mac
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                <Link href={downloadUrl} className="flex items-center gap-2">
+                  <Image
+                    src="/apple.svg"
+                    alt="Apple"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  Download
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

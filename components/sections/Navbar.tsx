@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Menu } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Button } from "../ui/button"
 
@@ -21,6 +21,7 @@ export default function Navbar() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [scrolled, setScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -54,6 +55,10 @@ export default function Navbar() {
     }
   }, [])
 
+  const downloadUrl = isSilicon
+    ? "https://tinyurl.com/yfsnn5dd"
+    : "https://tinyurl.com/bdemcvx2"
+
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     router.push("/")
@@ -66,7 +71,8 @@ export default function Navbar() {
           "w-full max-w-7xl h-14 transition-all duration-200 rounded-2xl border border-white/10",
           scrolled
             ? "bg-black/95 backdrop-blur-md"
-            : "bg-[#0A0A0A]/95 backdrop-blur-md"
+            : "bg-[#0A0A0A]/95 backdrop-blur-md",
+          mobileMenuOpen && "!rounded-b-none"
         )}
       >
         <div className="h-full flex items-center justify-between px-6">
@@ -105,7 +111,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             {!loading &&
               (user ? (
                 <DropdownMenu>
@@ -151,9 +157,12 @@ export default function Navbar() {
                   </Link>
                   <Button
                     asChild
-                    className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium flex items-center gap-2"
+                    className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium"
                   >
-                    <Link href="/signin">
+                    <Link
+                      href={downloadUrl}
+                      className="flex items-center gap-2"
+                    >
                       <Image
                         src="/apple.svg"
                         alt="Apple"
@@ -167,7 +176,117 @@ export default function Navbar() {
                 </>
               ))}
           </div>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5 text-white" />
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-white/10 bg-inherit backdrop-blur-md rounded-b-2xl">
+            <div className="px-6 py-4 space-y-4">
+              <Link
+                href="#how-to-use"
+                className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+              >
+                How to Use
+              </Link>
+              <Link
+                href="#pricing"
+                className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="#faq"
+                className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+              >
+                FAQ
+              </Link>
+
+              {!loading && (
+                <div className="pt-2 border-t border-white/10">
+                  {user ? (
+                    <>
+                      <div className="flex items-center gap-3 py-2">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={user.user_metadata?.avatar_url} />
+                          <AvatarFallback className="bg-primary text-xs">
+                            {user.email?.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <span className="text-sm text-white">
+                            {user.email}
+                          </span>
+                        </div>
+                      </div>
+                      <Link
+                        href="/settings"
+                        className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+                      >
+                        Settings
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full text-left text-[#FF4545] hover:text-red-400 text-sm py-2"
+                      >
+                        Log out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/signin"
+                        className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+                      >
+                        Sign in
+                      </Link>
+                      <div className="space-y-2">
+                        <Link
+                          href={downloadUrl}
+                          className={cn(
+                            "block w-full text-black text-center bg-primary hover:bg-primary/90 transition-all px-4 py-1.5 text-sm font-medium rounded-lg"
+                          )}
+                        >
+                          <div className="flex items-center gap-2 justify-center">
+                            <Image
+                              src="/apple.svg"
+                              alt="Apple"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            Download
+                          </div>
+                        </Link>
+                        <Link
+                          href="/waitlist"
+                          className="block w-full text-white text-center bg-[#1A1A1A] hover:bg-[#252525] transition-all px-4 py-1.5 text-sm font-medium rounded-lg"
+                        >
+                          <div className="flex items-center gap-2 justify-center">
+                            <Image
+                              src="/windows.svg"
+                              alt="Windows"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            Windows Waitlist
+                          </div>
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
     </div>
   )

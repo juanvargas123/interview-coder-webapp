@@ -74,7 +74,7 @@ export default function SignInForm() {
               alt="Interview Coder"
               width={48}
               height={48}
-              className="rounded-lg"
+              className="rounded-full"
             />
             <h2 className="text-2xl font-semibold text-white">
               Log in to Interview Coder
