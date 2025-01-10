@@ -127,58 +127,60 @@ export function PaymentMethodModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-gray-900 border border-gray-800">
+      <DialogContent className="bg-[#0A0A0A] border border-white/[0.06] p-4 lg:p-5 max-w-[425px] rounded-[16px] shadow-2xl overflow-hidden mx-4 lg:mx-0">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-white">
+          <DialogTitle className="text-base lg:text-[18px] font-medium text-white mb-1.5">
             Payment Methods
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-[12px] lg:text-[13px] text-[#8F8F8F]">
             Manage your payment methods for subscription billing.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4">
+        <div className="space-y-3 mt-4">
           {paymentMethods.map((method) => (
             <div
               key={method.id}
-              className="flex items-center justify-between p-4 bg-gray-800/50 border border-gray-700 rounded-lg"
+              className="flex items-center justify-between p-3 lg:p-4 bg-[#141414] border border-white/[0.06] rounded-[10px]"
             >
               <div className="flex items-center gap-3">
-                <div className="w-12 h-8 flex items-center">
+                <div className="w-10 h-7 lg:w-12 lg:h-8 flex items-center">
                   {getCardBrandIcon(method.brand)}
                 </div>
                 <div>
-                  <p className="font-medium text-white">
+                  <p className="text-[12px] lg:text-[13px] font-medium text-white">
                     {method.brand.charAt(0).toUpperCase() +
                       method.brand.slice(1)}{" "}
                     •••• {method.last4}
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-[12px] lg:text-[13px] text-[#8F8F8F]">
                     Expires {method.exp_month.toString().padStart(2, "0")}/
                     {method.exp_year}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 lg:gap-3">
                 {!method.isDefault && (
                   <>
                     <button
                       onClick={() => handleSetDefault(method.id)}
                       disabled={loading}
-                      className="text-sm text-blue-400 hover:text-blue-300 disabled:opacity-50 transition-colors"
+                      className="px-2.5 lg:px-3 py-1 lg:py-1.5 text-[12px] lg:text-[13px] font-medium rounded-[8px] text-[#45FF88] hover:bg-[#152015] border border-[#45FF88]/10 disabled:opacity-50 transition-all"
                     >
                       Make Default
                     </button>
                     <button
                       onClick={() => handleRemove(method.id)}
                       disabled={loading}
-                      className="text-sm text-red-400 hover:text-red-300 disabled:opacity-50 transition-colors"
+                      className="px-2.5 lg:px-3 py-1 lg:py-1.5 text-[12px] lg:text-[13px] font-medium rounded-[8px] text-[#FF4545] hover:bg-[#1F1315] border border-[#FF4545]/10 disabled:opacity-50 transition-all"
                     >
                       Remove
                     </button>
                   </>
                 )}
                 {method.isDefault && (
-                  <span className="text-sm text-gray-400">Default</span>
+                  <span className="px-2 lg:px-2.5 py-0.5 text-[12px] lg:text-[13px] font-medium bg-[#152015] text-[#45FF88] rounded-full border border-[#45FF88]/10">
+                    Default
+                  </span>
                 )}
               </div>
             </div>
@@ -186,7 +188,7 @@ export function PaymentMethodModal({
           <button
             onClick={handleAddCard}
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded disabled:opacity-50 transition-colors"
+            className="w-full px-3 py-2 text-[12px] lg:text-[13px] font-medium rounded-[10px] text-white bg-[#141414] border border-white/[0.06] hover:bg-[#1A1A1A] transition-all disabled:opacity-50"
           >
             {loading ? "Processing..." : "Add New Card"}
           </button>
