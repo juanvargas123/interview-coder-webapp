@@ -20,7 +20,7 @@ export default function DashboardPage() {
       } = await supabase.auth.getSession()
 
       if (!session) {
-        router.push("/auth")
+        router.push("/signin")
         return
       }
 

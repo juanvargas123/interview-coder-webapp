@@ -16,9 +16,9 @@ export default function PoliciesPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-neutral-300">
-                We offer a 7-day money-back guarantee for our software
+                We offer a 24-hour money-back guarantee for our software
                 subscription. If you're not satisfied with our service, you can
-                request a full refund within 7 days of your purchase by
+                request a full refund within 24 hours of your purchase by
                 contacting our customer service team.
               </p>
               <p className="text-neutral-300">To request a refund:</p>

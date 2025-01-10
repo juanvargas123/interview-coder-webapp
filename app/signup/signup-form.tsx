@@ -8,39 +8,77 @@ import Navbar from "@/components/sections/Navbar"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
-export default function SignInForm() {
+export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [shake, setShake] = useState(false)
+  const [passwordError, setPasswordError] = useState("")
   const searchParams = useSearchParams()
   const router = useRouter()
   const next = searchParams.get("next")
 
-  async function signInWithEmail(e: React.FormEvent) {
+  const validatePassword = (value: string) => {
+    if (value.length < 6) {
+      setPasswordError("Password must be at least 6 characters")
+      return false
+    }
+    setPasswordError("")
+    return true
+  }
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setPassword(value)
+    if (value) validatePassword(value)
+    else setPasswordError("")
+  }
+
+  async function signUpWithEmail(e: React.FormEvent) {
     e.preventDefault()
+    if (!validatePassword(password)) {
+      setShake(true)
+      setTimeout(() => setShake(false), 500)
+      return
+    }
+
     setIsLoading(true)
     setError("")
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: undefined,
+          data: {
+            email_confirmed: true
+          }
+        }
+      })
+      if (signUpError) throw signUpError
+
+      // Automatically sign in after signup
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password
       })
-      if (error) throw error
+      if (signInError) throw signInError
+
       router.push(next || "/")
     } catch (error) {
-      console.error("Error signing in with email:", error)
+      console.error("Error signing up:", error)
       setError("Something went wrong, try again later")
       setShake(true)
-      setTimeout(() => setShake(false), 500) // Remove shake class after animation
+      setTimeout(() => setShake(false), 500)
     } finally {
       setIsLoading(false)
     }
   }
 
-  async function signInWithGoogle() {
+  async function signUpWithGoogle() {
     setIsLoading(true)
+    setError("")
     try {
       const redirectUrl = `${window.location.origin}/auth/callback${
         next ? `?next=${encodeURIComponent(next)}` : ""
@@ -58,7 +96,10 @@ export default function SignInForm() {
 
       if (error) throw error
     } catch (error) {
-      console.error("Error signing in with Google:", error)
+      console.error("Error signing up with Google:", error)
+      setError("Something went wrong with Google sign up")
+      setShake(true)
+      setTimeout(() => setShake(false), 500)
       setIsLoading(false)
     }
   }
@@ -77,12 +118,12 @@ export default function SignInForm() {
               className="rounded-lg"
             />
             <h2 className="text-2xl font-semibold text-white">
-              Log in to Interview Coder
+              Create your account
             </h2>
 
             <div className="w-full max-w-sm space-y-4">
               <button
-                onClick={signInWithGoogle}
+                onClick={signUpWithGoogle}
                 disabled={isLoading}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#1A1A1A] hover:bg-[#242424] text-white rounded-2xl border border-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
@@ -118,7 +159,7 @@ export default function SignInForm() {
                 </div>
               </div>
 
-              <form onSubmit={signInWithEmail} className="space-y-3">
+              <form onSubmit={signUpWithEmail} className="space-y-3">
                 <div className="space-y-1">
                   <input
                     type="email"
@@ -138,35 +179,40 @@ export default function SignInForm() {
                     <p className="text-sm text-red-500 px-1">{error}</p>
                   )}
                 </div>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={cn(
-                    "w-full px-4 py-3 text-white rounded-2xl border focus:outline-none text-sm font-medium placeholder:text-[#989898] placeholder:font-medium transition-colors frosted-glass",
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-white/10 focus:border-white/20",
-                    shake && "shake"
+                <div className="space-y-1">
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    className={cn(
+                      "w-full px-4 py-3 text-white rounded-2xl border focus:outline-none text-sm font-medium placeholder:text-[#989898] placeholder:font-medium transition-colors frosted-glass",
+                      passwordError
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-white/10 focus:border-white/20",
+                      shake && "shake"
+                    )}
+                    required
+                  />
+                  {passwordError && (
+                    <p className="text-sm text-red-500 px-1">{passwordError}</p>
                   )}
-                  required
-                />
+                </div>
                 <button
                   type="submit"
-                  disabled={isLoading || !email || !password}
+                  disabled={isLoading || !email || !password || !!passwordError}
                   className="relative w-full px-4 py-3 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium auth-button"
                 >
-                  {isLoading ? "Signing in..." : "Sign in"}
+                  {isLoading ? "Creating account..." : "Create account"}
                 </button>
               </form>
 
               <Link
-                href="/signup"
+                href="/signin"
                 className="block w-full border border-white/10 rounded-2xl p-4 hover:bg-[#1A1A1A] transition-colors group"
               >
                 <p className="text-center text-sm text-[#989898]">
-                  Don't have an account? Sign up →
+                  Already have an account? Sign in →
                 </p>
               </Link>
             </div>

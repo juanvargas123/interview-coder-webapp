@@ -45,8 +45,7 @@ export async function POST(req: Request) {
       subscription_data: {
         metadata: {
           user_id: userId
-        },
-        trial_period_days: 7
+        }
       },
       line_items: [
         {

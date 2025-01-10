@@ -35,8 +35,7 @@ export async function GET() {
       subscription_data: {
         metadata: {
           user_id: TEST_USER_ID
-        },
-        trial_period_days: 7 // Adding a 7-day trial
+        }
       },
       metadata: {
         user_id: TEST_USER_ID,

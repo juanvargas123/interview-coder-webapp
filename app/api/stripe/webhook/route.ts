@@ -8,8 +8,7 @@ const relevantEvents = new Set([
   "checkout.session.completed",
   "customer.subscription.created",
   "customer.subscription.updated",
-  "customer.subscription.deleted",
-  "customer.subscription.trial_will_end"
+  "customer.subscription.deleted"
 ])
 
 export async function POST(req: Request) {
@@ -21,10 +20,8 @@ export async function POST(req: Request) {
   const { data, error } = await supabase.from("subscriptions").select("*")
   console.log("Supabase test:", { data, error })
 
-  const headersList = headers()
-  const signature = headersList.has("stripe-signature")
-    ? headersList.get("stripe-signature")!
-    : ""
+  const headersList = await headers()
+  const signature = headersList.get("stripe-signature") || ""
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
   console.log("Webhook secret:", webhookSecret)
@@ -85,11 +82,8 @@ export async function POST(req: Request) {
                 cancel_at: subscription.cancel_at
                   ? new Date(subscription.cancel_at * 1000)
                   : null,
-                trial_start: subscription.trial_start
-                  ? new Date(subscription.trial_start * 1000)
-                  : null,
-                trial_end: subscription.trial_end
-                  ? new Date(subscription.trial_end * 1000)
+                canceled_at: subscription.canceled_at
+                  ? new Date(subscription.canceled_at * 1000)
                   : null
               },
               {
@@ -121,12 +115,6 @@ export async function POST(req: Request) {
                 : null,
               canceled_at: subscription.canceled_at
                 ? new Date(subscription.canceled_at * 1000)
-                : null,
-              trial_start: subscription.trial_start
-                ? new Date(subscription.trial_start * 1000)
-                : null,
-              trial_end: subscription.trial_end
-                ? new Date(subscription.trial_end * 1000)
                 : null
             },
             {
@@ -146,12 +134,6 @@ export async function POST(req: Request) {
               cancel_at: new Date(subscription.cancel_at! * 1000)
             })
             .eq("stripe_subscription_id", subscription.id)
-          break
-        }
-
-        case "customer.subscription.trial_will_end": {
-          const subscription = event.data.object as Stripe.Subscription
-          // Optionally notify the user that their trial is ending soon
           break
         }
 

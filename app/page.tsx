@@ -96,10 +96,16 @@ export default function Home() {
         </div>
       </main>
       {/* Steps Section */}
-      <StepsSection />
-      <CommandsSection />
+      <div id="how-to-use">
+        <StepsSection />
+      </div>
+      <div id="pricing">
+        <CommandsSection />
+      </div>
       {/* FAQ Section */}
-      <FaqSection />
+      <div id="faq">
+        <FaqSection />
+      </div>
       <Footer />
       {/* </BackgroundBeamsWithCollision> */}
     </div>

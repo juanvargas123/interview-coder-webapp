@@ -1,15 +1,21 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import React from "react"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getCardBrandIcon(brand: string) {
+export function getCardBrandIcon(brand: string): React.ReactNode {
   switch (brand.toLowerCase()) {
     case "visa":
       return (
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z"
             fill="#1434CB"
@@ -38,7 +44,12 @@ export function getCardBrandIcon(brand: string) {
       )
     case "mastercard":
       return (
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z"
             fill="#252525"
@@ -55,58 +66,30 @@ export function getCardBrandIcon(brand: string) {
       )
     case "amex":
       return (
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z"
             fill="#006FCF"
           />
           <path
-            d="M10 29.0001V18.8001H38V29.0001H10Z"
-            fill="url(#paint0_linear)"
+            d="M24 28C26.2091 28 28 26.2091 28 24C28 21.7909 26.2091 20 24 20C21.7909 20 20 21.7909 20 24C20 26.2091 21.7909 28 24 28Z"
+            fill="#F7B600"
           />
-          <path
-            d="M16.4 21.0001L15.2 24.2001L14 21.0001H12V24.6001L10.4 21.0001H8.8L7.2 24.8001H8.4L8.8 24.0001H10.4L10.8 24.8001H12.8V21.8001L14 24.8001H15.2L16.4 21.8001V24.8001H17.6V21.0001H16.4Z"
-            fill="white"
-          />
-          <path
-            d="M18.4 24.8001H21.6V24.0001H19.2V23.2001H21.6V22.4001H19.2V21.6001H21.6V21.0001H18.4V24.8001Z"
-            fill="white"
-          />
-          <path
-            d="M25.6 22.4001C25.6 21.8001 25.2 21.4001 24.8 21.2001C24.4 21.0001 24 21.0001 23.2 21.0001H21.6V24.8001H22.8V23.4001H22.9766L24.4 24.8001H26L24.2 23.4001C25 23.2001 25.6 22.8001 25.6 22.4001ZM23.2 22.8001H22.8V21.8001H23.2C23.6 21.8001 24 21.8001 24 22.2001C24 22.6001 23.6 22.8001 23.2 22.8001Z"
-            fill="white"
-          />
-          <path
-            d="M26 24.8001H29.2V24.0001H26.8V23.2001H29.2V22.4001H26.8V21.6001H29.2V21.0001H26V24.8001Z"
-            fill="white"
-          />
-          <path
-            d="M29.6 24.8001H31.2L32.4 22.4001L33.6 24.8001H35.2L33.2 21.0001H31.6L29.6 24.8001Z"
-            fill="white"
-          />
-          <path
-            d="M35.2 24.8001H38.4V24.0001H36V23.2001H38.4V22.4001H36V21.6001H38.4V21.0001H35.2V24.8001Z"
-            fill="white"
-          />
-          <path d="M9.6 23.6001L8.8 22.0001L8 23.6001H9.6Z" fill="white" />
-          <defs>
-            <linearGradient
-              id="paint0_linear"
-              x1="10"
-              y1="23.9001"
-              x2="38"
-              y2="23.9001"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#006FCF" />
-              <stop offset="1" stopColor="#006FCF" />
-            </linearGradient>
-          </defs>
         </svg>
       )
     default:
       return (
-        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z"
             fill="#E6E6E6"
