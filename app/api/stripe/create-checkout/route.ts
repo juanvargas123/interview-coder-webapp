@@ -4,65 +4,57 @@ import { createClient } from "@/lib/supabase/server"
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await req.json()
     const supabase = createClient()
-
     const {
       data: { session }
     } = await supabase.auth.getSession()
-    if (!session || session.user.id !== userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    if (!session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
     }
 
-    // Create or retrieve Stripe customer
-    const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select("stripe_customer_id")
-      .eq("user_id", userId)
-      .single()
+    const userId = session.user.id
+    const email = session.user.email
 
-    let customerId = subscription?.stripe_customer_id
+    // Get or create customer
+    let customerId: string
+    const customers = await stripe.customers.list({
+      email: email
+    })
 
-    if (!customerId) {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser()
+    if (customers.data.length > 0) {
+      customerId = customers.data[0].id
+    } else {
       const customer = await stripe.customers.create({
-        email: user.email,
+        email: email,
         metadata: {
-          supabase_user_id: userId
+          userId: userId
         }
       })
       customerId = customer.id
     }
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       client_reference_id: userId,
-      payment_method_types: ["card"],
       mode: "subscription",
-      allow_promotion_codes: true,
-      subscription_data: {
-        metadata: {
-          userId
-        }
-      },
+      payment_method_types: ["card"],
       line_items: [
         {
           price: process.env.STRIPE_PRICE_ID,
           quantity: 1
         }
       ],
-      success_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/dashboard?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/billing?canceled=true`
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/`
     })
 
-    return NextResponse.json({ sessionId: session.id })
+    return NextResponse.json({ url: checkoutSession.url })
   } catch (error) {
-    console.log(error)
+    console.error("Error:", error)
     return NextResponse.json(
-      { error: "Something went wrong." },
+      { error: "Internal server error" },
       { status: 500 }
     )
   }
