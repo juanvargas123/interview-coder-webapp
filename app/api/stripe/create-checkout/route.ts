@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 
 export async function POST(req: Request) {
   try {
+    const { couponId } = await req.json()
     const supabase = createClient()
     const {
       data: { session }
@@ -46,7 +47,9 @@ export async function POST(req: Request) {
           quantity: 1
         }
       ],
-      allow_promotion_codes: true,
+      ...(couponId
+        ? { discounts: [{ coupon: couponId }] }
+        : { allow_promotion_codes: true }),
       success_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/settings?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/`
     })
