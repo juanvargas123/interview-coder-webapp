@@ -2,8 +2,9 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { supabase } from "@/lib/supabase/client"
+import { useUser } from "@/lib/hooks/use-user"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,35 +16,31 @@ import { cn } from "@/lib/utils"
 import { ChevronDown, Menu, Lock } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Button } from "../ui/button"
+import { Skeleton } from "../ui/skeleton"
 
 export default function Navbar() {
   const [isSilicon, setIsSilicon] = useState(false)
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isSubscribed, setIsSubscribed] = useState(false)
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
+  const { user, loading, isSubscribed } = useUser()
 
-  // Check auth state and subscription
-  const checkAuthAndSubscription = async () => {
-    const {
-      data: { session }
-    } = await supabase.auth.getSession()
-    setUser(session?.user ?? null)
-
-    if (session?.user) {
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .single()
-
-      setIsSubscribed(!!sub)
+  // Add click outside handler
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        !menuButtonRef.current?.contains(event.target as Node)
+      ) {
+        setMobileMenuOpen(false)
+      }
     }
-
-    setLoading(false)
-  }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,29 +54,8 @@ export default function Navbar() {
     const platform = navigator.platform.toLowerCase()
     setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
 
-    checkAuthAndSubscription()
-
-    // Listen for auth changes
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        const { data: sub } = await supabase
-          .from("subscriptions")
-          .select("*")
-          .eq("user_id", session.user.id)
-          .single()
-
-        setIsSubscribed(!!sub)
-      } else {
-        setIsSubscribed(false)
-      }
-    })
-
     return () => {
       window.removeEventListener("scroll", handleScroll)
-      subscription.unsubscribe()
     }
   }, [])
 
@@ -90,6 +66,190 @@ export default function Navbar() {
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     router.push("/")
+  }
+
+  const renderAuthSection = () => {
+    if (loading) {
+      return (
+        <div className="hidden md:flex items-center gap-4">
+          <Skeleton className="h-9 w-[100px]" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </div>
+      )
+    }
+
+    if (user) {
+      return (
+        <>
+          {!isSubscribed && (
+            <Button
+              onClick={() => router.push("/checkout")}
+              className="bg-black hover:bg-black/90 text-primary border border-primary transition-all px-5 py-2 text-sm font-semibold h-9"
+            >
+              <Lock className="w-4 h-4 mr-2 text-primary" />
+              Subscribe
+            </Button>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <ChevronDown className="w-4 h-4 text-[#989898]" />
+                <div className="relative">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.user_metadata?.avatar_url} />
+                    <AvatarFallback className="bg-primary text-xs">
+                      {user.email?.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  {isSubscribed && (
+                    <div className="absolute -top-1 -right-3 bg-primary text-black text-[10px] font-semibold px-1.5 rounded-full">
+                      PRO
+                    </div>
+                  )}
+                </div>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-56 bg-[#1A1A1A] backdrop-blur-lg border-white/10 rounded-xl py-2 space-y-1"
+            >
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/settings"
+                  className="cursor-pointer text-[#ABABAB] hover:text-white px-3 py-2.5"
+                >
+                  Settings
+                </Link>
+              </DropdownMenuItem>
+              <div className="h-px bg-white/10 mx-3 my-1" />
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                className="cursor-pointer text-[#FF4545] hover:text-red-400 px-3 py-2.5"
+              >
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
+      )
+    }
+
+    return (
+      <>
+        <Link
+          href="/signin"
+          className="text-[#989898] hover:text-white transition-colors text-sm"
+        >
+          Sign in
+        </Link>
+        <Button
+          asChild
+          className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium"
+        >
+          <Link href={downloadUrl} className="flex items-center gap-2">
+            <Image
+              src="/apple.svg"
+              alt="Apple"
+              width={16}
+              height={16}
+              className="w-4 h-4"
+            />
+            Download
+          </Link>
+        </Button>
+      </>
+    )
+  }
+
+  const renderMobileAuthSection = () => {
+    if (loading) {
+      return (
+        <div className="pt-2 border-t border-white/10">
+          <div className="flex items-center gap-3 py-2">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <Skeleton className="h-4 w-[120px]" />
+          </div>
+          <Skeleton className="h-9 w-full mt-2" />
+        </div>
+      )
+    }
+
+    if (user) {
+      return (
+        <>
+          <div className="flex items-center gap-3 py-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user.user_metadata?.avatar_url} />
+              <AvatarFallback className="bg-primary text-xs">
+                {user.email?.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="text-sm text-white">{user.email}</span>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            asChild
+            className="w-full justify-start text-[#989898] hover:text-white"
+          >
+            <Link href="/settings">Settings</Link>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleSignOut}
+            className="w-full justify-start text-[#FF4545] hover:text-red-400"
+          >
+            Log out
+          </Button>
+        </>
+      )
+    }
+
+    return (
+      <>
+        <Button
+          variant="ghost"
+          asChild
+          className="w-full justify-start text-[#989898] hover:text-white mb-2"
+        >
+          <Link href="/signin">Sign in</Link>
+        </Button>
+        <Button
+          asChild
+          className="w-full bg-primary hover:bg-primary/90 text-black"
+        >
+          <Link
+            href={downloadUrl}
+            className="flex items-center gap-2 justify-center"
+          >
+            <Image
+              src="/apple.svg"
+              alt="Apple"
+              width={16}
+              height={16}
+              className="w-4 h-4"
+            />
+            Download
+          </Link>
+        </Button>
+        <Button asChild variant="secondary" className="w-full mt-2">
+          <Link
+            href="/waitlist"
+            className="flex items-center gap-2 justify-center"
+          >
+            <Image
+              src="/windows.svg"
+              alt="Windows"
+              width={16}
+              height={16}
+              className="w-4 h-4"
+            />
+            Windows Waitlist
+          </Link>
+        </Button>
+      </>
+    )
   }
 
   return (
@@ -107,7 +267,7 @@ export default function Navbar() {
           <div className="h-full flex items-center justify-between px-6">
             <Link
               href="/"
-              className="text-white hover:text-white/80 transition-colors flex items-center gap-2"
+              className="text-white hover:text-white/80 transition-colors flex items-center gap-2 shrink-0"
             >
               <Image
                 src="/logo.svg"
@@ -119,116 +279,40 @@ export default function Navbar() {
               <span className="text-sm font-semibold">Interview Coder</span>
             </Link>
 
-            <div className="hidden md:flex items-center justify-center flex-1 gap-8">
-              <Link
-                href="#how-to-use"
-                className="text-[#989898] hover:text-white transition-colors text-sm"
-              >
-                How to Use
-              </Link>
-              <Link
-                href="#pricing"
-                className="text-[#989898] hover:text-white transition-colors text-sm"
-              >
-                Pricing
-              </Link>
-              <Link
-                href="#faq"
-                className="text-[#989898] hover:text-white transition-colors text-sm"
-              >
-                FAQ
-              </Link>
+            <div className="flex-1 flex items-center justify-center">
+              <div className="hidden md:flex items-center gap-8">
+                <Link
+                  href="#how-to-use"
+                  className="text-[#989898] hover:text-white transition-colors text-sm"
+                >
+                  How to Use
+                </Link>
+                <Link
+                  href="#pricing"
+                  className="text-[#989898] hover:text-white transition-colors text-sm"
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="#faq"
+                  className="text-[#989898] hover:text-white transition-colors text-sm"
+                >
+                  FAQ
+                </Link>
+              </div>
             </div>
 
-            <div className="hidden md:flex items-center gap-4">
-              {!loading &&
-                (user ? (
-                  <>
-                    {!isSubscribed && (
-                      <Button
-                        onClick={() => router.push("/checkout")}
-                        className="bg-black hover:bg-black/90 text-primary border border-primary transition-all px-5 py-2 text-sm font-semibold h-9"
-                      >
-                        <Lock className="w-4 h-4 mr-2 text-primary" />
-                        Subscribe
-                      </Button>
-                    )}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                          <ChevronDown className="w-4 h-4 text-[#989898]" />
-                          <div className="relative">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage
-                                src={user.user_metadata?.avatar_url}
-                              />
-                              <AvatarFallback className="bg-primary text-xs">
-                                {user.email?.slice(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            {isSubscribed && (
-                              <div className="absolute -top-1 -right-3 bg-primary text-black text-[10px] font-semibold px-1.5 rounded-full">
-                                PRO
-                              </div>
-                            )}
-                          </div>
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="w-56 bg-[#1A1A1A] backdrop-blur-lg border-white/10 rounded-xl py-2 space-y-1"
-                      >
-                        <DropdownMenuItem asChild>
-                          <Link
-                            href="/settings"
-                            className="cursor-pointer text-[#ABABAB] hover:text-white px-3 py-2.5"
-                          >
-                            Settings
-                          </Link>
-                        </DropdownMenuItem>
-                        <div className="h-px bg-white/10 mx-3 my-1" />
-                        <DropdownMenuItem
-                          onClick={handleSignOut}
-                          className="cursor-pointer text-[#FF4545] hover:text-red-400 px-3 py-2.5"
-                        >
-                          Log out
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      href="/signin"
-                      className="text-[#989898] hover:text-white transition-colors text-sm"
-                    >
-                      Sign in
-                    </Link>
-                    <Button
-                      asChild
-                      className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium"
-                    >
-                      <Link
-                        href={downloadUrl}
-                        className="flex items-center gap-2"
-                      >
-                        <Image
-                          src="/apple.svg"
-                          alt="Apple"
-                          width={16}
-                          height={16}
-                          className="w-4 h-4"
-                        />
-                        Download
-                      </Link>
-                    </Button>
-                  </>
-                ))}
+            <div className="hidden md:flex items-center gap-4 shrink-0">
+              {renderAuthSection()}
             </div>
 
             <button
+              ref={menuButtonRef}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors"
+              className={cn(
+                "md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors",
+                mobileMenuOpen && "bg-white/5"
+              )}
             >
               <Menu className="w-5 h-5 text-white" />
             </button>
@@ -236,23 +320,26 @@ export default function Navbar() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden border-t border-white/10 bg-inherit backdrop-blur-xl rounded-b-2xl">
+            <div
+              ref={mobileMenuRef}
+              className="md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl"
+            >
               <div className="px-6 py-4 space-y-4">
                 <Link
                   href="#how-to-use"
-                  className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+                  className="block text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   How to Use
                 </Link>
                 <Link
                   href="#pricing"
-                  className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+                  className="block text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   Pricing
                 </Link>
                 <Link
                   href="#faq"
-                  className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+                  className="block text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   FAQ
                 </Link>
@@ -295,14 +382,15 @@ export default function Navbar() {
                         >
                           Sign in
                         </Link>
-                        <div className="space-y-2">
-                          <Link
-                            href={downloadUrl}
-                            className={cn(
-                              "block w-full text-black text-center bg-primary hover:bg-primary/90 transition-all px-4 py-1.5 text-sm font-medium rounded-lg"
-                            )}
+                        <div className="space-y-2 mt-2">
+                          <Button
+                            asChild
+                            className="w-full bg-primary hover:bg-primary/90 text-black"
                           >
-                            <div className="flex items-center gap-2 justify-center">
+                            <Link
+                              href={downloadUrl}
+                              className="flex items-center gap-2 justify-center"
+                            >
                               <Image
                                 src="/apple.svg"
                                 alt="Apple"
@@ -311,13 +399,17 @@ export default function Navbar() {
                                 className="w-4 h-4"
                               />
                               Download
-                            </div>
-                          </Link>
-                          <Link
-                            href="/waitlist"
-                            className="block w-full text-white text-center bg-[#1A1A1A] hover:bg-[#252525] transition-all px-4 py-1.5 text-sm font-medium rounded-lg"
+                            </Link>
+                          </Button>
+                          <Button
+                            asChild
+                            variant="secondary"
+                            className="w-full"
                           >
-                            <div className="flex items-center gap-2 justify-center">
+                            <Link
+                              href="/waitlist"
+                              className="flex items-center gap-2 justify-center"
+                            >
                               <Image
                                 src="/windows.svg"
                                 alt="Windows"
@@ -326,8 +418,8 @@ export default function Navbar() {
                                 className="w-4 h-4"
                               />
                               Windows Waitlist
-                            </div>
-                          </Link>
+                            </Link>
+                          </Button>
                         </div>
                       </>
                     )}
