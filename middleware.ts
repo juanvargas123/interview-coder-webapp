@@ -23,8 +23,28 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Get session - this will be used by the client components to show correct UI
-  await supabase.auth.getSession()
+  // Get session
+  const {
+    data: { session }
+  } = await supabase.auth.getSession()
+
+  // If on checkout page and logged in, check subscription
+  if (request.nextUrl.pathname === "/checkout" && session) {
+    // Get subscription status
+    const { data: subscription } = await supabase
+      .from("subscriptions")
+      .select("status, cancel_at")
+      .eq("user_id", session.user.id)
+      .single()
+
+    const isSubscribed =
+      subscription?.status === "active" && !subscription?.cancel_at
+
+    // If subscribed, redirect to settings
+    if (isSubscribed) {
+      return NextResponse.redirect(new URL("/", request.url))
+    }
+  }
 
   // Allow Stripe webhook without auth
   if (request.nextUrl.pathname.startsWith("/api/stripe/webhook")) {
