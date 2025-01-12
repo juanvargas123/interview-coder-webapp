@@ -4,22 +4,12 @@
 
 @layer base {
   :root {
-    /* Core brand colors */
-    --burgundy: 45 100% 50%; /* Bright yellow */
-    --burgundy-light: 45 100% 60%; /* Lighter yellow */
-    --burgundy-dark: 45 100% 40%; /* Darker yellow */
-
     /* Theme colors */
     --background: 0 0% 0%; /* #0f0f0f - rgb(15,15,15) */
     --foreground: 0 0% 100%;
-    --primary: 45 100% 50%; /* Matching bright yellow */
+    --primary: 60 100% 50%; /* Pure yellow #FFFF00 */
     --primary-foreground: 0 0% 0%; /* Black text for contrast */
-    --muted: 45 30% 50%;
-
-    /* Accent colors */
-    --accent-gold: 45 100% 50%; /* Bright yellow */
-    --accent-red: 45 100% 60%; /* Lighter yellow for accent */
-    --accent-dark: 45 30% 15%;
+    --muted: 60 30% 50%;
   }
 }
 
@@ -29,9 +19,31 @@
   }
 }
 
+/* Glowy input styles */
+.glowy-input {
+  @apply relative bg-black/50 border-primary/50 text-primary placeholder-primary/50;
+  text-shadow: 0 0 10px hsl(45 100% 50% / 0.5);
+}
+
+.glowy-input:focus {
+  @apply ring-primary border-primary;
+  box-shadow: 0 0 20px hsl(45 100% 50% / 0.3);
+}
+
+/* Glowy button styles */
+.glowy-button {
+  @apply relative bg-primary hover:bg-primary/90 text-black transition-all;
+  box-shadow: 0 0 20px hsl(45 100% 50% / 0.3);
+}
+
+.glowy-button::before {
+  content: "";
+  @apply absolute -inset-0.5 bg-primary/30 rounded-[16px] blur-[8px] -z-10;
+}
+
 /* Custom gradient for highlights */
-.infernal-gradient {
-  @apply bg-gradient-to-r from-[#FFD700] via-[#FFC000] to-[#FFB000];
+.highlighter-gradient {
+  @apply bg-gradient-to-r from-[#FFFF00] via-[#FFFF00] to-[#FFEE00];
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;

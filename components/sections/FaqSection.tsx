@@ -184,7 +184,7 @@ export function FaqSection() {
                 variant="outline"
                 className="gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] border-neutral-700 hover:bg-neutral-800"
               >
-                <Link href="#" className="flex items-center gap-2">
+                <Link href="/waitlist" className="flex items-center gap-2">
                   <Image
                     src="/windows.svg"
                     alt="Windows"

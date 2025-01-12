@@ -62,7 +62,7 @@ export default function Home() {
             className="mb-10  text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] max-w-4xl mx-auto"
           >
             <span className="white-gradient">Invisible AI for </span>{" "}
-            <span className="infernal-gradient">Technical</span>{" "}
+            <span className="highlighter-gradient">Technical</span>{" "}
             <span className="white-gradient">Interviews</span>
           </motion.h1>
 
@@ -89,13 +89,13 @@ export default function Home() {
               variant="highlight"
               className="w-full md:w-auto max-w-[280px] h-10 text-sm"
             >
-              <Link href="/waitlist" className="flex gap-2 text-white">
+              <Link href="/waitlist" className="flex gap-2">
                 <Image
                   src="/windows.svg"
                   alt="Windows"
                   width={16}
                   height={16}
-                  className="w-4 h-4"
+                  className="w-5 h-5"
                 />
                 Windows Waitlist
               </Link>
