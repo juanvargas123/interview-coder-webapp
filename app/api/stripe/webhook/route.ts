@@ -168,17 +168,29 @@ export async function POST(req: Request) {
           return NextResponse.json({ received: true })
         }
       } else {
+        // Handle payment_intent.succeeded
         const paymentIntent = event.data.object as Stripe.PaymentIntent
         userId = paymentIntent.metadata?.user_id
         customerId = paymentIntent.customer as string
-        subscriptionId = paymentIntent.metadata?.subscriptionId
 
-        console.log("Payment intent details:", {
-          userId,
-          customerId,
-          subscriptionId,
-          metadata: paymentIntent.metadata
-        })
+        // If this is a subscription-related payment, get the subscription ID
+        if (paymentIntent.metadata?.subscriptionId) {
+          subscriptionId = paymentIntent.metadata.subscriptionId
+          console.log("Payment intent details:", {
+            userId,
+            customerId,
+            subscriptionId,
+            metadata: paymentIntent.metadata
+          })
+        } else {
+          // If no subscription ID, this might be a one-time payment or setup
+          console.log("Payment succeeded without subscription:", {
+            userId,
+            customerId,
+            metadata: paymentIntent.metadata
+          })
+          return NextResponse.json({ received: true })
+        }
       }
 
       if (!userId || !customerId) {
@@ -193,15 +205,18 @@ export async function POST(req: Request) {
         )
       }
 
-      // Get subscription details from Stripe if we have a subscription ID
-      let subscription: Stripe.Subscription | null = null
-      if (subscriptionId) {
-        subscription = await stripe.subscriptions.retrieve(subscriptionId)
-        console.log("Retrieved subscription details:", {
-          status: subscription.status,
-          currentPeriodEnd: subscription.current_period_end
-        })
+      // Only proceed with subscription update if we have a subscription ID
+      if (!subscriptionId) {
+        console.log("No subscription ID found, skipping subscription update")
+        return NextResponse.json({ received: true })
       }
+
+      // Get subscription details from Stripe
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+      console.log("Retrieved subscription details:", {
+        status: subscription.status,
+        currentPeriodEnd: subscription.current_period_end
+      })
 
       console.log("Creating/updating subscription for user:", userId)
 
@@ -210,20 +225,20 @@ export async function POST(req: Request) {
         .from("subscriptions")
         .upsert({
           user_id: userId,
-          status: subscription ? subscription.status : "active",
+          status: subscription.status,
           plan: "pro",
-          current_period_start: subscription
-            ? new Date(subscription.current_period_start * 1000).toISOString()
-            : new Date().toISOString(),
-          current_period_end: subscription
-            ? new Date(subscription.current_period_end * 1000).toISOString()
-            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
+          current_period_start: new Date(
+            subscription.current_period_start * 1000
+          ).toISOString(),
+          current_period_end: new Date(
+            subscription.current_period_end * 1000
+          ).toISOString(),
           stripe_customer_id: customerId,
-          stripe_subscription_id: subscriptionId || null,
-          cancel_at: subscription?.cancel_at
+          stripe_subscription_id: subscriptionId,
+          cancel_at: subscription.cancel_at
             ? new Date(subscription.cancel_at * 1000).toISOString()
             : null,
-          canceled_at: subscription?.canceled_at
+          canceled_at: subscription.canceled_at
             ? new Date(subscription.canceled_at * 1000).toISOString()
             : null
         })
@@ -237,6 +252,7 @@ export async function POST(req: Request) {
       }
 
       console.log("Successfully processed subscription for user:", userId)
+      return NextResponse.json({ received: true })
     } else {
       console.log("Unhandled event type:", event.type)
     }

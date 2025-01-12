@@ -82,11 +82,8 @@ export default function Navbar() {
       return (
         <>
           {!isSubscribed && (
-            <Button
-              onClick={() => router.push("/checkout")}
-              className="bg-black hover:bg-black/90 text-primary border border-primary transition-all px-5 py-2 text-sm font-semibold h-9"
-            >
-              <Lock className="w-4 h-4 mr-2 text-primary" />
+            <Button onClick={() => router.push("/checkout")}>
+              <Lock className="w-4 h-4 mr-2 text-black" />
               Subscribe
             </Button>
           )}
