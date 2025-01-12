@@ -1,26 +1,18 @@
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
+import { Inter } from "next/font/google"
+import { ReactQueryProvider } from "@/lib/react-query/provider"
 
-const font = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans"
-})
-
-export const metadata: Metadata = {
-  title: "Interview Coder",
-  description: "Never fail a Leetcode interview again."
-}
+const inter = Inter({ subsets: ["latin"] })
 
 export default function RootLayout({
   children
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en" className={`${font.variable}`}>
-      <body className="min-h-screen bg-background antialiased max-w-screen overflow-x-hidden font-sans">
-        {children}
+    <html lang="en">
+      <body className={inter.className}>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
   )

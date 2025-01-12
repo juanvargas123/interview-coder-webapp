@@ -1,65 +1,76 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { supabase } from "@/lib/supabase/client"
 import { User } from "@supabase/supabase-js"
+import { useEffect } from "react"
 
 export interface ExtendedUser extends User {
-  user_metadata: {
-    avatar_url?: string
-    full_name?: string
-    name?: string
-    picture?: string
-    email?: string
+  isSubscribed?: boolean
+}
+
+async function fetchUserAndSubscription(): Promise<{
+  user: ExtendedUser | null
+  isSubscribed: boolean
+}> {
+  const {
+    data: { session }
+  } = await supabase.auth.getSession()
+
+  if (!session) {
+    return { user: null, isSubscribed: false }
+  }
+
+  // Get subscription status
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("status, cancel_at")
+    .eq("user_id", session.user.id)
+    .single()
+
+  const isSubscribed =
+    subscription?.status === "active" && !subscription?.cancel_at
+
+  return {
+    user: { ...session.user, isSubscribed },
+    isSubscribed
   }
 }
 
 export function useUser() {
-  const [user, setUser] = useState<ExtendedUser | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [isSubscribed, setIsSubscribed] = useState(false)
+  const queryClient = useQueryClient()
 
-  const checkSubscription = async (userId: string) => {
-    try {
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("*")
-        .eq("user_id", userId)
-        .single()
-      setIsSubscribed(!!sub)
-    } catch (error) {
-      console.error("Error checking subscription:", error)
-      setIsSubscribed(false)
-    }
-  }
+  const { data, isLoading } = useQuery({
+    queryKey: ["user"],
+    queryFn: fetchUserAndSubscription,
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    refetchInterval: 1000 * 60 * 5 // Refetch every 5 minutes
+  })
 
   useEffect(() => {
-    // Get initial user
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user as ExtendedUser)
-      if (user) {
-        checkSubscription(user.id)
-      }
-      setLoading(false)
-    })
-
-    // Listen for changes
+    // Set up auth state change listener
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setUser((session?.user as ExtendedUser) ?? null)
-      if (session?.user) {
-        await checkSubscription(session.user.id)
-      } else {
-        setIsSubscribed(false)
+    } = supabase.auth.onAuthStateChange(async (event) => {
+      if (
+        event === "SIGNED_IN" ||
+        event === "SIGNED_OUT" ||
+        event === "USER_UPDATED"
+      ) {
+        // Invalidate and refetch user data
+        queryClient.invalidateQueries({ queryKey: ["user"] })
       }
-      setLoading(false)
     })
 
+    // Cleanup subscription when component unmounts
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, [queryClient])
 
-  return { user, loading, isSubscribed }
+  return {
+    user: data?.user ?? null,
+    isSubscribed: data?.isSubscribed ?? false,
+    loading: isLoading
+  }
 }
