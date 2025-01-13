@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Navbar from "@/components/sections/Navbar"
 import { Button } from "@/components/ui/button"
@@ -11,7 +11,7 @@ import {
 } from "@supabase/auth-helpers-nextjs"
 import { useUser } from "@/lib/hooks/use-user"
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const { user, loading: userLoading, isSubscribed } = useUser()
   const router = useRouter()
   const [tokenData, setTokenData] = useState<{ user_id: string } | null>(null)
@@ -473,5 +473,25 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black">
+          <Navbar />
+          <div className="flex items-center justify-center min-h-screen px-4">
+            <div className="text-center space-y-4">
+              <h2 className="text-xl mb-4">Loading checkout...</h2>
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <CheckoutPageContent />
+    </Suspense>
   )
 }

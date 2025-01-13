@@ -57,7 +57,7 @@ export default function WaitlistPage() {
       <Navbar />
 
       <div className="flex-1 flex items-center">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 pt-16 lg:pt-0">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
             {/* Left column - Content */}
             <div className="flex flex-col justify-center">
@@ -118,21 +118,21 @@ export default function WaitlistPage() {
             </div>
 
             {/* Right column - Windows Image */}
-            <div className="order-first lg:order-last relative h-[300px] sm:h-[400px] lg:h-auto flex items-center justify-center">
+            <div className="order-first lg:order-last relative h-[250px] sm:h-[350px] lg:h-auto flex items-center justify-center">
               {/* Yellow misty background effect */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] rounded-full bg-[#FFFF00]/20 blur-[100px] " />
-                <div className="absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full bg-[#FFFF00]/10 blur-[80px]  delay-75" />
-                <div className="absolute w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] rounded-full bg-[#FFFF00]/5 blur-[60px]  delay-150" />
+                <div className="w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full bg-[#FFFF00]/20 blur-[100px] " />
+                <div className="absolute w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] rounded-full bg-[#FFFF00]/10 blur-[80px]  delay-75" />
+                <div className="absolute w-[100px] h-[100px] sm:w-[200px] sm:h-[200px] rounded-full bg-[#FFFF00]/5 blur-[60px]  delay-150" />
               </div>
 
               {/* Windows logo */}
-              <div className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px]">
+              <div className="relative w-[200px] h-[200px] sm:w-[260px] sm:h-[260px]">
                 <Image
                   src="/windows_yellow.png"
                   alt="Windows Logo"
-                  width={320}
-                  height={320}
+                  width={260}
+                  height={260}
                   className="object-contain w-full h-full opacity-80"
                   priority
                 />
