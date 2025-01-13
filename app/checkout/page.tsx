@@ -1,12 +1,27 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Navbar from "@/components/sections/Navbar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+  createClientComponentClient,
+  Session
+} from "@supabase/auth-helpers-nextjs"
+import { useUser } from "@/lib/hooks/use-user"
 
 export default function CheckoutPage() {
+  const { user, loading: userLoading, isSubscribed } = useUser()
+  const router = useRouter()
+  const [tokenData, setTokenData] = useState<{ user_id: string } | null>(null)
+  const [session, setSession] = useState<Session | null>(null)
+  const [isValidatingToken, setIsValidatingToken] = useState(true)
+
+  const [authError, setAuthError] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  const supabase = createClientComponentClient()
+
   const [loading, setLoading] = useState(false)
   const [couponCode, setCouponCode] = useState("")
   const [couponError, setCouponError] = useState("")
@@ -16,7 +31,270 @@ export default function CheckoutPage() {
     amount_off?: number | null
   } | null>(null)
   const [total, setTotal] = useState(20.0)
-  const router = useRouter()
+
+  const [isRateLimited, setIsRateLimited] = useState(false)
+  const [rateLimitSeconds, setRateLimitSeconds] = useState(0)
+  const [magicLinkSent, setMagicLinkSent] = useState(false)
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    // Listen for session changes
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    async function validateToken() {
+      setIsValidatingToken(true)
+      try {
+        const token = searchParams.get("token")
+        if (!token) {
+          setIsValidatingToken(false)
+          return
+        }
+
+        // First check if we already have a valid session
+        const {
+          data: { session }
+        } = await supabase.auth.getSession()
+
+        const { data, error } = await supabase
+          .from("auth_tokens")
+          .select("user_id, used, expires_at")
+          .eq("token", token)
+          .single()
+
+        if (error || !data) {
+          throw new Error("Invalid token")
+        }
+
+        if (data.used) {
+          throw new Error("Token has already been used")
+        }
+
+        if (new Date(data.expires_at) < new Date()) {
+          throw new Error("Token has expired")
+        }
+
+        setTokenData(data)
+
+        // If user is already authenticated with the correct account
+        if (session?.user?.id === data.user_id) {
+          // Mark token as used
+          const response = await fetch("/api/auth/update-token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ token })
+          })
+
+          if (!response.ok) {
+            throw new Error("Failed to process checkout link")
+          }
+          return
+        }
+
+        // If we have a valid token but no session, get the user's email from their user_id
+        if (!session) {
+          console.log(
+            "No session found, looking up user with ID:",
+            data.user_id
+          )
+
+          // Get user email from our API endpoint
+          const response = await fetch(
+            `/api/auth/get-user?userId=${data.user_id}`
+          )
+          const userData = await response.json()
+
+          console.log("User lookup result:", userData)
+
+          if (!response.ok || !userData.email) {
+            console.log("Failed to find user email. Error:", userData.error)
+            throw new Error("Could not find user email")
+          }
+
+          console.log("Found user email:", userData.email)
+
+          // Mark token as used BEFORE sending the sign in email
+          const updateResponse = await fetch("/api/auth/update-token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ token })
+          })
+
+          if (!updateResponse.ok) {
+            console.log(
+              "Failed to mark token as used:",
+              await updateResponse.json()
+            )
+            throw new Error("Failed to process checkout link")
+          }
+
+          // Try to sign in with a passwordless link
+          const { error: signInError } = await supabase.auth.signInWithOtp({
+            email: userData.email,
+            options: {
+              shouldCreateUser: false,
+              emailRedirectTo: window.location.origin + "/auth/callback"
+            }
+          })
+
+          if (signInError) {
+            console.log("Sign in error:", signInError)
+            // Check if it's a rate limit error
+            if (signInError.message?.includes("security purposes")) {
+              const seconds = signInError.message.match(/\d+/)?.[0]
+              setRateLimitSeconds(Number(seconds) || 60)
+              setIsRateLimited(true)
+              return
+            }
+            throw signInError
+          }
+
+          setMagicLinkSent(true)
+          return
+        }
+      } catch (error) {
+        console.error("Token error:", error)
+        if (error instanceof Error) {
+          if (error.message === "Invalid token") {
+            setAuthError(
+              "Invalid checkout link. Please try again or contact support."
+            )
+          } else if (error.message === "Token has already been used") {
+            setAuthError(
+              "This checkout link has already been used. Please request a new one."
+            )
+          } else if (error.message === "Token has expired") {
+            setAuthError(
+              "This checkout link has expired. Please request a new one."
+            )
+          } else if (error.message === "Could not find user email") {
+            setAuthError("Could not find your account. Please contact support.")
+          } else {
+            setAuthError(
+              "Something went wrong. Please try again or contact support."
+            )
+          }
+        } else {
+          setAuthError(
+            "Something went wrong. Please try again or contact support."
+          )
+        }
+      } finally {
+        setIsValidatingToken(false)
+      }
+    }
+
+    validateToken()
+  }, [searchParams, supabase])
+
+  // Add this before other UI state checks
+  if (!userLoading && !user && !searchParams.get("token")) {
+    router.push("/signin")
+    return null
+  }
+
+  // Show magic link sent message
+  if (magicLinkSent) {
+    return (
+      <div className="min-h-screen bg-black">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen px-4">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl mb-4">Check your email to continue</h2>
+            <p className="text-gray-400">
+              We've sent you a secure sign in link. Click the link in your email
+              to continue to checkout.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show rate limit message
+  if (isRateLimited) {
+    return (
+      <div className="min-h-screen bg-black">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen px-4">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl mb-4">
+              Please check your email for a sign in link
+            </h2>
+            <p className="text-gray-400">
+              For security reasons, we can only send one email every{" "}
+              {rateLimitSeconds} seconds.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isValidatingToken) {
+    return (
+      <div className="min-h-screen bg-black">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen px-4">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl mb-4">Validating your checkout link...</h2>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (authError) {
+    return (
+      <div className="min-h-screen bg-black">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen px-4">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl mb-4 text-red-400">{authError}</h2>
+            <Button
+              onClick={() => router.push("/signin")}
+              className="flex items-center gap-2"
+            >
+              Return to Sign In
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show sign in button if token is valid but user isn't authenticated
+  if (tokenData && (!session || session.user.id !== tokenData.user_id)) {
+    return (
+      <div className="min-h-screen bg-black">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen px-4">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl mb-4">
+              Please wait while we sign you in...
+            </h2>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const validateCoupon = async () => {
     if (!couponCode) {
@@ -92,7 +370,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
-      <div className="max-w-3xl mx-auto px-4 pt-28 pb-12  mx-4">
+      <div className="max-w-3xl mx-auto px-4 pt-28 pb-12">
         <div className="space-y-8">
           {/* Pricing details */}
           <div>
