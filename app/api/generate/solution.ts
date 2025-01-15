@@ -69,7 +69,7 @@ Do not wrap the code in markdown code blocks.`
       axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-4-turbo-preview",
+          model: "o1-mini",
           messages: [
             {
               role: "user",
