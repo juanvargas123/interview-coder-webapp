@@ -63,7 +63,7 @@ ${pythonSolution}`
 
       console.log("Request payload:", {
         model: payload.model,
-        max_tokens: payload.max_tokens,
+
         max_completion_tokens: payload.max_completion_tokens,
         content_length: payload.messages[0].content.length
       })
