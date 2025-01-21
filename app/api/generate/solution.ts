@@ -15,20 +15,23 @@ export async function generateSolution(
 
   try {
     // Build the prompt for solution generation
-    const promptContent = `Given the following coding problem:
+    const promptContent = `You are a Python code generator. Your task is to generate a valid Python solution for the following problem.
+IMPORTANT: Return ONLY the Python code solution. No explanations, no markdown formatting, no additional text.
 
+PROBLEM DETAILS:
+---------------
 Problem Statement:
 ${problemInfo.problem_statement ?? "None"}
 
 Input Format:
 ${problemInfo.input_format?.description ?? "None"}
+
 Parameters:
 ${
   problemInfo.input_format?.parameters
     ?.map((p) => {
       let typeStr = p.type
       if (p.subtype) typeStr += ` of ${p.subtype}`
-      // Add nullable information
       typeStr += p.nullable ? " | None" : " (required)"
       return `- ${p.name}: ${typeStr}`
     })
@@ -62,16 +65,18 @@ ${
 Test Cases:
 ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}
 
-Generate a Python solution for this problem. The solution should:
-1. Be well-commented
-2. Include proper type hints for all function parameters and return values
-3. Handle all edge cases including None/null values where applicable
-4. Pass all test cases
-5. Be optimized for time and space complexity
-6. Follow Python best practices and PEP 484 type hints
+REQUIREMENTS:
+------------
+1. Use proper Python type hints (PEP 484)
+2. Handle all edge cases and None/null values
+3. Include clear but concise comments
+4. Optimize for time and space complexity
+5. Pass all test cases
 
-Return only the Python code, no explanations or analysis.
-Do not wrap the code in markdown code blocks.`
+RESPONSE FORMAT:
+--------------
+Return only valid Python code without any markdown formatting or additional text.
+Start directly with the function definition.`
 
     console.log("Making API request to OpenAI for solution generation...")
 
