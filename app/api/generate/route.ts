@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 import axios from "axios"
 import { withTimeout, type ProblemInfo } from "../config"
 import { generateSolution } from "./solution"
-
+export const maxDuration = 60
 export async function POST(request: Request) {
   try {
     console.log("Starting POST request processing...")
