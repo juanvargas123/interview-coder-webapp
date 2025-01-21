@@ -18,24 +18,30 @@ export async function generateSolution(
     const promptContent = `Given the following coding problem:
 
 Problem Statement:
-${problemInfo.problem_statement ?? "Problem statement not available"}
+${problemInfo.problem_statement ?? "None"}
 
 Input Format:
-${problemInfo.input_format?.description ?? "Input format not available"}
+${problemInfo.input_format?.description ?? "None"}
 Parameters:
 ${
   problemInfo.input_format?.parameters
-    ?.map((p) => `- ${p.name}: ${p.type}${p.subtype ? ` of ${p.subtype}` : ""}`)
-    .join("\n") ?? "No parameters available"
+    ?.map((p) => {
+      let typeStr = p.type
+      if (p.subtype) typeStr += ` of ${p.subtype}`
+      // Add nullable information
+      typeStr += p.nullable ? " | None" : " (required)"
+      return `- ${p.name}: ${typeStr}`
+    })
+    .join("\n") ?? "No parameters"
 }
 
 Output Format:
-${problemInfo.output_format?.description ?? "Output format not available"}
-Returns: ${problemInfo.output_format?.type ?? "Type not specified"}${
+${problemInfo.output_format?.description ?? "None"}
+Returns: ${problemInfo.output_format?.type ?? "None"}${
       problemInfo.output_format?.subtype
         ? ` of ${problemInfo.output_format.subtype}`
         : ""
-    }
+    }${problemInfo.output_format?.nullable ? " | None" : " (never None)"}
 
 Constraints:
 ${
@@ -45,20 +51,24 @@ ${
       if (c.range) {
         constraintStr += ` (${c.parameter}: ${c.range.min} to ${c.range.max})`
       }
+      if (c.nullable !== undefined) {
+        constraintStr += c.nullable ? " (can be None)" : " (cannot be None)"
+      }
       return constraintStr
     })
-    .join("\n") ?? "No constraints specified"
+    .join("\n") ?? "No constraints"
 }
 
 Test Cases:
-${JSON.stringify(problemInfo.test_cases ?? "No test cases available", null, 2)}
+${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}
 
 Generate a Python solution for this problem. The solution should:
 1. Be well-commented
-2. Handle all edge cases
-3. Pass all test cases
-4. Be optimized for time and space complexity
-5. Follow Python best practices
+2. Include proper type hints for all function parameters and return values
+3. Handle all edge cases including None/null values where applicable
+4. Pass all test cases
+5. Be optimized for time and space complexity
+6. Follow Python best practices and PEP 484 type hints
 
 Return only the Python code, no explanations or analysis.
 Do not wrap the code in markdown code blocks.`

@@ -37,12 +37,14 @@ export interface ProblemInfo {
       name: string
       type: string
       subtype?: string
+      nullable?: boolean
     }>
   }
   output_format?: {
     description?: string
     type?: string
     subtype?: string
+    nullable?: boolean
   }
   constraints?: Array<{
     description: string
@@ -51,6 +53,7 @@ export interface ProblemInfo {
       min?: number
       max?: number
     }
+    nullable?: boolean
   }>
   test_cases?: any
 }
