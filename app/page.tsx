@@ -23,8 +23,8 @@ export default function Home() {
   }, [])
 
   const downloadUrl = isSilicon
-    ? "https://tinyurl.com/yfsnn5dd"
-    : "https://tinyurl.com/bdemcvx2"
+    ? "https://github.com/ibttf/interview-coder-v1/releases/download/v1.0.3/Interview.Coder-arm64.dmg"
+    : "https://github.com/ibttf/interview-coder-v1/releases/download/v1.0.3/Interview.Coder-x64.dmg"
 
   return (
     <div className="relative w-full hero-gradient lg:px-0 px-4">
