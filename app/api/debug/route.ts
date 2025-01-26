@@ -3,7 +3,7 @@ import axios from "axios"
 import { NextResponse } from "next/server"
 import { withTimeout } from "../config"
 import { extractCodeFromImages } from "./extract"
-export const maxDuration = 120
+export const maxDuration = 300
 export async function POST(request: Request) {
   try {
     const { imageDataList, problemInfo } = await request.json()
