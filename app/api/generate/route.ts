@@ -36,12 +36,11 @@ export async function POST(request: Request) {
 
       // Simple, direct prompt following o1 guidelines
       const analysisPrompt = `Instructions:
-- Analyze the Python solution below
+- You are conducting a mock interview. Analyze the Python solution for a DSA question for this interview.
 - Return a JSON object with the following fields:
   - thoughts: array of 3 detailed, conversational observations that explain the solution's approach, key design decisions, and interesting implementation details. Write these as if you're explaining to a teacher, demonstrating your understanding of the solution.
   - time_complexity: runtime analysis
   - space_complexity: memory usage analysis
-- Make the thoughts natural and readable when spoken aloud
 
 Solution:
 ${pythonSolution}`

@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
       // Simple, direct prompt following o1 guidelines
       const analysisPrompt = `Instructions:
-- Analyze the code and any problem information below
+-  You are conducting a mock interview. Analyze the Python solution for a DSA question for this interview.
 - Return a JSON object with these exact fields:
   - new_code: an optimized or corrected version of the code
   - thoughts: array of 3 detailed, conversational observations that explain the code's key aspects, potential improvements, and interesting implementation details. Write these as if you're explaining to another developer in a casual but professional way.
