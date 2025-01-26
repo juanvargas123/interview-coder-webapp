@@ -4,7 +4,7 @@ export const API_BASE_URL =
     ? "http://localhost:3000"
     : "https://www.interviewcoder.co"
 
-export const TIMEOUT_DURATION = 60000 // 1 minute in milliseconds
+export const TIMEOUT_DURATION = 300000 // 1 minute in milliseconds
 
 // Helper function for timeout wrapping
 export async function withTimeout<T>(
@@ -15,7 +15,9 @@ export async function withTimeout<T>(
 
   const timeoutPromise = new Promise<T>((_, reject) => {
     timeoutId = setTimeout(() => {
-      reject(new Error("Operation timed out after 1 minute. Please try again."))
+      reject(
+        new Error("Operation timed out after 5 minutes. Please try again.")
+      )
     }, timeoutMs)
   })
 
