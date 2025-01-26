@@ -86,7 +86,24 @@ export default function SettingsPage() {
 
         if (response.ok) {
           const data = await response.json()
-          setPaymentMethods(data.paymentMethods || [])
+          // Filter out duplicate payment methods
+          const uniqueMethods =
+            data.paymentMethods?.reduce(
+              (acc: PaymentMethod[], curr: PaymentMethod) => {
+                const isDuplicate = acc.some(
+                  (method) =>
+                    method.last4 === curr.last4 &&
+                    method.exp_month === curr.exp_month &&
+                    method.exp_year === curr.exp_year
+                )
+                if (!isDuplicate) {
+                  acc.push(curr)
+                }
+                return acc
+              },
+              []
+            ) || []
+          setPaymentMethods(uniqueMethods)
         }
       } catch (error) {
         console.error("Error fetching payment methods:", error)
@@ -200,7 +217,24 @@ export default function SettingsPage() {
 
       if (response.ok) {
         const data = await response.json()
-        setPaymentMethods(data.paymentMethods || [])
+        // Filter out duplicate payment methods
+        const uniqueMethods =
+          data.paymentMethods?.reduce(
+            (acc: PaymentMethod[], curr: PaymentMethod) => {
+              const isDuplicate = acc.some(
+                (method) =>
+                  method.last4 === curr.last4 &&
+                  method.exp_month === curr.exp_month &&
+                  method.exp_year === curr.exp_year
+              )
+              if (!isDuplicate) {
+                acc.push(curr)
+              }
+              return acc
+            },
+            []
+          ) || []
+        setPaymentMethods(uniqueMethods)
       }
     } catch (error) {
       console.error("Error fetching payment methods:", error)

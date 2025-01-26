@@ -64,8 +64,16 @@ export default function Navbar() {
     : "https://tinyurl.com/bdemcvx2"
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/")
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+
+      // Force a router refresh to ensure auth state is updated
+      router.refresh()
+      router.push("/")
+    } catch (error) {
+      console.error("Error signing out:", error)
+    }
   }
 
   const renderAuthSection = () => {
