@@ -26,6 +26,7 @@ export default function Navbar() {
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
   const { user, loading, isSubscribed } = useUser()
+  const [isSigningOut, setIsSigningOut] = useState(false)
 
   // Add click outside handler
   useEffect(() => {
@@ -65,14 +66,16 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     try {
+      setIsSigningOut(true)
       const { error } = await supabase.auth.signOut()
       if (error) throw error
 
-      // Force a router refresh to ensure auth state is updated
+      // Use Next.js router to navigate, matching sign-in behavior
       router.refresh()
       router.push("/")
     } catch (error) {
       console.error("Error signing out:", error)
+      setIsSigningOut(false)
     }
   }
 
@@ -129,9 +132,10 @@ export default function Navbar() {
               <div className="h-px bg-white/10 mx-3 my-1" />
               <DropdownMenuItem
                 onClick={handleSignOut}
-                className="cursor-pointer text-[#FF4545] hover:text-red-400 px-3 py-2.5"
+                disabled={isSigningOut}
+                className="cursor-pointer text-[#FF4545] hover:text-red-400 px-3 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Log out
+                {isSigningOut ? "Signing out..." : "Log out"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
