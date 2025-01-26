@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const apiKey = process.env.OPEN_AI_API_KEY
     if (!apiKey) {
       return NextResponse.json(
-        { error: "OpenAI API key not found in environment variables" },
+        { error: "OpenAI API key not found in environment variables." },
         { status: 500 }
       )
     }
