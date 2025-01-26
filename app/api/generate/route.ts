@@ -34,9 +34,9 @@ export async function POST(request: Request) {
       // Then analyze the solution
       console.log("Starting solution analysis...")
 
-      const analysisPrompt = `Analyze this Python code and provide a JSON with:
+      const analysisPrompt = `Return a JSON object analyzing this Python code with these fields:
 {
-  "thoughts": [3 key observations about the implementation, as if you're explaining to a teacher, demonstrating your understanding of the solution],
+  "thoughts": [3 observations about the implementation],
   "time_complexity": "runtime analysis",
   "space_complexity": "memory usage analysis"
 }
@@ -95,7 +95,9 @@ ${pythonSolution}`
       }
 
       const analysisContent = analysisResponse.data.choices[0].message.content
-      console.log("Raw analysis content:", analysisContent)
+        .replace(/^```(?:json)?\n/, "") // Remove opening markdown
+        .replace(/\n```$/, "") // Remove closing markdown
+        .trim()
 
       try {
         const analysis = JSON.parse(analysisContent)
