@@ -38,20 +38,19 @@ export async function POST(request: Request) {
 
       // Simple, direct prompt following o1 guidelines
       const analysisPrompt = `Instructions:
-- Analyze the Python code below
+- Analyze the code and any problem information below
 - Return a JSON object with these exact fields:
-  - old_code: the original code provided
   - new_code: an optimized or corrected version of the code
-  - thoughts: array of 3 technical observations as strings
+  - thoughts: array of 3 detailed, conversational observations that explain the code's key aspects, potential improvements, and interesting implementation details. Write these as if you're explaining to another developer in a casual but professional way.
   - time_complexity: runtime analysis as a string
   - space_complexity: memory usage analysis as a string
-- Do not include any markdown formatting
+- Make the thoughts natural and readable when spoken aloud
 - Keep the same implementation structure
 
-Code:
+Code and Problem Information:
 ${extractedCode}
 
-Problem:
+Additional Problem Context:
 ${problemInfo.problem_statement ?? "Not available"}`
 
       console.log("Full analysis prompt:", analysisPrompt)
@@ -115,8 +114,7 @@ ${problemInfo.problem_statement ?? "Not available"}`
 
         // Return the exact structure expected by the client
         return NextResponse.json({
-          old_code: extractedCode,
-          new_code: analysis.new_code || extractedCode,
+          new_code: analysis.new_code,
           thoughts: analysis.thoughts,
           time_complexity: analysis.time_complexity,
           space_complexity: analysis.space_complexity

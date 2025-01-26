@@ -20,14 +20,14 @@ export async function extractCodeFromImages(
   }))
 
   // Construct the extraction prompt
-  const extractionPrompt = `Extract and combine all Python code visible in the provided images. Important notes:
-1. Only extract actual code that is visible in the images
+  const extractionPrompt = `Extract all relevant information from the provided images. Important notes:
+1. Extract all visible Python code, maintaining exact indentation and formatting
 2. Combine code from multiple images if present
-3. Maintain exact indentation and formatting
-4. Include all visible comments
+3. Include all visible comments
+4. If there are any visible problem statements or question text, include those as well
 5. Do not add any improvements or modifications
 6. Do not add any markdown formatting
-7. Return only the exact code seen in the images`
+7. Return only the exact code and text seen in the images`
 
   try {
     const response = await withTimeout(
