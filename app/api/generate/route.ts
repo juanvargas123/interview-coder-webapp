@@ -34,19 +34,13 @@ export async function POST(request: Request) {
       // Then analyze the solution
       console.log("Starting solution analysis...")
 
-      // Simple, direct prompt following o1 guidelines
-      const analysisPrompt = `Instructions:
-- Analyze the Python solution below
-- Return a JSON object with the following fields:
-  - thoughts: array of 3 detailed, conversational observations that explain the solution's approach, key design decisions, and interesting implementation details. Write these as if you're explaining to another developer in a casual but professional way.
-  - time_complexity: runtime analysis
-  - space_complexity: memory usage analysis
-- Make the thoughts natural and readable when spoken aloud
+      const analysisPrompt = `Analyze this Python solution and provide a JSON response with:
+- thoughts: 3 key observations about the approach
+- time_complexity: runtime analysis
+- space_complexity: memory usage analysis
 
-Solution:
 ${pythonSolution}`
 
-      console.log("Full analysis prompt:", analysisPrompt)
       console.log("Analysis prompt length:", analysisPrompt.length)
       console.log("Making API request for analysis...")
 
