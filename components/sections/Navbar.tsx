@@ -17,6 +17,7 @@ import { ChevronDown, Menu, Lock } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Button } from "../ui/button"
 import { Skeleton } from "../ui/skeleton"
+import { useQueryClient } from "@tanstack/react-query"
 
 export default function Navbar() {
   const [isSilicon, setIsSilicon] = useState(false)
@@ -27,6 +28,7 @@ export default function Navbar() {
   const router = useRouter()
   const { user, loading, isSubscribed } = useUser()
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const queryClient = useQueryClient()
 
   // Add click outside handler
   useEffect(() => {
@@ -70,8 +72,11 @@ export default function Navbar() {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
 
-      // Use Next.js router to navigate, matching sign-in behavior
-      router.refresh()
+      // Invalidate and remove all queries from the cache
+      await queryClient.invalidateQueries()
+      queryClient.removeQueries()
+
+      // Then navigate
       router.push("/")
     } catch (error) {
       console.error("Error signing out:", error)
