@@ -50,7 +50,7 @@ export async function POST(request: Request) {
   - space_complexity: memory usage analysis as a string
 - Make the thoughts natural and readable when spoken aloud
 - Keep the same implementation structure
-- No markdown or other formatting. JSON only.
+- No markdown or other formatting. Just return the JSON object.
 
 Code and Problem Information:
 ${extractedCode}
@@ -108,6 +108,9 @@ ${problemInfo.problem_statement ?? "Not available"}`
       console.log("Reasoning content:", reasoningContent)
 
       const analysisContent = response.data.choices[0].message.content
+        .replace(/```json\n/, "") // Remove opening code block
+        .replace(/```\n$/, "") // Remove closing code block
+        .trim() // Remove any extra whitespace
 
       try {
         const analysis = JSON.parse(analysisContent)
