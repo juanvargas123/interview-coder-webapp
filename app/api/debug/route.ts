@@ -17,9 +17,10 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
+    const openaiApiKey = process.env.OPEN_AI_API_KEY
+    const deepseekApiKey = process.env.DEEPSEEK_API_KEY
 
-    const apiKey = process.env.OPEN_AI_API_KEY
-    if (!apiKey) {
+    if (!deepseekApiKey || !openaiApiKey) {
       return NextResponse.json(
         { error: "OpenAI API key not found in environment variables." },
         { status: 500 }
@@ -29,7 +30,10 @@ export async function POST(request: Request) {
     try {
       // First extract code from images
       console.log("Extracting code from images...")
-      const extractedCode = await extractCodeFromImages(imageDataList, apiKey)
+      const extractedCode = await extractCodeFromImages(
+        imageDataList,
+        openaiApiKey
+      )
       console.log("Code extracted successfully")
 
       // Then analyze the code and generate improvements
@@ -57,56 +61,52 @@ ${problemInfo.problem_statement ?? "Not available"}`
       console.log("Analysis prompt length:", analysisPrompt.length)
       console.log("Making API request for analysis...")
 
-      const payload = {
-        model: "deepseek-reasoner",
-        messages: [
+      const response = await withTimeout(
+        axios.post(
+          "https://api.deepseek.com/chat/completions",
           {
-            role: "user",
-            content: analysisPrompt
+            model: "deepseek-chat",
+            messages: [
+              {
+                content:
+                  "You are a Python code analyzer that returns analysis in JSON format.",
+                role: "system"
+              },
+              {
+                role: "user",
+                content: analysisPrompt
+              }
+            ],
+
+            stream: false
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${deepseekApiKey}`
+            }
           }
-        ],
-        max_completion_tokens: 25000
-      }
-
-      console.log("Request payload:", {
-        model: payload.model,
-        max_completion_tokens: payload.max_completion_tokens,
-        content_length: payload.messages[0].content.length
-      })
-
-      const analysisResponse = await withTimeout(
-        axios.post("https://api.openai.com/v1/chat/completions", payload, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`
-          }
-        })
-      )
-
-      console.log(
-        "Received analysis response with status:",
-        analysisResponse.status
-      )
-      console.log("Response data structure:", {
-        has_choices: !!analysisResponse.data?.choices,
-        num_choices: analysisResponse.data?.choices?.length,
-        has_message: !!analysisResponse.data?.choices?.[0]?.message,
-        content_length:
-          analysisResponse.data?.choices?.[0]?.message?.content?.length
-      })
-
-      if (!analysisResponse.data?.choices?.[0]?.message?.content) {
-        console.error(
-          "Invalid analysis response structure:",
-          analysisResponse.data
         )
-        throw new Error("Invalid response from OpenAI API during analysis")
+      )
+
+      console.log("Received analysis response with status:", response.status)
+      console.log("Response data structure:", {
+        has_choices: !!response.data?.choices,
+        has_content: !!response.data?.choices?.[0]?.message?.content
+      })
+
+      if (!response.data?.choices?.[0]?.message?.content) {
+        console.error("Invalid analysis response structure:", response.data)
+        throw new Error("Invalid response from DeepSeek API during analysis")
       }
 
-      // Clean any markdown formatting and parse response
-      const analysisContent = analysisResponse.data.choices[0].message.content
-        .replace(/^```[\w]*\n/, "")
-        .replace(/\n```$/, "")
+      // Get both reasoning and content
+      const reasoningContent =
+        response.data.choices[0].message.reasoning_content
+      console.log("Reasoning content:", reasoningContent)
+
+      const analysisContent = response.data.choices[0].message.content
 
       try {
         const analysis = JSON.parse(analysisContent)
@@ -139,8 +139,7 @@ ${problemInfo.problem_statement ?? "Not available"}`
       if (error.response?.status === 401) {
         return NextResponse.json(
           {
-            error:
-              "Please close this window and re-enter a valid Open AI API key."
+            error: "There was an error with your request. Please try again."
           },
           { status: 401 }
         )
@@ -149,7 +148,7 @@ ${problemInfo.problem_statement ?? "Not available"}`
         return NextResponse.json(
           {
             error:
-              "API Key out of credits. Please refill your OpenAI API credits and try again."
+              "API Key out of credits. Please let us know at https://www.interviewcoder.co/contact."
           },
           { status: 429 }
         )

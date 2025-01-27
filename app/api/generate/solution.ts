@@ -78,34 +78,46 @@ RESPONSE FORMAT:
 Return only valid Python code without any markdown formatting or additional text.
 Start directly with the function definition.`
 
-    console.log("Making API request to OpenAI for solution generation...")
+    console.log("Making API request to DeepSeek for solution generation...")
 
     const response = await withTimeout(
       axios.post(
-        "https://api.openai.com/v1/chat/completions",
+        "https://api.deepseek.com/chat/completions",
         {
-          model: "deepseek-reasoner",
+          model: "deepseek-chat",
           messages: [
+            {
+              content:
+                "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown.",
+              role: "system"
+            },
             {
               role: "user",
               content: promptContent
             }
-          ]
+          ],
+
+          stream: false
         },
         {
           headers: {
             "Content-Type": "application/json",
+            Accept: "application/json",
             Authorization: `Bearer ${apiKey}`
           }
         }
       )
     )
 
-    console.log("Received response from OpenAI")
+    console.log("Received response from DeepSeek")
+    console.log("Response data structure:", {
+      has_choices: !!response.data?.choices,
+      has_content: !!response.data?.choices?.[0]?.message?.content
+    })
 
     if (!response.data?.choices?.[0]?.message?.content) {
       console.error("Invalid response structure:", response.data)
-      throw new Error("Invalid response from OpenAI API")
+      throw new Error("Invalid response from DeepSeek API")
     }
 
     const content = response.data.choices[0].message.content

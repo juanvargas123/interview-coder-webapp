@@ -15,9 +15,10 @@ export async function POST(request: Request) {
       hasOutputFormat: !!problemInfo.output_format,
       numTestCases: problemInfo.test_cases?.length
     })
+    const openaiApiKey = process.env.OPEN_AI_API_KEY
+    const deepseekApiKey = process.env.DEEPSEEK_API_KEY
 
-    const apiKey = process.env.OPEN_AI_API_KEY
-    if (!apiKey) {
+    if (!openaiApiKey || !deepseekApiKey) {
       console.error("OpenAI API key not found")
       return NextResponse.json(
         { error: "OpenAI API key not found in environment variables" },
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
     try {
       // First generate the Python solution
       console.log("Generating Python solution...")
-      const pythonSolution = await generateSolution(problemInfo, apiKey)
+      const pythonSolution = await generateSolution(problemInfo, deepseekApiKey)
       console.log("Solution generated successfully")
 
       // Then analyze the solution
@@ -47,54 +48,52 @@ ${pythonSolution}`
       console.log("Analysis prompt length:", analysisPrompt.length)
       console.log("Making API request for analysis...")
 
-      const payload = {
-        model: "deepseek-reasoner",
-        messages: [
+      const response = await withTimeout(
+        axios.post(
+          "https://api.deepseek.com/chat/completions",
           {
-            role: "user",
-            content: analysisPrompt
+            model: "deepseek-chat",
+            messages: [
+              {
+                content:
+                  "You are a Python code analyzer that returns analysis in JSON format.",
+                role: "system"
+              },
+              {
+                role: "user",
+                content: analysisPrompt
+              }
+            ],
+
+            stream: false
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${deepseekApiKey}`
+            }
           }
-        ],
-        max_completion_tokens: 25000 // Reserve space for reasoning
-      }
-
-      console.log("Request payload:", {
-        model: payload.model,
-
-        max_completion_tokens: payload.max_completion_tokens,
-        content_length: payload.messages[0].content.length
-      })
-
-      const analysisResponse = await withTimeout(
-        axios.post("https://api.openai.com/v1/chat/completions", payload, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`
-          }
-        })
-      )
-
-      console.log(
-        "Received analysis response with status:",
-        analysisResponse.status
-      )
-      console.log("Response data structure:", {
-        has_choices: !!analysisResponse.data?.choices,
-        num_choices: analysisResponse.data?.choices?.length,
-        has_message: !!analysisResponse.data?.choices?.[0]?.message,
-        content_length:
-          analysisResponse.data?.choices?.[0]?.message?.content?.length
-      })
-
-      if (!analysisResponse.data?.choices?.[0]?.message?.content) {
-        console.error(
-          "Invalid analysis response structure:",
-          analysisResponse.data
         )
-        throw new Error("Invalid response from OpenAI API during analysis")
+      )
+
+      console.log("Received analysis response with status:", response.status)
+      console.log("Response data structure:", {
+        has_choices: !!response.data?.choices,
+        has_content: !!response.data?.choices?.[0]?.message?.content
+      })
+
+      if (!response.data?.choices?.[0]?.message?.content) {
+        console.error("Invalid analysis response structure:", response.data)
+        throw new Error("Invalid response from DeepSeek API during analysis")
       }
 
-      const analysisContent = analysisResponse.data.choices[0].message.content
+      // Get both reasoning and content
+      const reasoningContent =
+        response.data.choices[0].message.reasoning_content
+      console.log("Reasoning content:", reasoningContent)
+
+      const analysisContent = response.data.choices[0].message.content
         .replace(/^```(?:json)?\n/, "") // Remove opening markdown
         .replace(/\n```$/, "") // Remove closing markdown
         .trim()
