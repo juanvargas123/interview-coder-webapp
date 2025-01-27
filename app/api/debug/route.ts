@@ -50,6 +50,7 @@ export async function POST(request: Request) {
   - space_complexity: memory usage analysis as a string
 - Make the thoughts natural and readable when spoken aloud
 - Keep the same implementation structure
+- No markdown or other formatting. JSON only.
 
 Code and Problem Information:
 ${extractedCode}
