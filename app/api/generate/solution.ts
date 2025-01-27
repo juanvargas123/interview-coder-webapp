@@ -154,9 +154,9 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
 
   const response = await withTimeout(
     axios.post(
-      "https://api.openai.com/v1/chat/completions",
+      "https://api.deepseek.com/chat/completions",
       {
-        model: "o1-mini",
+        model: "deepseek-chat",
         messages: [
           {
             content:
@@ -165,7 +165,8 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
 
             role: "user"
           }
-        ]
+        ],
+        stream: false
       },
       {
         headers: {
