@@ -41,16 +41,21 @@ export async function POST(request: Request) {
       console.log("Extracted code length:", extractedCode?.length ?? 0)
 
       // Simple, direct prompt following o1 guidelines
-      const analysisPrompt = `Instructions:
--  You are conducting a mock interview. Analyze the Python solution for a DSA question for this interview.
-- Return a JSON object with these exact fields:
-  - new_code: an optimized or corrected version of the code
-  - thoughts: array of 3 detailed, conversational observations that explain the code's key aspects, potential improvements, and interesting implementation details. Write these as if you're explaining to another developer in a casual but professional way.
-  - time_complexity: runtime analysis as a string
-  - space_complexity: memory usage analysis as a string
-- Make the thoughts natural and readable when spoken aloud
-- Keep the same implementation structure
-- No markdown or other formatting. Just return the JSON object.
+      const analysisPrompt = `IMPORTANT: Return ONLY a raw JSON object with no markdown, no code blocks, and no additional text.
+
+Required JSON structure:
+{
+  "new_code": "string containing the optimized code",
+  "thoughts": ["string1", "string2", "string3"],
+  "time_complexity": "string",
+  "space_complexity": "string"
+}
+
+Analyze this Python solution for a DSA interview question. Include:
+1. An optimized version of the code in new_code
+2. Three detailed, conversational observations in thoughts that explain key aspects, improvements, and implementation details
+3. Runtime analysis in time_complexity
+4. Memory usage analysis in space_complexity
 
 Code and Problem Information:
 ${extractedCode}
