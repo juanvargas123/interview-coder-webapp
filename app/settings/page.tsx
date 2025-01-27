@@ -11,11 +11,14 @@ import { Progress } from "@/components/ui/progress"
 import { useUser } from "@/lib/hooks/use-user"
 import { supabase } from "@/lib/supabase/client"
 import { getCardBrandIcon } from "@/lib/utils"
-import { Lock } from "lucide-react"
+import { Lock, Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 
 interface Subscription {
+  id: string
+  user_id: string
   status: string
   plan: string
   current_period_end: string
@@ -23,6 +26,9 @@ interface Subscription {
   cancel_at: string | null
   canceled_at: string | null
   stripe_customer_id: string
+  credits: number
+  created_at: string
+  updated_at: string
 }
 
 interface PaymentMethod {
@@ -34,17 +40,31 @@ interface PaymentMethod {
   isDefault?: boolean
 }
 
+async function fetchSubscription(userId: string | undefined) {
+  if (!userId) return null
+  const { data } = await supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("user_id", userId)
+    .single()
+  return data
+}
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account")
-  const { user } = useUser()
+  const { user, isSubscribed, loading } = useUser()
+  const { data: subscription } = useQuery({
+    queryKey: ["subscription", user?.id],
+    queryFn: () => fetchSubscription(user?.id),
+    enabled: !!user?.id
+  })
   const router = useRouter()
 
   // Billing state
-  const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([])
-  const [loading, setLoading] = useState(true)
   const [cancelLoading, setCancelLoading] = useState(false)
   const [renewLoading, setRenewLoading] = useState(false)
+  const [purchaseCreditsLoading, setPurchaseCreditsLoading] = useState(false)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false)
 
@@ -52,156 +72,7 @@ export default function SettingsPage() {
     "cancel" | "resume"
   >("cancel")
 
-  async function loadSubscriptionData() {
-    // Check if user is authenticated
-    const {
-      data: { session }
-    } = await supabase.auth.getSession()
-    if (!session) {
-      router.push("/signin")
-      return
-    }
-
-    // Get user's subscription status
-    const { data: sub } = await supabase
-      .from("subscriptions")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .single()
-
-    setSubscription(sub)
-
-    // If there's a subscription, fetch the payment methods
-    if (sub?.stripe_customer_id) {
-      try {
-        const response = await fetch("/api/stripe/get-payment-method", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            customerId: sub.stripe_customer_id
-          })
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          // Filter out duplicate payment methods
-          const uniqueMethods =
-            data.paymentMethods?.reduce(
-              (acc: PaymentMethod[], curr: PaymentMethod) => {
-                const isDuplicate = acc.some(
-                  (method) =>
-                    method.last4 === curr.last4 &&
-                    method.exp_month === curr.exp_month &&
-                    method.exp_year === curr.exp_year
-                )
-                if (!isDuplicate) {
-                  acc.push(curr)
-                }
-                return acc
-              },
-              []
-            ) || []
-          setPaymentMethods(uniqueMethods)
-        }
-      } catch (error) {
-        console.error("Error fetching payment methods:", error)
-      }
-    }
-
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    loadSubscriptionData()
-  }, [router])
-
-  const handleCancel = async () => {
-    if (!subscription) return
-
-    try {
-      setCancelLoading(true)
-      const {
-        data: { session }
-      } = await supabase.auth.getSession()
-      if (!session) {
-        router.push("/signin")
-        return
-      }
-
-      const response = await fetch("/api/stripe/cancel-subscription", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          userId: session.user.id
-        })
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to cancel subscription")
-      }
-
-      // Close the modal first
-      setIsSubscriptionModalOpen(false)
-
-      // Then refresh the data
-      await loadSubscriptionData()
-    } catch (error) {
-      console.error("Error:", error)
-      if (error instanceof Error) {
-        throw error
-      } else {
-        throw new Error("Failed to cancel subscription. Please try again.")
-      }
-    } finally {
-      setCancelLoading(false)
-    }
-  }
-
-  const handleRenew = async () => {
-    if (!subscription) return
-
-    try {
-      setRenewLoading(true)
-      const {
-        data: { session }
-      } = await supabase.auth.getSession()
-      if (!session) {
-        router.push("/signin")
-        return
-      }
-
-      const response = await fetch("/api/stripe/renew-subscription", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          userId: session.user.id
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to renew subscription")
-      }
-
-      // Refresh subscription data
-      await loadSubscriptionData()
-      setIsSubscriptionModalOpen(false)
-    } catch (error) {
-      console.error("Error:", error)
-      throw new Error("Failed to renew subscription. Please try again.")
-    } finally {
-      setRenewLoading(false)
-    }
-  }
-
-  const handlePaymentMethodsChange = async () => {
+  async function loadPaymentMethods() {
     if (!subscription?.stripe_customer_id) return
 
     try {
@@ -241,6 +112,129 @@ export default function SettingsPage() {
     }
   }
 
+  useEffect(() => {
+    if (subscription?.stripe_customer_id) {
+      loadPaymentMethods()
+    }
+  }, [subscription?.stripe_customer_id])
+
+  const handleCancel = async () => {
+    if (!subscription) return
+
+    try {
+      setCancelLoading(true)
+      if (!user) {
+        router.push("/signin")
+        return
+      }
+
+      const response = await fetch("/api/stripe/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: user.id
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to cancel subscription")
+      }
+
+      // Close the modal first
+      setIsSubscriptionModalOpen(false)
+    } catch (error) {
+      console.error("Error:", error)
+      if (error instanceof Error) {
+        throw error
+      } else {
+        throw new Error("Failed to cancel subscription. Please try again.")
+      }
+    } finally {
+      setCancelLoading(false)
+    }
+  }
+
+  const handleRenew = async () => {
+    if (!subscription) return
+
+    try {
+      setRenewLoading(true)
+      if (!user) {
+        router.push("/signin")
+        return
+      }
+
+      const response = await fetch("/api/stripe/renew-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: user.id
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to renew subscription")
+      }
+
+      setIsSubscriptionModalOpen(false)
+    } catch (error) {
+      console.error("Error:", error)
+      throw new Error("Failed to renew subscription. Please try again.")
+    } finally {
+      setRenewLoading(false)
+    }
+  }
+
+  const handlePaymentMethodsChange = async () => {
+    await loadPaymentMethods()
+  }
+
+  const handlePurchaseCredits = async () => {
+    if (!subscription?.stripe_customer_id) return
+
+    try {
+      setPurchaseCreditsLoading(true)
+      console.log(
+        "Attempting purchase with customer ID:",
+        subscription.stripe_customer_id
+      )
+
+      const response = await fetch("/api/stripe/purchase-credits", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          customerId: subscription.stripe_customer_id
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.error("Purchase credits error:", data)
+        throw new Error(data.error || "Failed to create checkout session")
+      }
+
+      window.location.href = data.url
+    } catch (error) {
+      console.error("Error:", error)
+      throw error
+    } finally {
+      setPurchaseCreditsLoading(false)
+    }
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
@@ -259,6 +253,50 @@ export default function SettingsPage() {
 
             {activeTab === "billing" && (
               <div className="space-y-6 lg:space-y-8">
+                {subscription?.status === "active" &&
+                  subscription?.plan === "pro" && (
+                    <section>
+                      <h2 className="text-xl lg:text-2xl font-medium mb-3 lg:mb-4">
+                        Credits
+                      </h2>
+                      <p className="text-[13px] lg:text-[15px] text-gray-400 mb-4 lg:mb-6">
+                        Purchase additional credits to use Interview Coder.
+                      </p>
+                      <div className="bg-white/5 rounded-xl border border-gray-800">
+                        <div className="p-4 lg:p-6">
+                          <div className="flex items-center justify-between flex-wrap gap-4">
+                            <div>
+                              <h3 className="text-base lg:text-lg font-medium">
+                                Available Credits
+                              </h3>
+                              <p className="text-3xl font-bold mt-2">
+                                {subscription?.credits || 0}
+                              </p>
+                              <p className="text-[13px] lg:text-sm text-gray-400 mt-1">
+                                Credits reset to 50 at the start of each billing
+                                cycle
+                              </p>
+                            </div>
+                            <Button
+                              onClick={handlePurchaseCredits}
+                              disabled={purchaseCreditsLoading}
+                              className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors px-4 py-2 rounded-full text-sm font-medium"
+                            >
+                              {purchaseCreditsLoading ? (
+                                "Processing..."
+                              ) : (
+                                <>
+                                  <Plus className="w-4 h-4 mr-2" />
+                                  Purchase 50 Credits ($10)
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
                 <section>
                   <h2 className="text-xl lg:text-2xl font-medium mb-3 lg:mb-4">
                     Subscription Plan

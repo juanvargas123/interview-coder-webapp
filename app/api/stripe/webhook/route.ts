@@ -146,6 +146,8 @@ export async function POST(req: Request) {
       let customerId: string | undefined
       let subscriptionId: string | undefined
       let isSetupMode = false
+      let isCreditsPayment = false
+      let creditsAmount: number | undefined
 
       if (event.type === "checkout.session.completed") {
         const session = event.data.object as Stripe.Checkout.Session
@@ -153,13 +155,19 @@ export async function POST(req: Request) {
         customerId = session.customer as string
         subscriptionId = session.subscription as string
         isSetupMode = session.mode === "setup"
+        isCreditsPayment = session.metadata?.type === "credits_purchase"
+        creditsAmount = session.metadata?.credits_amount
+          ? parseInt(session.metadata.credits_amount)
+          : undefined
 
         console.log("Checkout session details:", {
           userId,
           customerId,
           subscriptionId,
           mode: session.mode,
-          metadata: session.metadata
+          metadata: session.metadata,
+          isCreditsPayment,
+          creditsAmount
         })
 
         // If this is just a setup session (adding a card), return early
@@ -167,11 +175,122 @@ export async function POST(req: Request) {
           console.log("Setup session completed, no subscription update needed")
           return NextResponse.json({ received: true })
         }
+
+        // Handle credits purchase
+        if (isCreditsPayment && userId && creditsAmount) {
+          console.log("Processing credits purchase:", {
+            userId,
+            creditsAmount
+          })
+
+          // Update credits in the subscriptions table
+          const { error: creditsError } = await supabase.rpc(
+            "increment_credits",
+            {
+              p_user_id: userId,
+              p_credits_amount: creditsAmount
+            }
+          )
+
+          if (creditsError) {
+            console.error("Error updating credits:", creditsError)
+            return NextResponse.json(
+              { error: "Error updating credits" },
+              { status: 500 }
+            )
+          }
+
+          console.log("Successfully updated credits for user:", userId)
+          return NextResponse.json({ received: true })
+        }
+
+        // Handle new subscription
+        if (subscriptionId && userId) {
+          console.log("Processing new subscription:", {
+            userId,
+            subscriptionId
+          })
+
+          // Get subscription details from Stripe
+          const subscription = await stripe.subscriptions.retrieve(
+            subscriptionId
+          )
+
+          // Create or update subscription record
+          const { error: subscriptionError } = await supabase
+            .from("subscriptions")
+            .upsert({
+              user_id: userId,
+              status: subscription.status,
+              plan: "pro",
+              credits: 50, // Initial credits for new subscription
+              current_period_start: new Date(
+                subscription.current_period_start * 1000
+              ).toISOString(),
+              current_period_end: new Date(
+                subscription.current_period_end * 1000
+              ).toISOString(),
+              stripe_customer_id: customerId,
+              stripe_subscription_id: subscriptionId,
+              cancel_at: subscription.cancel_at
+                ? new Date(subscription.cancel_at * 1000).toISOString()
+                : null,
+              canceled_at: subscription.canceled_at
+                ? new Date(subscription.canceled_at * 1000).toISOString()
+                : null
+            })
+
+          if (subscriptionError) {
+            console.error("Error upserting subscription:", subscriptionError)
+            return NextResponse.json(
+              { error: "Error upserting subscription" },
+              { status: 500 }
+            )
+          }
+
+          console.log(
+            "Successfully created/updated subscription for user:",
+            userId
+          )
+          return NextResponse.json({ received: true })
+        }
       } else {
         // Handle payment_intent.succeeded
         const paymentIntent = event.data.object as Stripe.PaymentIntent
         userId = paymentIntent.metadata?.user_id
         customerId = paymentIntent.customer as string
+        isCreditsPayment = paymentIntent.metadata?.type === "credits_purchase"
+        creditsAmount = paymentIntent.metadata?.credits_amount
+          ? parseInt(paymentIntent.metadata.credits_amount)
+          : undefined
+
+        // Handle credits purchase for payment intent
+        if (isCreditsPayment && userId && creditsAmount) {
+          console.log("Processing credits purchase from payment intent:", {
+            userId,
+            creditsAmount
+          })
+
+          // Update credits in the subscriptions table
+          const { error: creditsError } = await supabase.rpc(
+            "increment_credits",
+            {
+              p_user_id: userId,
+              p_credits_amount: creditsAmount
+            }
+          )
+
+          if (creditsError) {
+            console.error("Error updating credits:", creditsError)
+            return NextResponse.json(
+              { error: "Error updating credits" },
+              { status: 500 }
+            )
+          }
+
+          console.log("Successfully updated credits for user:", userId)
+          return NextResponse.json({ received: true })
+        }
 
         // If this is a subscription-related payment, get the subscription ID
         if (paymentIntent.metadata?.subscriptionId) {

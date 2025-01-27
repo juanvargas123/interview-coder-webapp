@@ -4,20 +4,49 @@ import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState, useRef } from "react"
 import { supabase } from "@/lib/supabase/client"
-import { useUser } from "@/lib/hooks/use-user"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { ChevronDown, Menu, Lock } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Button } from "../ui/button"
 import { Skeleton } from "../ui/skeleton"
-import { useQueryClient } from "@tanstack/react-query"
+import { useQueryClient, useQuery } from "@tanstack/react-query"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+
+interface Subscription {
+  id: string
+  user_id: string
+  status: string
+  plan: string
+  current_period_end: string
+  current_period_start: string
+  cancel_at: string | null
+  canceled_at: string | null
+  stripe_customer_id: string
+  credits: number
+  created_at: string
+  updated_at: string
+}
+
+async function fetchUserAndSubscription() {
+  const {
+    data: { session }
+  } = await supabase.auth.getSession()
+  if (!session) return { user: null, subscription: null }
+
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("user_id", session.user.id)
+    .single()
+
+  return { user: session.user, subscription }
+}
 
 export default function Navbar() {
   const [isSilicon, setIsSilicon] = useState(false)
@@ -26,9 +55,19 @@ export default function Navbar() {
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
-  const { user, loading, isSubscribed } = useUser()
   const [isSigningOut, setIsSigningOut] = useState(false)
   const queryClient = useQueryClient()
+
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["user-nav"],
+    queryFn: fetchUserAndSubscription,
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    refetchInterval: 1000 * 60 * 5 // Refetch every 5 minutes
+  })
+
+  const user = data?.user
+  const subscription = data?.subscription
+  const isSubscribed = subscription?.status === "active"
 
   // Add click outside handler
   useEffect(() => {
