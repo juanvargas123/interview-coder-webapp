@@ -43,8 +43,8 @@ export async function POST(request: Request) {
       // Simple, direct prompt following o1 guidelines
       const analysisPrompt = `Return a JSON object analyzing this Python code with these fields:
 {
-  "new_code": "an optimized or corrected version of the code",
-  "thoughts": [3 conversational thoughts about the solution, explaining your debugging process and analysis as if walking through your thought process with another developer],
+  "new_code": "an optimized or corrected version of the code, with comments explaining the changes",
+  "thoughts": [3 conversational thoughts about what you changed, explaining your debugging process and analysis as if walking through your thought process with another developer],
   "time_complexity": "runtime analysis",
   "space_complexity": "memory usage analysis"
 }
@@ -67,16 +67,11 @@ ${problemInfo.problem_statement ?? "Not available"}`
             messages: [
               {
                 content:
-                  "You are a Python code analyzer that returns analysis in JSON format.",
-                role: "system"
-              },
-              {
-                role: "user",
-                content: analysisPrompt
+                  "You are a Python code analyzer that returns analysis in JSON format, with no markdown or code blocks. You should be very specific and detailed in your analysis, and you should be very specific in your thoughts. " +
+                  analysisPrompt,
+                role: "user"
               }
-            ],
-
-            stream: false
+            ]
           },
           {
             headers: {

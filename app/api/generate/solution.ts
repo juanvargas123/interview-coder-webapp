@@ -72,7 +72,7 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
           {
             role: "user",
             content:
-              "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown."
+              "You are a Python code generator that only outputs valid Python code solutions. You should use a minimal amount of external libraries, and you should be writing code that is legible and the optimal solution. It is very important that this code is legible and understandable, so add comments next to relevant places in the code that explain what the code does. Absolutely no markdown."
           },
           {
             role: "user",
@@ -154,21 +154,18 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
 
   const response = await withTimeout(
     axios.post(
-      "https://api.deepseek.com/chat/completions",
+      "https://api.openai.com/v1/chat/completions",
       {
-        model: "deepseek-chat",
+        model: "o1-mini",
         messages: [
           {
             content:
-              "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown.",
+              "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown." +
+              promptContent,
+
             role: "user"
-          },
-          {
-            role: "user",
-            content: promptContent
           }
-        ],
-        stream: false
+        ]
       },
       {
         headers: {
