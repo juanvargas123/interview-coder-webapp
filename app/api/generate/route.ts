@@ -38,7 +38,11 @@ export async function POST(request: Request) {
     try {
       // First generate the Python solution
       console.log("Generating Python solution...")
-      const pythonSolution = await generateSolution(problemInfo, deepseekApiKey)
+      const pythonSolution = await generateSolution(
+        problemInfo,
+        deepseekApiKey,
+        openaiApiKey
+      )
       console.log("Solution generated successfully")
 
       // Then analyze the solution

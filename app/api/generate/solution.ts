@@ -7,15 +7,13 @@ function cleanCodeFromMarkdown(content: string): string {
   return content.replace(/^```[\w]*\n/, "").replace(/\n```$/, "")
 }
 
-export async function generateSolution(
+async function generateWithOpenAI(
   problemInfo: ProblemInfo,
   apiKey: string
-) {
-  console.log("Starting solution generation...")
+): Promise<string> {
+  console.log("Starting OpenAI solution generation...")
 
-  try {
-    // Build the prompt for solution generation
-    const promptContent = `You are a Python code generator. Your task is to generate a valid Python solution for the following problem.
+  const promptContent = `You are a Python code generator. Your task is to generate a valid Python solution for the following problem.
 IMPORTANT: Return ONLY the Python code solution. No explanations, no markdown formatting, no additional text.
 
 PROBLEM DETAILS:
@@ -41,10 +39,10 @@ ${
 Output Format:
 ${problemInfo.output_format?.description ?? "None"}
 Returns: ${problemInfo.output_format?.type ?? "None"}${
-      problemInfo.output_format?.subtype
-        ? ` of ${problemInfo.output_format.subtype}`
-        : ""
-    }${problemInfo.output_format?.nullable ? " | None" : " (never None)"}
+    problemInfo.output_format?.subtype
+      ? ` of ${problemInfo.output_format.subtype}`
+      : ""
+  }${problemInfo.output_format?.nullable ? " | None" : " (never None)"}
 
 Constraints:
 ${
@@ -63,71 +61,155 @@ ${
 }
 
 Test Cases:
-${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}
+${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
 
-REQUIREMENTS:
-------------
-1. Use proper Python type hints (PEP 484)
-2. Handle all edge cases and None/null values
-3. Include clear but concise comments
-4. Optimize for time and space complexity
-5. Pass all test cases
-
-RESPONSE FORMAT:
---------------
-Return only valid Python code without any markdown formatting or additional text.
-Start directly with the function definition.`
-
-    console.log("Making API request to DeepSeek for solution generation...")
-
-    const response = await withTimeout(
-      axios.post(
-        "https://api.deepseek.com/chat/completions",
-        {
-          model: "deepseek-chat",
-          messages: [
-            {
-              content:
-                "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown.",
-              role: "system"
-            },
-            {
-              role: "user",
-              content: promptContent
-            }
-          ],
-
-          stream: false
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${apiKey}`
+  const response = await withTimeout(
+    axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "o1-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown."
+          },
+          {
+            role: "user",
+            content: promptContent
           }
+        ]
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`
         }
-      )
+      }
     )
+  )
 
-    console.log("Received response from DeepSeek")
-    console.log("Response data structure:", {
-      has_choices: !!response.data?.choices,
-      has_content: !!response.data?.choices?.[0]?.message?.content
+  if (!response.data?.choices?.[0]?.message?.content) {
+    throw new Error("Invalid response from OpenAI API")
+  }
+
+  return cleanCodeFromMarkdown(response.data.choices[0].message.content)
+}
+
+async function generateWithDeepseek(
+  problemInfo: ProblemInfo,
+  apiKey: string
+): Promise<string> {
+  console.log("Starting DeepSeek solution generation...")
+
+  const promptContent = `You are a Python code generator. Your task is to generate a valid Python solution for the following problem.
+IMPORTANT: Return ONLY the Python code solution. No explanations, no markdown formatting, no additional text.
+
+PROBLEM DETAILS:
+---------------
+Problem Statement:
+${problemInfo.problem_statement ?? "None"}
+
+Input Format:
+${problemInfo.input_format?.description ?? "None"}
+
+Parameters:
+${
+  problemInfo.input_format?.parameters
+    ?.map((p) => {
+      let typeStr = p.type
+      if (p.subtype) typeStr += ` of ${p.subtype}`
+      typeStr += p.nullable ? " | None" : " (required)"
+      return `- ${p.name}: ${typeStr}`
     })
+    .join("\n") ?? "No parameters"
+}
 
-    if (!response.data?.choices?.[0]?.message?.content) {
-      console.error("Invalid response structure:", response.data)
-      throw new Error("Invalid response from DeepSeek API")
+Output Format:
+${problemInfo.output_format?.description ?? "None"}
+Returns: ${problemInfo.output_format?.type ?? "None"}${
+    problemInfo.output_format?.subtype
+      ? ` of ${problemInfo.output_format.subtype}`
+      : ""
+  }${problemInfo.output_format?.nullable ? " | None" : " (never None)"}
+
+Constraints:
+${
+  problemInfo.constraints
+    ?.map((c) => {
+      let constraintStr = `- ${c.description}`
+      if (c.range) {
+        constraintStr += ` (${c.parameter}: ${c.range.min} to ${c.range.max})`
+      }
+      if (c.nullable !== undefined) {
+        constraintStr += c.nullable ? " (can be None)" : " (cannot be None)"
+      }
+      return constraintStr
+    })
+    .join("\n") ?? "No constraints"
+}
+
+Test Cases:
+${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
+
+  const response = await withTimeout(
+    axios.post(
+      "https://api.deepseek.com/chat/completions",
+      {
+        model: "deepseek-chat",
+        messages: [
+          {
+            content:
+              "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown.",
+            role: "system"
+          },
+          {
+            role: "user",
+            content: promptContent
+          }
+        ],
+        stream: false
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${apiKey}`
+        }
+      }
+    )
+  )
+
+  if (!response.data?.choices?.[0]?.message?.content) {
+    throw new Error("Invalid response from DeepSeek API")
+  }
+
+  return cleanCodeFromMarkdown(response.data.choices[0].message.content)
+}
+
+export async function generateSolution(
+  problemInfo: ProblemInfo,
+  deepseekApiKey: string,
+  openaiApiKey?: string
+): Promise<string> {
+  try {
+    // Try Deepseek first
+    return await generateWithDeepseek(problemInfo, deepseekApiKey)
+  } catch (error) {
+    console.error("DeepSeek generation failed:", error)
+
+    // If OpenAI key is provided, try as fallback
+    if (openaiApiKey) {
+      console.log("Falling back to OpenAI generation...")
+      try {
+        return await generateWithOpenAI(problemInfo, openaiApiKey)
+      } catch (openaiError) {
+        console.error("OpenAI generation failed:", openaiError)
+        throw openaiError
+      }
     }
 
-    const content = response.data.choices[0].message.content
-    return cleanCodeFromMarkdown(content)
-  } catch (error: any) {
-    console.error("Error in generateSolution:", {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status
-    })
-    throw error // Re-throw to be handled by the route handler
+    // If no OpenAI key or both failed, throw the original error
+    throw error
   }
 }
