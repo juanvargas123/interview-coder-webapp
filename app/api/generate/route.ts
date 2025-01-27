@@ -18,6 +18,15 @@ export async function POST(request: Request) {
     const openaiApiKey = process.env.OPEN_AI_API_KEY
     const deepseekApiKey = process.env.DEEPSEEK_API_KEY
 
+    // Debug logging
+    console.log("Environment check:", {
+      hasOpenAI: !!process.env.OPEN_AI_API_KEY,
+      hasDeepseek: !!process.env.DEEPSEEK_API_KEY,
+      envKeys: Object.keys(process.env).filter(
+        (key) => key.includes("API") || key.includes("KEY")
+      )
+    })
+
     if (!openaiApiKey || !deepseekApiKey) {
       console.error("OpenAI API key not found")
       return NextResponse.json(
