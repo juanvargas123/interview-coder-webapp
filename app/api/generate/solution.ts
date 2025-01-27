@@ -84,7 +84,7 @@ Start directly with the function definition.`
       axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "o1-mini",
+          model: "deepseek-reasoner",
           messages: [
             {
               role: "user",

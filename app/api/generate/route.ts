@@ -48,7 +48,7 @@ ${pythonSolution}`
       console.log("Making API request for analysis...")
 
       const payload = {
-        model: "o1-mini",
+        model: "deepseek-reasoner",
         messages: [
           {
             role: "user",
