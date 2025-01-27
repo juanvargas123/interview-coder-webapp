@@ -15,25 +15,9 @@ export async function POST(request: Request) {
       hasOutputFormat: !!problemInfo.output_format,
       numTestCases: problemInfo.test_cases?.length
     })
-    const openaiApiKey = process.env.OPEN_AI_API_KEY
+
     const deepseekApiKey = process.env.DEEPSEEK_API_KEY
-
-    // Debug logging
-    console.log("Environment check:", {
-      hasOpenAI: !!process.env.OPEN_AI_API_KEY,
-      hasDeepseek: !!process.env.DEEPSEEK_API_KEY,
-      envKeys: Object.keys(process.env).filter(
-        (key) => key.includes("API") || key.includes("KEY")
-      )
-    })
-
-    if (!openaiApiKey || !deepseekApiKey) {
-      console.error("OpenAI API key not found")
-      return NextResponse.json(
-        { error: "OpenAI API key not found in environment variables" },
-        { status: 500 }
-      )
-    }
+    const openaiApiKey = process.env.OPENAI_API_KEY
 
     try {
       // First generate the Python solution
@@ -68,16 +52,10 @@ ${pythonSolution}`
             model: "deepseek-chat",
             messages: [
               {
-                content:
-                  "You are a Python code analyzer that returns analysis in JSON format.",
-                role: "system"
-              },
-              {
                 role: "user",
                 content: analysisPrompt
               }
             ],
-
             stream: false
           },
           {
@@ -90,9 +68,8 @@ ${pythonSolution}`
         )
       )
 
-      console.log("Received analysis response with status:", response.status)
+      console.log("Received analysis response")
       console.log("Response data structure:", {
-        has_choices: !!response.data?.choices,
         has_content: !!response.data?.choices?.[0]?.message?.content
       })
 
@@ -100,11 +77,6 @@ ${pythonSolution}`
         console.error("Invalid analysis response structure:", response.data)
         throw new Error("Invalid response from DeepSeek API during analysis")
       }
-
-      // Get both reasoning and content
-      const reasoningContent =
-        response.data.choices[0].message.reasoning_content
-      console.log("Reasoning content:", reasoningContent)
 
       const analysisContent = response.data.choices[0].message.content
         .replace(/^```(?:json)?\n/, "") // Remove opening markdown
@@ -141,7 +113,7 @@ ${pythonSolution}`
         return NextResponse.json(
           {
             error:
-              "Please close this window and re-enter a valid Open AI API key."
+              "Please close this window and re-enter a valid DeepSeek API key."
           },
           { status: 401 }
         )
@@ -150,7 +122,7 @@ ${pythonSolution}`
         return NextResponse.json(
           {
             error:
-              "API Key out of credits. Please refill your OpenAI API credits and try again."
+              "API Key rate limit exceeded. Please try again in a few minutes."
           },
           { status: 429 }
         )

@@ -70,7 +70,7 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
         model: "o1-mini",
         messages: [
           {
-            role: "system",
+            role: "user",
             content:
               "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown."
           },
@@ -161,7 +161,7 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
           {
             content:
               "You are a Python code generator that only outputs valid Python code solutions. No explanations, no markdown.",
-            role: "system"
+            role: "user"
           },
           {
             role: "user",
