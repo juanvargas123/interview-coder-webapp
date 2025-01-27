@@ -41,21 +41,13 @@ export async function POST(request: Request) {
       console.log("Extracted code length:", extractedCode?.length ?? 0)
 
       // Simple, direct prompt following o1 guidelines
-      const analysisPrompt = `IMPORTANT: Return ONLY a raw JSON object with no markdown, no code blocks, and no additional text.
-
-Required JSON structure:
+      const analysisPrompt = `Return a JSON object analyzing this Python code with these fields:
 {
-  "new_code": "string containing the optimized code",
-  "thoughts": ["string1", "string2", "string3"],
-  "time_complexity": "string",
-  "space_complexity": "string"
+  "new_code": "an optimized or corrected version of the code",
+  "thoughts": [3 conversational thoughts about the solution, explaining your debugging process and analysis as if walking through your thought process with another developer],
+  "time_complexity": "runtime analysis",
+  "space_complexity": "memory usage analysis"
 }
-
-Analyze this Python solution for a DSA interview question. Include:
-1. An optimized version of the code in new_code
-2. Three detailed, conversational observations in thoughts that explain key aspects, improvements, and implementation details
-3. Runtime analysis in time_complexity
-4. Memory usage analysis in space_complexity
 
 Code and Problem Information:
 ${extractedCode}
@@ -112,10 +104,21 @@ ${problemInfo.problem_statement ?? "Not available"}`
         response.data.choices[0].message.reasoning_content
       console.log("Reasoning content:", reasoningContent)
 
-      const analysisContent = response.data.choices[0].message.content
-        .replace(/```json\n/, "") // Remove opening code block
-        .replace(/```\n$/, "") // Remove closing code block
+      const rawContent = response.data.choices[0].message.content
+      console.log("Raw content from API:", rawContent)
+
+      const analysisContent = rawContent
+        .replace(/^```(?:json)?\n?/g, "") // Remove any opening code block
+        .replace(/\n?```\s*$/g, "") // Remove any closing code block at the end
+        .replace(/^```.*$/gm, "") // Remove any other code block markers
         .trim() // Remove any extra whitespace
+
+      console.log("Cleaned content:", analysisContent)
+      console.log("Content length before parsing:", analysisContent.length)
+      console.log(
+        "Last 10 characters:",
+        JSON.stringify(analysisContent.slice(-10))
+      )
 
       try {
         const analysis = JSON.parse(analysisContent)
