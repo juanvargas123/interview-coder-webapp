@@ -26,7 +26,7 @@ async function fetchUserAndStatus(): Promise<{
   // Get subscription status
   const { data: subscription } = await supabase
     .from("subscriptions")
-    .select("status, cancel_at")
+    .select("status, cancel_at, current_period_end")
     .eq("user_id", session.user.id)
     .single()
 
@@ -51,7 +51,9 @@ async function fetchUserAndStatus(): Promise<{
   }
 
   const isSubscribed =
-    subscription?.status === "active" && !subscription?.cancel_at
+    subscription?.status === "active" &&
+    new Date(subscription.cancel_at) >= new Date()
+
   const isOnWaitlist = !!finalWaitlistEntry
 
   return {
