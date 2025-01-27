@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
       const analysisPrompt = `Return a JSON object analyzing this Python code with these fields:
 {
-  "thoughts": [3 observations about the implementation],
+  "thoughts": [3 conversational thoughts about the solution, said as if you were explaining the process of arriving to the solution before you wrote it to a school teacher, demonstrating your thoughts and understanding of the problem],
   "time_complexity": "runtime analysis",
   "space_complexity": "memory usage analysis"
 }
