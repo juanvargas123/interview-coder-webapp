@@ -54,8 +54,7 @@ export default function PoliciesPage() {
                 </li>
               </ul>
               <p className="text-neutral-300 mt-4">
-                To cancel your subscription, please contact our customer service
-                team.
+                To cancel your subscription, go to the settings page.
               </p>
             </CardContent>
           </Card>
