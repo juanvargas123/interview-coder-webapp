@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { LinkedinBadge } from "@/components/ui/linked-in-badge"
 import { Button } from "@/components/ui/button"
 import { HeroVideo } from "@/components/ui/hero-video"
+import { WingsBackground } from "@/components/ui/WingsBackground"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -19,47 +20,41 @@ export const HeroSection = () => {
     : "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview.Coder-x64.dmg"
 
   return (
-    <main className="relative overflow-hidden flex flex-col items-center justify-center md:pt-36">
-      <div className="container px-4 text-center max-w-2xl mx-auto lg:max-w-6xl">
-        <motion.div
+    <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center pt-36">
+      {/* <WingsBackground /> */}
+      <div className="container relative z-10 px-4 text-center max-w-3xl mx-auto">
+        <motion.h1
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.3]"
         >
-          <LinkedinBadge />
-        </motion.div>
+          <span className="white-gradient pb-6">F*ck Leetcode.</span>
+        </motion.h1>
 
-        <motion.h2
+        <motion.p
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-6 text-center text-md lg:text-[24px] font-medium text-[#B3B3B3] font-['Inter']"
+          className="mb-12 text-center text-md lg:text-[16px] lg:px-24 font-medium text-[#B3B3B3] font-['Inter']"
           style={{
             fontFamily: '"Inter", "Inter Placeholder", sans-serif',
             fontWeight: 500
           }}
         >
-          Meet Interview Coder
-        </motion.h2>
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mb-10 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] max-w-4xl mx-auto"
-        >
-          <span className="white-gradient">Invisible AI for </span>{" "}
-          <span className="highlighter-gradient">Technical</span>{" "}
-          <span className="white-gradient">Interviews</span>
-        </motion.h1>
+          Interview Coder is an{" "}
+          <span className="highlighter-gradient">undetectable</span> desktop
+          application to help you pass your Leetcode interviews.
+        </motion.p>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="flex flex-col md:flex-row gap-4 md:gap-12 w-full justify-center items-center md:text-medium text-sm"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <Button className="bg-primary w-full md:w-auto max-w-[280px] h-10 text-sm">
-            <Link href={downloadUrl} className="flex gap-2">
+          <Button className="bg-primary w-full sm:w-auto px-6 py-2">
+            <Link href={downloadUrl} className="flex items-center gap-2">
               <Image
                 src="/apple.svg"
                 alt="Apple"
@@ -70,11 +65,8 @@ export const HeroSection = () => {
               Download for Mac
             </Link>
           </Button>
-          <Button
-            variant="highlight"
-            className="w-full md:w-auto max-w-[280px] h-10 text-sm"
-          >
-            <Link href="/waitlist" className="flex gap-2">
+          <Button variant="highlight" className="w-full sm:w-auto px-6 py-2">
+            <Link href="/waitlist" className="flex items-center gap-2">
               <Image
                 src="/windows.svg"
                 alt="Windows"
@@ -87,7 +79,14 @@ export const HeroSection = () => {
           </Button>
         </motion.div>
 
-        <HeroVideo />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+          className="mt-8"
+        >
+          <HeroVideo />
+        </motion.div>
       </div>
     </main>
   )

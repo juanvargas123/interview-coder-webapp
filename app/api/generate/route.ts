@@ -79,13 +79,17 @@ ${pythonSolution}`
         throw new Error("Invalid response from DeepSeek API during analysis")
       }
 
-      const analysisContent = response.data.choices[0].message.content
-        .replace(/^```(?:json)?\n/, "") // Remove opening markdown
-        .replace(/\n```$/, "") // Remove closing markdown
-        .trim()
+      const analysisContent = response.data.choices[0].message.content.trim()
 
       try {
-        const analysis = JSON.parse(analysisContent)
+        // Find the first occurrence of a JSON object
+        const jsonMatch = analysisContent.match(/\{[\s\S]*?\}/)
+        if (!jsonMatch) {
+          throw new Error("Could not find JSON object in response")
+        }
+
+        const jsonStr = jsonMatch[0]
+        const analysis = JSON.parse(jsonStr)
         console.log("Analysis parsed successfully")
 
         // Combine the solution and analysis

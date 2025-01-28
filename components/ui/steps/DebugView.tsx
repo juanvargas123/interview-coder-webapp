@@ -41,61 +41,25 @@ const DebugView = () => {
               </div>
             </div>
 
-            {/* Solutions Grid */}
-            <div className="grid grid-cols-2 gap-8">
-              {/* Before Section */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-white/90">
-                  Before (Brute Force)
-                </h3>
-                <div className="bg-[#1E1E1E] rounded-lg overflow-hidden">
-                  <SyntaxHighlighter
-                    language="python"
-                    style={oneDark}
-                    customStyle={{
-                      background: "transparent",
-                      padding: "16px",
-                      margin: 0,
-                      borderRadius: 0,
-                      fontSize: "12px"
-                    }}
-                    showLineNumbers={true}
-                    wrapLines={true}
-                    wrapLongLines={true}
-                  >
-                    {`def twoSum(nums: List[int], target: int) -> List[int]:
-    n = len(nums)
-    # Check every possible pair
-    for i in range(n):
-        for j in range(i + 1, n):
-            if nums[i] + nums[j] == target:
-                return [i, j]
-    return []  # No solution found`}
-                  </SyntaxHighlighter>
-                </div>
-              </div>
-
-              {/* After Section */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-white/90">
-                  After (Optimized)
-                </h3>
-                <div className="bg-[#1E1E1E] rounded-lg overflow-hidden">
-                  <SyntaxHighlighter
-                    language="python"
-                    style={oneDark}
-                    customStyle={{
-                      background: "transparent",
-                      padding: "16px",
-                      margin: 0,
-                      borderRadius: 0,
-                      fontSize: "12px"
-                    }}
-                    showLineNumbers={true}
-                    wrapLines={true}
-                    wrapLongLines={true}
-                  >
-                    {`def twoSum(nums: List[int], target: int) -> List[int]:
+            {/* Solution Section */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-white/90">Solution</h3>
+              <div className="bg-[#1E1E1E] rounded-lg overflow-hidden">
+                <SyntaxHighlighter
+                  language="python"
+                  style={oneDark}
+                  customStyle={{
+                    background: "transparent",
+                    padding: "16px",
+                    margin: 0,
+                    borderRadius: 0,
+                    fontSize: "12px"
+                  }}
+                  showLineNumbers={true}
+                  wrapLines={true}
+                  wrapLongLines={true}
+                >
+                  {`def twoSum(nums: List[int], target: int) -> List[int]:
     seen = {}  # Value -> Index mapping
     for i, num in enumerate(nums):
         complement = target - num
@@ -103,8 +67,7 @@ const DebugView = () => {
             return [seen[complement], i]
         seen[num] = i
     return []  # No solution found`}
-                  </SyntaxHighlighter>
-                </div>
+                </SyntaxHighlighter>
               </div>
             </div>
 

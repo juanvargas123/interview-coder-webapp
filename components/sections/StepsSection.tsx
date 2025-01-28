@@ -1,20 +1,24 @@
 "use client"
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
+import { useUser } from "@/lib/hooks/use-user"
 
 import { HowToUseHeader } from "./HowToUseHeader"
-import ApiKey from "../ui/steps/apiKey"
+import SubscribePage from "../ui/steps/subscribePage"
 import Queue from "../ui/steps/Queue"
 import SolutionsView from "../ui/steps/SolutionsView"
 import DebugView from "../ui/steps/DebugView"
+import { Button } from "../ui/button"
+import Link from "next/link"
+import Image from "next/image"
 
 const steps = [
   {
     id: "api-key",
     subtitle: "Get Started",
-    title: "Login and subscribe to Interview Coder",
+    title: "Subscribe to Interview Coder",
     description:
-      "You'll need a funded OpenAI API key to use Interview Coder. Your key is never stored and is only used on your computer."
+      "Make an account and subscribe to Interview Coder. Get instant access to our AI-powered interview solution generator."
   },
   {
     id: "interview",
@@ -41,6 +45,7 @@ const steps = [
 
 export const StepsSection = () => {
   const [pathCoords, setPathCoords] = useState({ x1: 90, x2: 95 })
+  const { user } = useUser()
 
   useEffect(() => {
     const handleResize = () => {
@@ -333,29 +338,30 @@ export const StepsSection = () => {
                         {step.description}
                       </p>
                       {index === 0 && (
-                        <a
-                          href="https://platform.openai.com/api-keys"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-white inline-flex items-center hover:opacity-80 transition-all group"
+                        <Button
+                          variant="highlight"
+                          className="w-full sm:w-auto px-6 py-2"
                         >
-                          <span className="bg-gradient-to-r from-[#FFD700] to-[#FFC000] bg-clip-text text-transparent text-lg">
-                            Get an API Key
-                          </span>
-                          <svg
-                            className="ml-2 w-5 h-5 transform transition-transform group-hover:translate-x-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                          <Link
+                            href="/settings"
+                            className="flex items-center gap-2"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </a>
+                            Subscribe Today ($20/month)
+                            <svg
+                              className="ml-2 w-5 h-5 transform transition-transform group-hover:translate-x-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </Link>
+                        </Button>
                       )}
                     </div>
                   </motion.div>
@@ -377,7 +383,7 @@ export const StepsSection = () => {
                     }`}
                   >
                     {index === 0 ? (
-                      <ApiKey />
+                      <SubscribePage />
                     ) : index === 1 ? (
                       <Queue />
                     ) : index === 2 ? (

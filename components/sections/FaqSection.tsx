@@ -126,7 +126,7 @@ export function FaqSection() {
 
   return (
     <section className="py-24 relative">
-      <div className="container px-4 mx-auto max-w-6xl">
+      <div className="container px-4 mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4 tracking-tight">
             <span className="white-gradient font-inter">Common Questions</span>
@@ -154,11 +154,11 @@ export function FaqSection() {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center">
-          <div className="relative w-full h-[600px] overflow-hidden">
+        <div className="text-center ">
+          <div className="relative w-full h-[600px] lg:h-[800px]">
             <AnimatedKeyboard />
           </div>
-          <div className=" space-y-6">
+          <div className="">
             <div className="space-y-4">
               <h2 className="text-4xl font-bold tracking-tight">
                 Take the short way.
@@ -167,7 +167,7 @@ export function FaqSection() {
                 Download and use Interview Coder today.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
               <Button className="text-black gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] bg-primary hover:bg-primary/90">
                 <Link href={downloadUrl} className="flex items-center gap-2">
                   <Image

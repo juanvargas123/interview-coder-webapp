@@ -220,7 +220,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed left-0 top-0 w-full z-50 flex justify-center px-4 pt-4">
+      <div className="fixed left-0 top-0 w-full z-50 flex justify-center px-4 pt-4  overflow-hidden max-w-screen ">
         <nav
           className={cn(
             "w-full max-w-7xl h-14 transition-all duration-200 rounded-2xl border border-white/10",

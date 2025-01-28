@@ -1,4 +1,5 @@
 import styles from "@/styles/Keyboard.module.css"
+import { useEffect, useState } from "react"
 
 const KeyboardKey = ({
   children,
@@ -22,6 +23,16 @@ const KeyboardRow = ({ children, isBottom = false }) => (
 )
 
 export const AnimatedKeyboard = () => {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null // Return null on server-side and first render
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.keyboard}>
@@ -104,12 +115,6 @@ export const AnimatedKeyboard = () => {
           </KeyboardRow>
 
           <KeyboardRow isBottom>
-            <KeyboardKey isModifier>
-              <div className={styles.fnKey}>
-                <span>fn</span>
-                <span>fn</span>
-              </div>
-            </KeyboardKey>
             <KeyboardKey isModifier>
               <div className={styles.commandKey}>
                 <span>control</span>
