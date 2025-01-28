@@ -65,15 +65,15 @@ export const PricingSection = () => {
   }
 
   return (
-    <section className="bg-black">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 mt-48">
         <GlowingLine />
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Interview Coder just got smarter.
+            Interview Coder just got a lot smarter.
           </h2>
           <p className="mt-6 text-lg leading-8 text-[#999999]">
-            Fine-tuned models. 10x more powerful. 80% more accurate. <br />
+            Better prompts. 4o-mini to o1. We shit on hards now. <br />
             <br />
           </p>
         </div>

@@ -121,8 +121,8 @@ export function FaqSection() {
   }, [])
 
   const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder-v1/releases/download/v1.0.3/Interview.Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder-v1/releases/download/v1.0.3/Interview.Coder-x64.dmg"
+    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview.Coder-arm64.dmg"
+    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview.Coder-x64.dmg"
 
   return (
     <section className="py-24 relative">

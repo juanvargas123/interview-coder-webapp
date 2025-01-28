@@ -12,7 +12,7 @@ const steps = [
   {
     id: "api-key",
     subtitle: "Get Started",
-    title: "Enter your OpenAI API key",
+    title: "Login and subscribe to Interview Coder",
     description:
       "You'll need a funded OpenAI API key to use Interview Coder. Your key is never stored and is only used on your computer."
   },

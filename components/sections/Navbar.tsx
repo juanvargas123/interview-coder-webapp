@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { Badge } from "../ui/badge"
 
 interface Subscription {
   id: string
@@ -102,8 +103,8 @@ export default function Navbar() {
   }, [])
 
   const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder-v1/releases/download/v1.0.3/Interview.Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder-v1/releases/download/v1.0.3/Interview.Coder-x64.dmg"
+    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview.Coder-arm64.dmg"
+    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview.Coder-x64.dmg"
 
   const handleSignOut = async () => {
     try {
@@ -137,9 +138,12 @@ export default function Navbar() {
       return (
         <>
           {!isSubscribed && (
-            <Button onClick={() => router.push("/checkout")}>
+            <Button onClick={() => router.push("/")} className="relative">
               <Lock className="w-4 h-4 mr-2 text-black" />
               Subscribe
+              <div className="absolute -top-2 -right-2 bg-primary text-black text-[10px] font-semibold px-1.5 rounded-full">
+                NEW
+              </div>
             </Button>
           )}
           <DropdownMenu>
@@ -244,19 +248,24 @@ export default function Navbar() {
             <div className="flex-1 flex items-center justify-center">
               <div className="hidden md:flex items-center gap-8">
                 <Link
-                  href="#how-to-use"
+                  href="/"
                   className="text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   How to Use
                 </Link>
+                <div className="relative">
+                  <Link
+                    href="/"
+                    className="text-[#989898] hover:text-white transition-colors text-sm"
+                  >
+                    Subscription
+                  </Link>
+                  <Badge className="absolute -top-3 -right-6" variant="default">
+                    NEW
+                  </Badge>
+                </div>
                 <Link
-                  href="#pricing"
-                  className="text-[#989898] hover:text-white transition-colors text-sm"
-                >
-                  Pricing
-                </Link>
-                <Link
-                  href="#faq"
+                  href="/"
                   className="text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   FAQ
@@ -288,19 +297,19 @@ export default function Navbar() {
             >
               <div className="px-6 py-4 space-y-4">
                 <Link
-                  href="#how-to-use"
+                  href="/"
                   className="block text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   How to Use
                 </Link>
                 <Link
-                  href="#pricing"
+                  href="/"
                   className="block text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   Pricing
                 </Link>
                 <Link
-                  href="#faq"
+                  href="/"
                   className="block text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   FAQ

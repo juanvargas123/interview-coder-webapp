@@ -126,7 +126,7 @@ export function PaymentMethodModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#0A0A0A] border border-white/[0.06] p-4 lg:p-6 max-w-[700px] rounded-[16px] shadow-2xl overflow-hidden mx-4 lg:mx-0">
+      <DialogContent className="bg-[#0A0A0A] border border-white/[0.06] p-4 lg:p-6 max-w-[900px] rounded-[16px] shadow-2xl overflow-hidden mx-4 lg:mx-0">
         <DialogHeader>
           <DialogTitle className="text-base lg:text-[18px] font-medium text-white mb-1.5">
             Payment Methods
@@ -139,9 +139,9 @@ export function PaymentMethodModal({
           {paymentMethods.map((method) => (
             <div
               key={method.id}
-              className="flex items-center justify-between p-4 lg:p-5 bg-[#141414] border border-white/[0.06] rounded-[10px]"
+              className="flex items-center justify-between p-4 lg:p-6 bg-[#141414] border border-white/[0.06] rounded-[10px]"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 lg:gap-6">
                 <div className="w-10 h-7 lg:w-12 lg:h-8 flex items-center">
                   {getCardBrandIcon(method.brand)}
                 </div>
@@ -157,27 +157,27 @@ export function PaymentMethodModal({
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 lg:gap-4">
+              <div className="flex items-center gap-3 lg:gap-5">
                 {!method.isDefault && (
                   <>
                     <button
                       onClick={() => handleSetDefault(method.id)}
                       disabled={loading}
-                      className="px-3 lg:px-4 py-1.5 text-[12px] lg:text-[13px] font-medium rounded-[8px] text-[#45FF88] hover:bg-[#152015] border border-[#45FF88]/10 disabled:opacity-50 transition-all whitespace-nowrap"
+                      className="px-4 lg:px-5 py-1.5 text-[12px] lg:text-[13px] font-medium rounded-[8px] text-[#45FF88] hover:bg-[#152015] border border-[#45FF88]/10 disabled:opacity-50 transition-all whitespace-nowrap"
                     >
                       Make Default
                     </button>
                     <button
                       onClick={() => handleRemove(method.id)}
                       disabled={loading}
-                      className="px-3 lg:px-4 py-1.5 text-[12px] lg:text-[13px] font-medium rounded-[8px] text-[#FF4545] hover:bg-[#1F1315] border border-[#FF4545]/10 disabled:opacity-50 transition-all"
+                      className="px-4 lg:px-5 py-1.5 text-[12px] lg:text-[13px] font-medium rounded-[8px] text-[#FF4545] hover:bg-[#1F1315] border border-[#FF4545]/10 disabled:opacity-50 transition-all"
                     >
                       Remove
                     </button>
                   </>
                 )}
                 {method.isDefault && (
-                  <span className="px-3 lg:px-4 py-1 text-[12px] lg:text-[13px] font-medium bg-[#152015] text-[#45FF88] rounded-full border border-[#45FF88]/10">
+                  <span className="px-4 lg:px-5 py-1 text-[12px] lg:text-[13px] font-medium bg-[#152015] text-[#45FF88] rounded-full border border-[#45FF88]/10">
                     Default
                   </span>
                 )}

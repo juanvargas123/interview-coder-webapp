@@ -232,7 +232,44 @@ export default function SettingsPage() {
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className="min-h-screen bg-black">
+        <Navbar />
+        <div className="max-w-6xl mx-auto px-4 pt-20 pb-12 lg:pt-28">
+          <div className="flex lg:flex-row flex-col lg:gap-12 gap-8">
+            {/* Sidebar skeleton */}
+            <div className="lg:w-64 w-full">
+              <div className="space-y-2">
+                <div className="h-10 bg-white/5 rounded-lg animate-pulse" />
+                <div className="h-10 bg-white/5 rounded-lg animate-pulse" />
+              </div>
+            </div>
+
+            {/* Main content skeleton */}
+            <div className="flex-1 lg:max-w-2xl w-full space-y-8">
+              {/* User header skeleton */}
+              <div className="space-y-4">
+                <div className="h-12 w-48 bg-white/5 rounded-lg animate-pulse" />
+                <div className="h-4 w-72 bg-white/5 rounded-lg animate-pulse" />
+              </div>
+
+              {/* Content sections skeleton */}
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <div className="h-8 w-32 bg-white/5 rounded-lg animate-pulse" />
+                  <div className="h-[200px] bg-white/5 rounded-xl border border-gray-800 animate-pulse" />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="h-8 w-40 bg-white/5 rounded-lg animate-pulse" />
+                  <div className="h-[150px] bg-white/5 rounded-xl border border-gray-800 animate-pulse" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -246,6 +283,49 @@ export default function SettingsPage() {
               <>
                 <UserHeader user={user} />
                 <div className="space-y-8 lg:space-y-10">
+                  {subscription?.status === "active" &&
+                    subscription?.plan === "pro" && (
+                      <section>
+                        <h2 className="text-xl lg:text-2xl font-medium mb-3 lg:mb-4">
+                          Credits
+                        </h2>
+                        <p className="text-[13px] lg:text-[15px] text-gray-400 mb-4 lg:mb-6">
+                          Purchase additional credits to use Interview Coder.
+                        </p>
+                        <div className="bg-white/5 rounded-xl border border-gray-800">
+                          <div className="p-4 lg:p-6">
+                            <div className="flex items-center justify-between flex-wrap gap-4">
+                              <div>
+                                <h3 className="text-base lg:text-lg font-medium">
+                                  Available Credits
+                                </h3>
+                                <p className="text-3xl font-bold mt-2">
+                                  {subscription?.credits || 0}
+                                </p>
+                                <p className="text-[13px] lg:text-sm text-gray-400 mt-1">
+                                  Credits reset to 50 at the start of each
+                                  billing cycle
+                                </p>
+                              </div>
+                              <Button
+                                onClick={handlePurchaseCredits}
+                                disabled={purchaseCreditsLoading}
+                                className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors px-4 py-2 rounded-full text-sm font-medium"
+                              >
+                                {purchaseCreditsLoading ? (
+                                  "Processing..."
+                                ) : (
+                                  <>
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Purchase 50 Credits ($10)
+                                  </>
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    )}
                   <AccountDetails user={user} />
                 </div>
               </>
@@ -253,50 +333,6 @@ export default function SettingsPage() {
 
             {activeTab === "billing" && (
               <div className="space-y-6 lg:space-y-8">
-                {subscription?.status === "active" &&
-                  subscription?.plan === "pro" && (
-                    <section>
-                      <h2 className="text-xl lg:text-2xl font-medium mb-3 lg:mb-4">
-                        Credits
-                      </h2>
-                      <p className="text-[13px] lg:text-[15px] text-gray-400 mb-4 lg:mb-6">
-                        Purchase additional credits to use Interview Coder.
-                      </p>
-                      <div className="bg-white/5 rounded-xl border border-gray-800">
-                        <div className="p-4 lg:p-6">
-                          <div className="flex items-center justify-between flex-wrap gap-4">
-                            <div>
-                              <h3 className="text-base lg:text-lg font-medium">
-                                Available Credits
-                              </h3>
-                              <p className="text-3xl font-bold mt-2">
-                                {subscription?.credits || 0}
-                              </p>
-                              <p className="text-[13px] lg:text-sm text-gray-400 mt-1">
-                                Credits reset to 50 at the start of each billing
-                                cycle
-                              </p>
-                            </div>
-                            <Button
-                              onClick={handlePurchaseCredits}
-                              disabled={purchaseCreditsLoading}
-                              className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors px-4 py-2 rounded-full text-sm font-medium"
-                            >
-                              {purchaseCreditsLoading ? (
-                                "Processing..."
-                              ) : (
-                                <>
-                                  <Plus className="w-4 h-4 mr-2" />
-                                  Purchase 50 Credits ($10)
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-                  )}
-
                 <section>
                   <h2 className="text-xl lg:text-2xl font-medium mb-3 lg:mb-4">
                     Subscription Plan
