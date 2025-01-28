@@ -18,11 +18,11 @@ export async function POST(request: Request) {
       )
     }
     const openaiApiKey = process.env.OPEN_AI_API_KEY
-    const deepseekApiKey = process.env.DEEPSEEK_API_KEY
+    const anthropicApiKey = process.env.ANTHROPIC_API_KEY
 
-    if (!deepseekApiKey || !openaiApiKey) {
+    if (!anthropicApiKey || !openaiApiKey) {
       return NextResponse.json(
-        { error: "OpenAI API key not found in environment variables." },
+        { error: "Required API keys not found in environment variables." },
         { status: 500 }
       )
     }
@@ -41,7 +41,8 @@ export async function POST(request: Request) {
       console.log("Extracted code length:", extractedCode?.length ?? 0)
 
       // Simple, direct prompt following o1 guidelines
-      const analysisPrompt = `Return a JSON object analyzing this Python code with these fields:
+      const analysisPrompt = `You must respond with ONLY a valid JSON object, no markdown, no code blocks, no additional text.
+The JSON object must have exactly these fields:
 {
   "new_code": "an optimized or corrected version of the code, with comments explaining the changes",
   "thoughts": [3 conversational thoughts about what you changed, explaining your debugging process and analysis as if walking through your thought process with another developer],
@@ -49,57 +50,55 @@ export async function POST(request: Request) {
   "space_complexity": "memory usage analysis"
 }
 
-Code and Problem Information:
+Here is the code to analyze:
 ${extractedCode}
 
 Additional Problem Context:
 ${problemInfo.problem_statement ?? "Not available"}`
 
-      console.log("Full analysis prompt:", analysisPrompt)
       console.log("Analysis prompt length:", analysisPrompt.length)
       console.log("Making API request for analysis...")
 
       const response = await withTimeout(
         axios.post(
-          "https://api.deepseek.com/chat/completions",
+          "https://api.anthropic.com/v1/messages",
           {
-            model: "deepseek-chat",
+            model: "claude-3-sonnet-20240229",
+            max_tokens: 4000,
+            temperature: 0,
+            system:
+              "You are a code analyzer that MUST return ONLY valid JSON with no markdown, no code blocks, and no additional text. Your response should be parseable by JSON.parse() directly.",
             messages: [
               {
-                content:
-                  "You are a Python code analyzer that returns analysis in JSON format, with no markdown or code blocks. You should be very specific and detailed in your analysis, and you should be very specific in your thoughts. " +
-                  analysisPrompt,
-                role: "user"
+                role: "user",
+                content: analysisPrompt
               }
             ]
           },
           {
             headers: {
               "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${deepseekApiKey}`
+              "anthropic-version": "2023-06-01",
+              "x-api-key": anthropicApiKey
             }
           }
         )
       )
 
       console.log("Received analysis response with status:", response.status)
-      console.log("Response data structure:", {
-        has_choices: !!response.data?.choices,
-        has_content: !!response.data?.choices?.[0]?.message?.content
-      })
 
-      if (!response.data?.choices?.[0]?.message?.content) {
-        console.error("Invalid analysis response structure:", response.data)
-        throw new Error("Invalid response from DeepSeek API during analysis")
+      // More detailed logging of the response structure
+      console.log("Full API Response:", JSON.stringify(response.data, null, 2))
+
+      if (!response.data?.content || !response.data.content[0]?.text) {
+        console.error(
+          "Invalid or empty response from Claude API:",
+          response.data
+        )
+        throw new Error("Invalid or empty response from Claude API")
       }
 
-      // Get both reasoning and content
-      const reasoningContent =
-        response.data.choices[0].message.reasoning_content
-      console.log("Reasoning content:", reasoningContent)
-
-      const rawContent = response.data.choices[0].message.content
+      const rawContent = response.data.content[0].text
       console.log("Raw content from API:", rawContent)
 
       const analysisContent = rawContent

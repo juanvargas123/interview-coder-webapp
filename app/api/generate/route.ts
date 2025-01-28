@@ -4,6 +4,7 @@ import axios from "axios"
 import { withTimeout, type ProblemInfo } from "../config"
 import { generateSolution } from "./solution"
 export const maxDuration = 300
+
 export async function POST(request: Request) {
   try {
     console.log("Starting POST request processing...")
@@ -16,25 +17,34 @@ export async function POST(request: Request) {
       numTestCases: problemInfo.test_cases?.length
     })
 
-    const deepseekApiKey = process.env.DEEPSEEK_API_KEY
     const openaiApiKey = process.env.OPENAI_API_KEY
+    const anthropicApiKey = process.env.ANTHROPIC_API_KEY
+    if (!openaiApiKey) {
+      return NextResponse.json(
+        { error: "OpenAI API key is not configured" },
+        { status: 500 }
+      )
+    }
+    if (!anthropicApiKey) {
+      return NextResponse.json(
+        { error: "Anthropic API key is not configured" },
+        { status: 500 }
+      )
+    }
 
     try {
-      // First generate the Python solution
+      // Generate the Python solution using o1-mini
       console.log("Generating Python solution...")
-      const pythonSolution = await generateSolution(
-        problemInfo,
-        deepseekApiKey,
-        openaiApiKey
-      )
+      const pythonSolution = await generateSolution(problemInfo, openaiApiKey)
       console.log("Solution generated successfully")
 
-      // Then analyze the solution
+      // Then analyze the solution using DeepSeek
       console.log("Starting solution analysis...")
 
-      const analysisPrompt = `Return a JSON object analyzing this Python code with these fields:
+      const analysisPrompt = `You must respond with ONLY a valid JSON object, no markdown, no code blocks, no additional text.
+The JSON object must have exactly these fields:
 {
-  "thoughts": [3 conversational thoughts about the solution, said as if you were explaining the process of arriving to the solution before you wrote it to a school teacher, demonstrating your thoughts and understanding of the problem/],
+  "thoughts": [3 conversational thoughts about the solution, said as if you were explaining the process of arriving to the solution before you wrote it to a school teacher, demonstrating your thoughts and understanding of the problem],
   "time_complexity": "runtime analysis",
   "space_complexity": "memory usage analysis"
 }
@@ -47,39 +57,42 @@ ${pythonSolution}`
 
       const response = await withTimeout(
         axios.post(
-          "https://api.deepseek.com/chat/completions",
+          "https://api.anthropic.com/v1/messages",
           {
-            model: "deepseek-chat",
+            model: "claude-3-sonnet-20240229",
+            max_tokens: 4000,
+            temperature: 0,
+            system:
+              "You are a code analyzer that MUST return ONLY valid JSON with no markdown, no code blocks, and no additional text. Your response should be parseable by JSON.parse() directly.",
             messages: [
               {
                 role: "user",
                 content: analysisPrompt
               }
-            ],
-            stream: false
+            ]
           },
-
           {
             headers: {
               "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${deepseekApiKey}`
+              "anthropic-version": "2023-06-01",
+              "x-api-key": anthropicApiKey
             }
           }
         )
       )
 
       console.log("Received analysis response")
-      console.log("Response data structure:", {
-        has_content: !!response.data?.choices?.[0]?.message?.content
-      })
+      console.log("Full API Response:", JSON.stringify(response.data, null, 2))
 
-      if (!response.data?.choices?.[0]?.message?.content) {
-        console.error("Invalid analysis response structure:", response.data)
-        throw new Error("Invalid response from DeepSeek API during analysis")
+      if (!response.data?.content || !response.data.content[0]?.text) {
+        console.error(
+          "Invalid or empty response from Claude API:",
+          response.data
+        )
+        throw new Error("Invalid response from Claude API during analysis")
       }
 
-      const analysisContent = response.data.choices[0].message.content.trim()
+      const analysisContent = response.data.content[0].text.trim()
 
       try {
         // Find the first occurrence of a JSON object
@@ -117,8 +130,9 @@ ${pythonSolution}`
       if (error.response?.status === 401) {
         return NextResponse.json(
           {
-            error:
-              "Please close this window and re-enter a valid DeepSeek API key."
+            error: error.config?.url?.includes("anthropic")
+              ? "Please close this window and re-enter a valid Anthropic API key."
+              : "Please close this window and re-enter a valid OpenAI API key."
           },
           { status: 401 }
         )
