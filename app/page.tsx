@@ -24,8 +24,8 @@ export default function Home() {
   }, [])
 
   const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview-Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview-Coder-x64.dmg"
+    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.6/Interview-Coder-arm64.dmg"
+    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.6/Interview-Coder-x64.dmg"
 
   return (
     <div className="relative w-full hero-gradient lg:px-0 px-4">

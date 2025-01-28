@@ -21,8 +21,8 @@ export function Footer() {
   }, [])
 
   const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview-Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.5/Interview-Coder-x64.dmg"
+    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.6/Interview-Coder-arm64.dmg"
+    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.6/Interview-Coder-x64.dmg"
 
   return (
     <footer className="border-t border-neutral-800 bg-neutral-900/50 backdrop-blur-sm">
