@@ -16,8 +16,8 @@ export const HeroSection = () => {
   }, [])
 
   const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.6/Interview-Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.6/Interview-Coder-x64.dmg"
+    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
 
   return (
     <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center lg:pt-36">
