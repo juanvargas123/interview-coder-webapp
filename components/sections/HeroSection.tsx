@@ -20,8 +20,9 @@ export const HeroSection = () => {
     : "https://github.com/ibttf/interview-coder/releases/download/v1.0.6/Interview-Coder-x64.dmg"
 
   return (
-    <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center pt-36">
+    <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center lg:pt-36">
       {/* <WingsBackground /> */}
+      <LinkedinBadge />
       <div className="container relative z-10 px-4 text-center max-w-3xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, scale: 0.5 }}
