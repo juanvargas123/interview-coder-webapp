@@ -359,7 +359,6 @@ export default function SettingsPage() {
                                     }
                                   }}
                                 >
-                                  {console.log({ subscription })}
                                   <option value="python">Python</option>
                                   <option value="javascript">JavaScript</option>
                                   <option value="java">Java</option>
