@@ -19,21 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "../ui/badge"
 
-interface Subscription {
-  id: string
-  user_id: string
-  status: string
-  plan: string
-  current_period_end: string
-  current_period_start: string
-  cancel_at: string | null
-  canceled_at: string | null
-  stripe_customer_id: string
-  credits: number
-  created_at: string
-  updated_at: string
-}
-
 async function fetchUserAndSubscription() {
   const {
     data: { session }
@@ -50,7 +35,6 @@ async function fetchUserAndSubscription() {
 }
 
 export default function Navbar() {
-  const [isSilicon, setIsSilicon] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
@@ -93,18 +77,10 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll)
     handleScroll()
 
-    // Detect Silicon Mac
-    const platform = navigator.platform.toLowerCase()
-    setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
-
     return () => {
       window.removeEventListener("scroll", handleScroll)
     }
   }, [])
-
-  const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
 
   const handleSignOut = async () => {
     try {
@@ -141,9 +117,6 @@ export default function Navbar() {
             <Button onClick={() => router.push("/")} className="relative">
               <Lock className="w-4 h-4 mr-2 text-black" />
               Subscribe
-              <div className="absolute -top-2 -right-2 bg-primary text-black text-[10px] font-semibold px-1.5 rounded-full">
-                NEW
-              </div>
             </Button>
           )}
           <DropdownMenu>
@@ -199,21 +172,40 @@ export default function Navbar() {
         >
           Sign in
         </Link>
-        <Button
-          asChild
-          className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium"
-        >
-          <Link href={downloadUrl} className="flex items-center gap-2">
-            <Image
-              src="/apple.svg"
-              alt="Apple"
-              width={16}
-              height={16}
-              className="w-4 h-4"
-            />
-            Download
-          </Link>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/apple.svg"
+                  alt="Apple"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4"
+                />
+                Download
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <Link
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                className="w-full"
+              >
+                Download for Mac (Apple Silicon)
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                className="w-full"
+              >
+                Download for Mac (Intel)
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </>
     )
   }
@@ -260,7 +252,7 @@ export default function Navbar() {
                   >
                     Subscription
                   </Link>
-                  <Badge className="absolute -top-3 -right-6" variant="default">
+                  <Badge className="absolute -top-4 -right-7" variant="default">
                     NEW
                   </Badge>
                 </div>
@@ -354,24 +346,40 @@ export default function Navbar() {
                           Sign in
                         </Link>
                         <div className="space-y-2 mt-2">
-                          <Button
-                            asChild
-                            className="w-full bg-primary hover:bg-primary/90 text-black"
-                          >
-                            <Link
-                              href={downloadUrl}
-                              className="flex items-center gap-2 justify-center"
-                            >
-                              <Image
-                                src="/apple.svg"
-                                alt="Apple"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              Download
-                            </Link>
-                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button className="w-full bg-primary hover:bg-primary/90 text-black">
+                                <div className="flex items-center gap-2 justify-center">
+                                  <Image
+                                    src="/apple.svg"
+                                    alt="Apple"
+                                    width={16}
+                                    height={16}
+                                    className="w-4 h-4"
+                                  />
+                                  Download
+                                </div>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem>
+                                <Link
+                                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                                  className="w-full"
+                                >
+                                  Download for Mac (Apple Silicon)
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Link
+                                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                                  className="w-full"
+                                >
+                                  Download for Mac (Intel)
+                                </Link>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                           <Button
                             asChild
                             variant="secondary"

@@ -13,17 +13,6 @@ import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 export function Footer() {
-  const [isSilicon, setIsSilicon] = useState(false)
-
-  useEffect(() => {
-    const platform = navigator.platform.toLowerCase()
-    setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
-  }, [])
-
-  const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
-
   return (
     <footer className="border-t border-neutral-800 bg-neutral-900/50 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-12">
@@ -88,21 +77,40 @@ export function Footer() {
           <div className="md:col-span-4 flex flex-col gap-4">
             <h3 className="text-neutral-400 font-semibold">Download</h3>
             <div className="flex flex-col gap-4">
-              <Button
-                asChild
-                className="text-black gap-2 text-sm font-medium h-10 bg-primary hover:bg-primary/90 w-fit"
-              >
-                <Link href={downloadUrl} className="flex items-center gap-2">
-                  <Image
-                    src="/apple.svg"
-                    alt="Apple"
-                    width={16}
-                    height={16}
-                    className="w-4 h-4"
-                  />
-                  Download
-                </Link>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="text-black gap-2 text-sm font-medium h-10 bg-primary hover:bg-primary/90 w-fit">
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/apple.svg"
+                        alt="Apple"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      Download
+                    </div>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                      className="w-full"
+                    >
+                      Download for Mac (Apple Silicon)
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                      className="w-full"
+                    >
+                      Download for Mac (Intel)
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>

@@ -5,20 +5,14 @@ import { HeroVideo } from "@/components/ui/hero-video"
 import { WingsBackground } from "@/components/ui/WingsBackground"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 
 export const HeroSection = () => {
-  const [isSilicon, setIsSilicon] = useState(false)
-
-  useEffect(() => {
-    const platform = navigator.platform.toLowerCase()
-    setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
-  }, [])
-
-  const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
-
   return (
     <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center lg:pt-36">
       {/* <WingsBackground /> */}
@@ -54,18 +48,40 @@ export const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <Button className="bg-primary w-full sm:w-auto px-6 py-2">
-            <Link href={downloadUrl} className="flex items-center gap-2">
-              <Image
-                src="/apple.svg"
-                alt="Apple"
-                width={16}
-                height={16}
-                className="w-4 h-4"
-              />
-              Download for Mac
-            </Link>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-primary w-full sm:w-auto px-6 py-2">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/apple.svg"
+                    alt="Apple"
+                    width={16}
+                    height={16}
+                    className="w-4 h-4"
+                  />
+                  Download for Mac
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <Link
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                  className="w-full"
+                >
+                  Download for Mac (Apple Silicon)
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                  className="w-full"
+                >
+                  Download for Mac (Intel)
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button variant="highlight" className="w-full sm:w-auto px-6 py-2">
             <Link href="/waitlist" className="flex items-center gap-2">
               <Image

@@ -5,6 +5,12 @@ import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 
 const words = ["kill Leetcode", "fix Technical", "change Coding"]
 const faqs = [
@@ -113,16 +119,6 @@ function FaqItem({
 
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const [isSilicon, setIsSilicon] = useState(false)
-
-  useEffect(() => {
-    const platform = navigator.platform.toLowerCase()
-    setIsSilicon(platform.includes("mac") && !platform.includes("intel"))
-  }, [])
-
-  const downloadUrl = isSilicon
-    ? "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
-    : "https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
 
   return (
     <section className="py-24 relative">
@@ -168,18 +164,40 @@ export function FaqSection() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-              <Button className="text-black gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] bg-primary hover:bg-primary/90">
-                <Link href={downloadUrl} className="flex items-center gap-2">
-                  <Image
-                    src="/apple.svg"
-                    alt="Apple"
-                    width={16}
-                    height={16}
-                    className="w-4 h-4"
-                  />
-                  Download for Mac
-                </Link>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="text-black gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] bg-primary hover:bg-primary/90">
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/apple.svg"
+                        alt="Apple"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      Download for Mac
+                    </div>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                      className="w-full"
+                    >
+                      Download for Mac (Apple Silicon)
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                      className="w-full"
+                    >
+                      Download for Mac (Intel)
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button
                 variant="outline"
                 className="gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] border-neutral-700 hover:bg-neutral-800"
