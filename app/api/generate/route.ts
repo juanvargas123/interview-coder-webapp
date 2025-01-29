@@ -20,12 +20,14 @@ export async function POST(request: Request) {
     const openaiApiKey = process.env.OPENAI_API_KEY
     const anthropicApiKey = process.env.ANTHROPIC_API_KEY
     if (!openaiApiKey) {
+      console.log("OpenAI API key is not configured")
       return NextResponse.json(
         { error: "OpenAI API key is not configured" },
         { status: 500 }
       )
     }
     if (!anthropicApiKey) {
+      console.log("Anthropic API key is not configured")
       return NextResponse.json(
         { error: "Anthropic API key is not configured" },
         { status: 500 }
