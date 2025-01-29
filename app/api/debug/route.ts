@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
-    const openaiApiKey = process.env.OPEN_AI_API_KEY
+    const openaiApiKey = process.env.OPENAI_API_KEY
     const anthropicApiKey = process.env.ANTHROPIC_API_KEY
 
     if (!anthropicApiKey || !openaiApiKey) {
