@@ -23,7 +23,11 @@ export default function PoliciesPage() {
               </p>
               <p className="text-neutral-300">To request a refund:</p>
               <ul className="list-disc pl-6 text-neutral-300 space-y-2">
-                <li>Contact our customer service team via email or phone</li>
+                <li>
+                  Contact our customer service team via email or phone at
+                  churlee12@gmail.com or 4709192464.
+                </li>
+
                 <li>Provide your purchase details and reason for refund</li>
                 <li>Refunds will be processed within 5-7 business days</li>
               </ul>
