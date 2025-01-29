@@ -17,7 +17,7 @@ const faqs = [
   {
     question: "Is Interview Coder free?",
     answer:
-      "Yes, we only ask you to fund your Open AI API key, which we make no money off of. Our goal is to change the way companies conduct technical interviews, not to make a buck. "
+      "No, it's $20 a month. In exchange, you get access to the absolute latest models, including o1, Claude, and Deepseek."
   },
   {
     question: "How is it undetectable?",
