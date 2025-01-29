@@ -7,7 +7,6 @@ import { Footer } from "@/components/sections/Footer"
 import { HeroSection } from "@/components/sections/HeroSection"
 import { PricingSection } from "@/components/sections/PricingSection"
 import { StepsSection } from "@/components/sections/StepsSection"
-import { useEffect, useState } from "react"
 
 export default function Home() {
   return (

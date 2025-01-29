@@ -77,7 +77,7 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
           {
             role: "user",
             content:
-              "You are a Python code generator that only outputs valid Python code solutions. You should use a minimal amount of external libraries, and you should be writing code that is legible and the optimal solution in terms of time and space complexity. It is very important that this code is legible and understandable, so add comments next to relevant places in the code that explain what the code does. Absolutely no markdown. Write your answer in the style of a solution to a Leetcode problem." +
+              "You are a Python code generator that only outputs valid Python code solutions. You should use a minimal amount of external libraries, and you should be writing code that is legible and the optimal solution in terms of time and space complexity. It is very important that this code is legible and understandable, so add comments next to relevant places in the code that explain what the code does. Absolutely no markdown. Write your answer in the style of a solution to a Leetcode problem. Do not add any comments after the solution explaining how to use the function." +
               promptContent
           }
         ]
