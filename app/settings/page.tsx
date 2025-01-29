@@ -14,22 +14,7 @@ import { getCardBrandIcon } from "@/lib/utils"
 import { Lock, Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-
-interface Subscription {
-  id: string
-  user_id: string
-  status: string
-  plan: string
-  current_period_end: string
-  current_period_start: string
-  cancel_at: string | null
-  canceled_at: string | null
-  stripe_customer_id: string
-  credits: number
-  created_at: string
-  updated_at: string
-}
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 interface PaymentMethod {
   id: string
@@ -53,6 +38,7 @@ async function fetchSubscription(userId: string | undefined) {
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account")
   const { user, isSubscribed, loading } = useUser()
+  const queryClient = useQueryClient()
   const { data: subscription } = useQuery({
     queryKey: ["subscription", user?.id],
     queryFn: () => fetchSubscription(user?.id),
@@ -275,7 +261,7 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 pt-28 pb-12 lg:pt-28 pt-20">
+      <div className="max-w-6xl mx-auto px-4 pt-28 pb-12">
         <div className="flex lg:flex-row flex-col lg:gap-12 gap-8">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="flex-1 lg:max-w-2xl w-full">
@@ -321,6 +307,69 @@ export default function SettingsPage() {
                                   </>
                                 )}
                               </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    )}
+
+                  {subscription?.status === "active" &&
+                    subscription?.plan === "pro" && (
+                      <section>
+                        <h2 className="text-xl lg:text-2xl font-medium mb-3 lg:mb-4">
+                          Language Settings
+                        </h2>
+                        <p className="text-[13px] lg:text-[15px] text-gray-400 mb-4 lg:mb-6">
+                          Choose your preferred programming language for code
+                          generation.
+                        </p>
+                        <div className="bg-white/5 rounded-xl border border-gray-800">
+                          <div className="p-4 lg:p-6">
+                            <div className="flex items-center justify-between flex-wrap gap-4">
+                              <div>
+                                <h3 className="text-base lg:text-lg font-medium">
+                                  Current Language
+                                </h3>
+
+                                <select
+                                  className="mt-2 w-full max-w-xs bg-black/50 border border-gray-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                  value={
+                                    subscription?.preferred_language || "python"
+                                  }
+                                  onChange={async (e) => {
+                                    try {
+                                      await supabase
+                                        .from("subscriptions")
+                                        .update({
+                                          preferred_language: e.target.value
+                                        })
+                                        .eq("user_id", user?.id)
+                                      // Invalidate both queries to ensure UI updates
+                                      queryClient.invalidateQueries({
+                                        queryKey: ["subscription", user?.id]
+                                      })
+                                      queryClient.invalidateQueries({
+                                        queryKey: ["user"]
+                                      })
+                                    } catch (error) {
+                                      console.error(
+                                        "Error updating language:",
+                                        error
+                                      )
+                                    }
+                                  }}
+                                >
+                                  {console.log({ subscription })}
+                                  <option value="python">Python</option>
+                                  <option value="javascript">JavaScript</option>
+                                  <option value="java">Java</option>
+                                  <option value="golang">Golang</option>
+                                </select>
+                                <p className="text-[13px] lg:text-sm text-gray-400 mt-2">
+                                  This will be used as the default language for
+                                  your code generation
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>

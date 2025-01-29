@@ -32,6 +32,7 @@ export async function withTimeout<T>(
 }
 
 export interface ProblemInfo {
+  language?: "python" | "javascript" | "golang" | "java" // Optional programming language, defaults to python
   problem_statement?: string
   input_format?: {
     description?: string

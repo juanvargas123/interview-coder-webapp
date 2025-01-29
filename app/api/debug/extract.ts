@@ -3,7 +3,8 @@ import { withTimeout } from "../config"
 
 export async function extractCodeFromImages(
   imageDataList: string[],
-  apiKey: string
+  apiKey: string,
+  language: "python" | "javascript" | "golang" | "java" = "python"
 ) {
   console.log("Starting code extraction from images...")
 
@@ -21,7 +22,7 @@ export async function extractCodeFromImages(
 
   // Construct the extraction prompt
   const extractionPrompt = `Extract all relevant information from the provided images. Important notes:
-1. Extract all visible Python code, maintaining exact indentation and formatting
+1. Extract all visible ${language} code, maintaining exact indentation and formatting
 2. Combine code from multiple images if present
 3. Include all visible comments
 4. If there are any visible problem statements or question text, include those as well

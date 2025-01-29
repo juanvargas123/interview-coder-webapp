@@ -18,8 +18,14 @@ export async function generateSolution(
 
   console.log("Starting OpenAI solution generation...")
 
-  const promptContent = `You are a Python code generator. Your task is to generate a valid Python solution for the following problem.
-IMPORTANT: Return ONLY the Python code solution. No explanations, no markdown formatting, no additional text.
+  const promptContent = `You are a ${
+    problemInfo.language ?? "python"
+  } code generator. Your task is to generate a valid ${
+    problemInfo.language ?? "python"
+  } solution for the following problem.
+IMPORTANT: Return ONLY the ${
+    problemInfo.language ?? "python"
+  } code solution. No explanations, no markdown formatting, no additional text.
 
 PROBLEM DETAILS:
 ---------------
@@ -35,7 +41,7 @@ ${
     ?.map((p) => {
       let typeStr = p.type
       if (p.subtype) typeStr += ` of ${p.subtype}`
-      typeStr += p.nullable ? " | None" : " (required)"
+      typeStr += p.nullable ? " | null" : " (required)"
       return `- ${p.name}: ${typeStr}`
     })
     .join("\n") ?? "No parameters"
@@ -47,7 +53,7 @@ Returns: ${problemInfo.output_format?.type ?? "None"}${
     problemInfo.output_format?.subtype
       ? ` of ${problemInfo.output_format.subtype}`
       : ""
-  }${problemInfo.output_format?.nullable ? " | None" : " (never None)"}
+  }${problemInfo.output_format?.nullable ? " | null" : " (never null)"}
 
 Constraints:
 ${
@@ -58,7 +64,7 @@ ${
         constraintStr += ` (${c.parameter}: ${c.range.min} to ${c.range.max})`
       }
       if (c.nullable !== undefined) {
-        constraintStr += c.nullable ? " (can be None)" : " (cannot be None)"
+        constraintStr += c.nullable ? " (can be null)" : " (cannot be null)"
       }
       return constraintStr
     })
@@ -77,7 +83,11 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
           {
             role: "user",
             content:
-              "You are a Python code generator that only outputs valid Python code solutions. You should use a minimal amount of external libraries, and you should be writing code that is legible and the optimal solution in terms of time and space complexity. It is very important that this code is legible and understandable, so add comments next to relevant places in the code that explain what the code does. Absolutely no markdown. Write your answer in the style of a solution to a Leetcode problem. Do not add any comments after the solution explaining how to use the function." +
+              `You are a ${
+                problemInfo.language ?? "python"
+              } code generator that only outputs valid ${
+                problemInfo.language ?? "python"
+              } code solutions. You should use a minimal amount of external libraries, and you should be writing code that is legible and the optimal solution in terms of time and space complexity. It is very important that this code is legible and understandable, so add comments next to relevant places in the code that explain what the code does. Absolutely no markdown. Write your answer in the style of a solution to a Leetcode problem. Do not add any comments after the solution explaining how to use the function.` +
               promptContent
           }
         ]

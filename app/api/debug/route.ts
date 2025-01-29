@@ -32,7 +32,8 @@ export async function POST(request: Request) {
       console.log("Extracting code from images...")
       const extractedCode = await extractCodeFromImages(
         imageDataList,
-        openaiApiKey
+        openaiApiKey,
+        problemInfo.language
       )
       console.log("Code extracted successfully")
 
@@ -44,8 +45,10 @@ export async function POST(request: Request) {
       const analysisPrompt = `You must respond with ONLY a valid JSON object, no markdown, no code blocks, no additional text.
 The JSON object must have exactly these fields:
 {
-  "new_code": "an optimized or corrected version of the code, with comments explaining the changes",
-  "thoughts": [3 conversational thoughts about what you changed, explaining your debugging process and analysis as if walking through your thought process with another developer],
+  "new_code": "an optimized or corrected version of the ${
+    problemInfo.language
+  } code, with comments explaining the changes",
+  "thoughts": [3 conversational, short thoughts about what you changed, explaining your debugging process and analysis as if walking through your thought process with another developer],
   "time_complexity": "runtime analysis",
   "space_complexity": "memory usage analysis"
 }

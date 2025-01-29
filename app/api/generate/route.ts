@@ -35,9 +35,9 @@ export async function POST(request: Request) {
     }
 
     try {
-      // Generate the Python solution using o1-mini
-      console.log("Generating Python solution...")
-      const pythonSolution = await generateSolution(problemInfo, openaiApiKey)
+      // Generate the solution using o1-mini
+      console.log(`Generating ${problemInfo.language} solution...`)
+      const solution = await generateSolution(problemInfo, openaiApiKey)
       console.log("Solution generated successfully")
 
       // Then analyze the solution using DeepSeek
@@ -46,13 +46,13 @@ export async function POST(request: Request) {
       const analysisPrompt = `You must respond with ONLY a valid JSON object, no markdown, no code blocks, no additional text.
 The JSON object must have exactly these fields:
 {
-  "thoughts": [3 conversational thoughts about the solution, said as if you were explaining the process of arriving to the solution before you wrote it to a school teacher, demonstrating your thoughts and understanding of the problem],
+  "thoughts": [3 short, conversational thoughts about the solution, said as if you were explaining the process of arriving to the solution before you wrote it to a school teacher, demonstrating your thoughts and understanding of the problem. Keep it short and concise and only mention key points, data structures, algorithms, and core concepts used.],
   "time_complexity": "runtime analysis",
   "space_complexity": "memory usage analysis"
 }
 
 Code:
-${pythonSolution}`
+${solution}`
 
       console.log("Analysis prompt length:", analysisPrompt.length)
       console.log("Making API request for analysis...")
@@ -110,7 +110,7 @@ ${pythonSolution}`
         // Combine the solution and analysis
         return NextResponse.json({
           ...analysis,
-          code: pythonSolution
+          code: solution
         })
       } catch (parseError: any) {
         console.error("Error parsing analysis response:", {

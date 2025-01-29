@@ -8,6 +8,7 @@ import { useEffect } from "react"
 export interface ExtendedUser extends User {
   isSubscribed?: boolean
   isOnWaitlist?: boolean
+  preferred_language?: string
 }
 
 async function fetchUserAndStatus(): Promise<{
@@ -26,7 +27,7 @@ async function fetchUserAndStatus(): Promise<{
   // Get subscription status
   const { data: subscription } = await supabase
     .from("subscriptions")
-    .select("status, cancel_at, current_period_end")
+    .select("status, cancel_at, current_period_end, language")
     .eq("user_id", session.user.id)
     .single()
 
