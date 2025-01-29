@@ -18,16 +18,16 @@ export const HeroSection = () => {
       {/* <WingsBackground /> */}
       <LinkedinBadge />
       <div className="container relative z-10 px-4 text-center max-w-3xl mx-auto">
-        <motion.h1
+        <motion.h2
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.3]"
         >
           <span className="white-gradient pb-6">F*ck Leetcode.</span>
-        </motion.h1>
+        </motion.h2>
 
-        <motion.p
+        <motion.h1
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -40,7 +40,7 @@ export const HeroSection = () => {
           Interview Coder is an{" "}
           <span className="highlighter-gradient">undetectable</span> desktop
           application to help you pass your Leetcode interviews.
-        </motion.p>
+        </motion.h1>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
