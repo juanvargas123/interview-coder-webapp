@@ -11,7 +11,7 @@ import { useEffect, useState } from "react"
 
 export default function Home() {
   return (
-    <div className="relative w-full hero-gradient lg:px-0 px-4">
+    <div className="relative w-screen overflow-x-hidden hero-gradient lg:px-0 px-4">
       <Navbar />
       <HeroSection />
 
