@@ -118,11 +118,13 @@ export default function Navbar() {
   const renderAuthSection = () => {
     if (loading) {
       return (
-        <div className="hidden md:flex items-center gap-4">
-          <Skeleton className="h-9 w-[100px]" />
-          <Skeleton className="h-9 w-[100px]" />
-          <Skeleton className="h-8 w-8 rounded-full" />
-        </div>
+        <>
+          <div className="hidden md:flex items-center gap-4">
+            <Skeleton className="h-9 w-[100px]" />
+            <Skeleton className="h-9 w-[100px]" />
+            <Skeleton className="h-8 w-8 rounded-full" />
+          </div>
+        </>
       )
     }
 
@@ -197,6 +199,21 @@ export default function Navbar() {
 
     return (
       <>
+        {githubLoading ? (
+          <Skeleton className="h-9 w-[100px] mr-4" />
+        ) : (
+          <Button variant="outline" asChild className="gap-1 bg-transparent">
+            <Link
+              href="https://github.com/ibttf/interview-coder"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center"
+            >
+              <Star className="w-4 h-4 fill-white" />
+              <span>{githubData || 911}</span>
+            </Link>
+          </Button>
+        )}
         <Link
           href="/signin"
           className="text-[#989898] hover:text-white transition-colors text-sm"
