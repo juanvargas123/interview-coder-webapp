@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react"
 import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { ChevronDown, Menu, Lock } from "lucide-react"
+import { ChevronDown, Menu, Lock, Star } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Button } from "../ui/button"
 import { Skeleton } from "../ui/skeleton"
@@ -34,6 +34,14 @@ async function fetchUserAndSubscription() {
   return { user: session.user, subscription }
 }
 
+async function fetchGitHubStars() {
+  const response = await fetch(
+    "https://api.github.com/repos/ibttf/interview-coder"
+  )
+  const data = await response.json()
+  return data.stargazers_count
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -46,6 +54,13 @@ export default function Navbar() {
   const { data, isLoading: loading } = useQuery({
     queryKey: ["user-nav"],
     queryFn: fetchUserAndSubscription,
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    refetchInterval: 1000 * 60 * 5 // Refetch every 5 minutes
+  })
+
+  const { data: githubData, isLoading: githubLoading } = useQuery({
+    queryKey: ["github-stars"],
+    queryFn: fetchGitHubStars,
     staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
     refetchInterval: 1000 * 60 * 5 // Refetch every 5 minutes
   })
@@ -105,6 +120,7 @@ export default function Navbar() {
       return (
         <div className="hidden md:flex items-center gap-4">
           <Skeleton className="h-9 w-[100px]" />
+          <Skeleton className="h-9 w-[100px]" />
           <Skeleton className="h-8 w-8 rounded-full" />
         </div>
       )
@@ -113,6 +129,21 @@ export default function Navbar() {
     if (user) {
       return (
         <>
+          {githubLoading ? (
+            <Skeleton className="h-9 w-[100px] mr-4" />
+          ) : (
+            <Button variant="outline" asChild className="gap-1 bg-transparent">
+              <Link
+                href="https://github.com/ibttf/interview-coder"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center"
+              >
+                <Star className="w-4 h-4 fill-white" />
+                <span>{githubData || 911}</span>
+              </Link>
+            </Button>
+          )}
           {!isSubscribed && (
             <Button onClick={() => router.push("/")} className="relative">
               <Lock className="w-4 h-4 mr-2 text-black" />
@@ -187,20 +218,38 @@ export default function Navbar() {
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
+          <DropdownMenuContent
+            className="w-[280px] bg-[#1A1A1A] backdrop-blur-lg border-white/10 rounded-xl py-2 space-y-1 md:w-auto"
+            align="end"
+            sideOffset={8}
+          >
+            <DropdownMenuItem asChild>
               <Link
                 href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
-                className="w-full"
+                className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
+                <Image
+                  src="/apple.svg"
+                  alt="Apple"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4"
+                />
                 Download for Mac (Apple Silicon)
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link
                 href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
-                className="w-full"
+                className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
+                <Image
+                  src="/apple.svg"
+                  alt="Apple"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4"
+                />
                 Download for Mac (Intel)
               </Link>
             </DropdownMenuItem>
@@ -212,17 +261,17 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed left-0 top-0 w-full z-50 flex justify-center px-4 pt-4  overflow-hidden max-w-screen ">
+      <div className="fixed left-0 top-0 w-full z-50 flex justify-center px-4 pt-4">
         <nav
           className={cn(
-            "w-full max-w-7xl h-14 transition-all duration-200 rounded-2xl border border-white/10",
+            "relative w-full max-w-7xl transition-all duration-200 rounded-2xl border border-white/10",
             scrolled
               ? "bg-black/40 backdrop-blur-xl"
               : "bg-[#0A0A0A]/40 backdrop-blur-xl",
             mobileMenuOpen && "!rounded-b-none"
           )}
         >
-          <div className="h-full flex items-center justify-between px-6">
+          <div className="h-14 flex items-center justify-between px-6">
             <Link
               href="/"
               className="text-white hover:text-white/80 transition-colors flex items-center gap-2 shrink-0"
@@ -285,7 +334,7 @@ export default function Navbar() {
           {mobileMenuOpen && (
             <div
               ref={mobileMenuRef}
-              className="md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl"
+              className="absolute left-0 right-0 top-14 z-50 md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl shadow-lg"
             >
               <div className="px-6 py-4 space-y-4">
                 <Link
@@ -308,9 +357,37 @@ export default function Navbar() {
                 </Link>
 
                 {!loading && (
-                  <div className="pt-2 border-t border-white/10">
+                  <div className="pt-2 border-t border-white/10 w-fit">
+                    {githubLoading ? (
+                      <Skeleton className="h-9 w-[100px] mb-4" />
+                    ) : (
+                      <Button
+                        variant="outline"
+                        asChild
+                        className="gap-2 w-full mb-4"
+                      >
+                        <Link
+                          href="https://github.com/ibttf/interview-coder"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center"
+                        >
+                          <Star className="w-4 h-4" />
+                          <span>{githubData || 0}</span>
+                        </Link>
+                      </Button>
+                    )}
                     {user ? (
                       <>
+                        {!isSubscribed && (
+                          <Button
+                            onClick={() => router.push("/")}
+                            className="relative"
+                          >
+                            <Lock className="w-4 h-4 mr-2 text-black" />
+                            Subscribe
+                          </Button>
+                        )}
                         <div className="flex items-center gap-3 py-2">
                           <Avatar className="h-8 w-8">
                             <AvatarImage src={user.user_metadata?.avatar_url} />
@@ -341,64 +418,50 @@ export default function Navbar() {
                       <>
                         <Link
                           href="/signin"
-                          className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+                          className="block text-[#989898] hover:text-white transition-colors text-sm"
                         >
                           Sign in
                         </Link>
                         <div className="space-y-2 mt-2">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button className="w-full bg-primary hover:bg-primary/90 text-black">
-                                <div className="flex items-center gap-2 justify-center">
-                                  <Image
-                                    src="/apple.svg"
-                                    alt="Apple"
-                                    width={16}
-                                    height={16}
-                                    className="w-4 h-4"
-                                  />
-                                  Download
-                                </div>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem>
-                                <Link
-                                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
-                                  className="w-full"
-                                >
-                                  Download for Mac (Apple Silicon)
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Link
-                                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
-                                  className="w-full"
-                                >
-                                  Download for Mac (Intel)
-                                </Link>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                          <Button
-                            asChild
-                            variant="secondary"
-                            className="w-full"
+                          <Link
+                            href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                            className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                           >
-                            <Link
-                              href="/waitlist"
-                              className="flex items-center gap-2 justify-center"
-                            >
-                              <Image
-                                src="/windows.svg"
-                                alt="Windows"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              Windows Waitlist
-                            </Link>
-                          </Button>
+                            <Image
+                              src="/apple.svg"
+                              alt="Apple"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            Download for Mac (Apple Silicon)
+                          </Link>
+                          <Link
+                            href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                            className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                          >
+                            <Image
+                              src="/apple.svg"
+                              alt="Apple"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            Download for Mac (Intel)
+                          </Link>
+                          <Link
+                            href="/waitlist"
+                            className="flex items-center gap-2 justify-center w-full bg-secondary hover:bg-secondary/90 text-white transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                          >
+                            <Image
+                              src="/windows.svg"
+                              alt="Windows"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4"
+                            />
+                            Windows Waitlist
+                          </Link>
                         </div>
                       </>
                     )}
