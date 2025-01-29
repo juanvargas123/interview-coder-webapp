@@ -247,7 +247,7 @@ export default function Navbar() {
                 </Link>
                 <div className="relative">
                   <Link
-                    href="/"
+                    href="/#subscription"
                     className="text-[#989898] hover:text-white transition-colors text-sm"
                   >
                     Subscription
@@ -257,7 +257,7 @@ export default function Navbar() {
                   </Badge>
                 </div>
                 <Link
-                  href="/"
+                  href="/#faq"
                   className="text-[#989898] hover:text-white transition-colors text-sm"
                 >
                   FAQ
