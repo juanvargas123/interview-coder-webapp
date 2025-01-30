@@ -75,6 +75,7 @@ const GitHubStarsButton = ({
 export default function Navbar() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [windowWidth, setWindowWidth] = useState(0)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const router = useRouter()
@@ -98,6 +99,14 @@ export default function Navbar() {
   const user = data?.user
   const subscription = data?.subscription
   const isSubscribed = subscription?.status === "active"
+
+  // Add window width tracking
+  useEffect(() => {
+    setWindowWidth(window.innerWidth)
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   // Add click outside handler
   useEffect(() => {
@@ -290,17 +299,17 @@ export default function Navbar() {
           className="w-full px-4 flex justify-center"
           style={{
             paddingTop:
-              window.innerWidth >= 768 ? `${8 + scrollProgress * 8}px` : "8px",
+              windowWidth >= 768 ? `${8 + scrollProgress * 8}px` : "8px",
             paddingLeft:
-              window.innerWidth >= 768 ? `${scrollProgress * 16}px` : "16px",
+              windowWidth >= 768 ? `${scrollProgress * 16}px` : "16px",
             paddingRight:
-              window.innerWidth >= 768 ? `${scrollProgress * 16}px` : "16px"
+              windowWidth >= 768 ? `${scrollProgress * 16}px` : "16px"
           }}
         >
           <nav
             className="relative w-full rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 md:transition-all md:duration-300"
             style={
-              window.innerWidth >= 768
+              windowWidth >= 768
                 ? {
                     width:
                       scrollProgress === 0
