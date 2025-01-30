@@ -42,8 +42,34 @@ async function fetchGitHubStars() {
   return data.stargazers_count
 }
 
+const GitHubStarsButton = ({
+  githubData,
+  isLoading
+}: {
+  githubData: number | undefined
+  isLoading: boolean
+}) => {
+  if (isLoading) {
+    return <Skeleton className="h-9 w-[100px] mr-4" />
+  }
+
+  return (
+    <Button variant="outline" asChild className="gap-1 bg-transparent">
+      <Link
+        href="https://github.com/ibttf/interview-coder"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center"
+      >
+        <Star className="w-4 h-4 fill-white" />
+        <span>{githubData || 911}</span>
+      </Link>
+    </Button>
+  )
+}
+
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
@@ -86,7 +112,9 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+      // Calculate progress as percentage (0 to 1) up to 10% of screen height
+      const progress = Math.min(1, window.scrollY / (window.innerHeight * 0.1))
+      setScrollProgress(progress)
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -131,21 +159,10 @@ export default function Navbar() {
     if (user) {
       return (
         <>
-          {githubLoading ? (
-            <Skeleton className="h-9 w-[100px] mr-4" />
-          ) : (
-            <Button variant="outline" asChild className="gap-1 bg-transparent">
-              <Link
-                href="https://github.com/ibttf/interview-coder"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center"
-              >
-                <Star className="w-4 h-4 fill-white" />
-                <span>{githubData || 911}</span>
-              </Link>
-            </Button>
-          )}
+          <GitHubStarsButton
+            githubData={githubData}
+            isLoading={githubLoading}
+          />
           {!isSubscribed && (
             <Button onClick={() => router.push("/")} className="relative">
               <Lock className="w-4 h-4 mr-2 text-black" />
@@ -199,21 +216,7 @@ export default function Navbar() {
 
     return (
       <>
-        {githubLoading ? (
-          <Skeleton className="h-9 w-[100px] mr-4" />
-        ) : (
-          <Button variant="outline" asChild className="gap-1 bg-transparent">
-            <Link
-              href="https://github.com/ibttf/interview-coder"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center"
-            >
-              <Star className="w-4 h-4 fill-white" />
-              <span>{githubData || 911}</span>
-            </Link>
-          </Button>
-        )}
+        <GitHubStarsButton githubData={githubData} isLoading={githubLoading} />
         <Link
           href="/signin"
           className="text-[#989898] hover:text-white transition-colors text-sm"
@@ -278,216 +281,237 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed left-0 top-0 w-full z-50 flex justify-center px-4 pt-4">
-        <nav
-          className={cn(
-            "relative w-full max-w-7xl transition-all duration-200 rounded-2xl border border-white/10",
-            scrolled
-              ? "bg-black/40 backdrop-blur-xl"
-              : "bg-[#0A0A0A]/40 backdrop-blur-xl",
-            mobileMenuOpen && "!rounded-b-none"
-          )}
+      <div className="fixed left-0 top-0 w-full z-50 flex justify-center pt-2 md:pt-0">
+        <div
+          className="w-full px-4 flex justify-center"
+          style={{
+            paddingTop:
+              window.innerWidth >= 768 ? `${8 + scrollProgress * 8}px` : "8px",
+            paddingLeft:
+              window.innerWidth >= 768 ? `${scrollProgress * 16}px` : "16px",
+            paddingRight:
+              window.innerWidth >= 768 ? `${scrollProgress * 16}px` : "16px"
+          }}
         >
-          <div className="h-14 flex items-center justify-between px-6">
-            <Link
-              href="/"
-              className="text-white hover:text-white/80 transition-colors flex items-center gap-2 shrink-0"
-            >
-              <Image
-                src="/logo.svg"
-                alt="Interview Coder"
-                width={20}
-                height={20}
-                className="w-6 h-6 rounded-full"
-              />
-              <span className="text-sm font-semibold">Interview Coder</span>
-            </Link>
-
-            <div className="flex-1 flex items-center justify-center">
-              <div className="hidden md:flex items-center gap-8">
-                <Link
-                  href="/"
-                  className="text-[#989898] hover:text-white transition-colors text-sm"
+          <nav
+            className="relative w-full rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 md:transition-all md:duration-300"
+            style={
+              window.innerWidth >= 768
+                ? {
+                    width:
+                      scrollProgress === 0
+                        ? "100%"
+                        : `${100 - scrollProgress * 25}%`,
+                    backgroundColor: `rgba(0, 0, 0, ${scrollProgress * 0.4})`,
+                    backdropFilter: `blur(${scrollProgress * 16}px)`,
+                    borderColor: `rgba(255, 255, 255, ${scrollProgress * 0.1})`
+                  }
+                : {}
+            }
+          >
+            <div className="h-16 flex items-center justify-between px-6">
+              <Link
+                href="/"
+                className="text-white hover:text-white/80 transition-colors flex items-center gap-2 shrink-0"
+              >
+                <Image
+                  src="/logo.svg"
+                  alt="Interview Coder"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 rounded-full"
+                />
+                <span
+                  className="text-sm font-semibold transition-opacity duration-300 md:block hidden"
+                  style={{
+                    opacity: Math.max(0, 1 - scrollProgress * 2)
+                  }}
                 >
-                  How to Use
-                </Link>
-                <div className="relative">
+                  Interview Coder
+                </span>
+              </Link>
+
+              <div className="flex-1 flex items-center justify-center">
+                <div
+                  className="hidden md:flex items-center gap-8 transition-all duration-300"
+                  style={{
+                    width: "100%",
+                    justifyContent: "center"
+                  }}
+                >
                   <Link
-                    href="/#subscription"
+                    href="/#how-to-use"
                     className="text-[#989898] hover:text-white transition-colors text-sm"
                   >
-                    Subscription
+                    How to Use
                   </Link>
-                  <Badge className="absolute -top-4 -right-7" variant="default">
-                    NEW
-                  </Badge>
-                </div>
-                <Link
-                  href="/#faq"
-                  className="text-[#989898] hover:text-white transition-colors text-sm"
-                >
-                  FAQ
-                </Link>
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-4 shrink-0">
-              {renderAuthSection()}
-            </div>
-
-            <button
-              ref={menuButtonRef}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={cn(
-                "md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors",
-                mobileMenuOpen && "bg-white/5"
-              )}
-            >
-              <Menu className="w-5 h-5 text-white" />
-            </button>
-          </div>
-
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div
-              ref={mobileMenuRef}
-              className="absolute left-0 right-0 top-14 z-50 md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl shadow-lg"
-            >
-              <div className="px-6 py-4 space-y-4">
-                <Link
-                  href="/"
-                  className="block text-[#989898] hover:text-white transition-colors text-sm"
-                >
-                  How to Use
-                </Link>
-                <Link
-                  href="/"
-                  className="block text-[#989898] hover:text-white transition-colors text-sm"
-                >
-                  Pricing
-                </Link>
-                <Link
-                  href="/"
-                  className="block text-[#989898] hover:text-white transition-colors text-sm"
-                >
-                  FAQ
-                </Link>
-
-                {!loading && (
-                  <div className="pt-2 border-t border-white/10 w-fit">
-                    {githubLoading ? (
-                      <Skeleton className="h-9 w-[100px] mb-4" />
-                    ) : (
-                      <Button
-                        variant="outline"
-                        asChild
-                        className="gap-2 w-full mb-4"
-                      >
-                        <Link
-                          href="https://github.com/ibttf/interview-coder"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center"
-                        >
-                          <Star className="w-4 h-4" />
-                          <span>{githubData || 0}</span>
-                        </Link>
-                      </Button>
-                    )}
-                    {user ? (
-                      <>
-                        {!isSubscribed && (
-                          <Button
-                            onClick={() => router.push("/")}
-                            className="relative"
-                          >
-                            <Lock className="w-4 h-4 mr-2 text-black" />
-                            Subscribe
-                          </Button>
-                        )}
-                        <div className="flex items-center gap-3 py-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={user.user_metadata?.avatar_url} />
-                            <AvatarFallback className="bg-primary text-xs">
-                              {user.email?.slice(0, 2).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="text-sm text-white">
-                              {user.email}
-                            </span>
-                          </div>
-                        </div>
-                        <Link
-                          href="/settings"
-                          className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
-                        >
-                          Settings
-                        </Link>
-                        <button
-                          onClick={handleSignOut}
-                          className="w-full text-left text-[#FF4545] hover:text-red-400 text-sm py-2"
-                        >
-                          Log out
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          href="/signin"
-                          className="block text-[#989898] hover:text-white transition-colors text-sm"
-                        >
-                          Sign in
-                        </Link>
-                        <div className="space-y-2 mt-2">
-                          <Link
-                            href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
-                            className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
-                          >
-                            <Image
-                              src="/apple.svg"
-                              alt="Apple"
-                              width={16}
-                              height={16}
-                              className="w-4 h-4"
-                            />
-                            Download for Mac (Apple Silicon)
-                          </Link>
-                          <Link
-                            href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
-                            className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
-                          >
-                            <Image
-                              src="/apple.svg"
-                              alt="Apple"
-                              width={16}
-                              height={16}
-                              className="w-4 h-4"
-                            />
-                            Download for Mac (Intel)
-                          </Link>
-                          <Link
-                            href="/waitlist"
-                            className="flex items-center gap-2 justify-center w-full bg-secondary hover:bg-secondary/90 text-white transition-all px-4 py-1.5 text-sm font-medium rounded-md"
-                          >
-                            <Image
-                              src="/windows.svg"
-                              alt="Windows"
-                              width={16}
-                              height={16}
-                              className="w-4 h-4"
-                            />
-                            Windows Waitlist
-                          </Link>
-                        </div>
-                      </>
-                    )}
+                  <div>
+                    <Link
+                      href="/#subscription"
+                      className="text-[#989898] hover:text-white transition-colors text-sm"
+                    >
+                      <span className="">
+                        Subscription
+                        <Badge variant="highlight" className="ml-2">
+                          NEW
+                        </Badge>
+                      </span>
+                    </Link>
                   </div>
-                )}
+                  <Link
+                    href="/#faq"
+                    className="text-[#989898] hover:text-white transition-colors text-sm"
+                  >
+                    FAQ
+                  </Link>
+                </div>
               </div>
+
+              <div className="hidden md:flex items-center gap-4 shrink-0">
+                {renderAuthSection()}
+              </div>
+
+              <button
+                ref={menuButtonRef}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className={cn(
+                  "md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors",
+                  mobileMenuOpen && "bg-white/5"
+                )}
+              >
+                <Menu className="w-5 h-5 text-white" />
+              </button>
             </div>
-          )}
-        </nav>
+
+            {/* Mobile Menu */}
+            {mobileMenuOpen && (
+              <div
+                ref={mobileMenuRef}
+                className="absolute left-0 right-0 top-14 z-50 md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl shadow-lg"
+              >
+                <div className="px-6 py-4 space-y-4">
+                  <Link
+                    href="/"
+                    className="block text-[#989898] hover:text-white transition-colors text-sm"
+                  >
+                    How to Use
+                  </Link>
+                  <Link
+                    href="/"
+                    className="block text-[#989898] hover:text-white transition-colors text-sm"
+                  >
+                    Pricing
+                  </Link>
+                  <Link
+                    href="/"
+                    className="block text-[#989898] hover:text-white transition-colors text-sm"
+                  >
+                    FAQ
+                  </Link>
+
+                  {!loading && (
+                    <div className="pt-2 border-t border-white/10 w-fit">
+                      <GitHubStarsButton
+                        githubData={githubData}
+                        isLoading={githubLoading}
+                      />
+                      {user ? (
+                        <>
+                          {!isSubscribed && (
+                            <Button
+                              onClick={() => router.push("/")}
+                              className="relative"
+                            >
+                              <Lock className="w-4 h-4 mr-2 text-black" />
+                              Subscribe
+                            </Button>
+                          )}
+                          <div className="flex items-center gap-3 py-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage
+                                src={user.user_metadata?.avatar_url}
+                              />
+                              <AvatarFallback className="bg-primary text-xs">
+                                {user.email?.slice(0, 2).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <span className="text-sm text-white">
+                                {user.email}
+                              </span>
+                            </div>
+                          </div>
+                          <Link
+                            href="/settings"
+                            className="block text-[#989898] hover:text-white transition-colors text-sm py-2"
+                          >
+                            Settings
+                          </Link>
+                          <button
+                            onClick={handleSignOut}
+                            className="w-full text-left text-[#FF4545] hover:text-red-400 text-sm py-2"
+                          >
+                            Log out
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <Link
+                            href="/signin"
+                            className="block text-[#989898] hover:text-white transition-colors text-sm"
+                          >
+                            Sign in
+                          </Link>
+                          <div className="space-y-2 mt-2">
+                            <Link
+                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                              className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                            >
+                              <Image
+                                src="/apple.svg"
+                                alt="Apple"
+                                width={16}
+                                height={16}
+                                className="w-4 h-4"
+                              />
+                              Download for Mac (Apple Silicon)
+                            </Link>
+                            <Link
+                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                              className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                            >
+                              <Image
+                                src="/apple.svg"
+                                alt="Apple"
+                                width={16}
+                                height={16}
+                                className="w-4 h-4"
+                              />
+                              Download for Mac (Intel)
+                            </Link>
+                            <Link
+                              href="/waitlist"
+                              className="flex items-center gap-2 justify-center w-full bg-secondary hover:bg-secondary/90 text-white transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                            >
+                              <Image
+                                src="/windows.svg"
+                                alt="Windows"
+                                width={16}
+                                height={16}
+                                className="w-4 h-4"
+                              />
+                              Windows Waitlist
+                            </Link>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </nav>
+        </div>
       </div>
     </>
   )
