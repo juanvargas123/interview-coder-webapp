@@ -95,7 +95,7 @@ export function Footer() {
                 <DropdownMenuContent>
                   <DropdownMenuItem>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-arm64.dmg"
                       className="w-full"
                     >
                       Download for Mac (Apple Silicon)
@@ -103,7 +103,7 @@ export function Footer() {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-x64.dmg"
                       className="w-full"
                     >
                       Download for Mac (Intel)

@@ -258,7 +258,7 @@ export default function Navbar() {
           >
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-arm64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
@@ -273,7 +273,7 @@ export default function Navbar() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-x64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
@@ -477,7 +477,7 @@ export default function Navbar() {
                           </Link>
                           <div className="space-y-2 mt-2">
                             <Link
-                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-arm64.dmg"
+                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-arm64.dmg"
                               className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                             >
                               <Image
@@ -490,7 +490,7 @@ export default function Navbar() {
                               Download for Mac (Apple Silicon)
                             </Link>
                             <Link
-                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.7/Interview-Coder-x64.dmg"
+                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-x64.dmg"
                               className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                             >
                               <Image
