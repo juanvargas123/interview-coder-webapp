@@ -50,7 +50,7 @@
 }
 
 .white-gradient {
-  @apply bg-gradient-to-br from-white via-gray-200 to-gray-400;
+  @apply bg-gradient-to-t from-gray-600 via-gray-400 to-white;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;

@@ -45,7 +45,8 @@ const faqs = [
   },
   {
     question: "What programming languages are supported?",
-    answer: "Python."
+    answer:
+      "Python, Golang, Java, and Javascript. You can edit your preferred langauge in the app or in your settings."
   }
 ]
 
