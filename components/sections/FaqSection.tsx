@@ -47,6 +47,12 @@ const faqs = [
     question: "What programming languages are supported?",
     answer:
       "Python, Golang, Java, and Javascript. You can edit your preferred langauge in the app or in your settings."
+  },
+  ,
+  {
+    question: "I'm experiencing a bug, what should I do",
+    answer:
+      "9 times out of 10, you can uninstall and reinstall the app from this website. If that doesn't work, please email us at <a href='mailto:churlee12@gmail.com'>churlee12@gmail.com</a> and we'll get back to you within 24 hours."
   }
 ]
 
