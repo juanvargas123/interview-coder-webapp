@@ -400,7 +400,7 @@ export default function Navbar() {
             {mobileMenuOpen && (
               <div
                 ref={mobileMenuRef}
-                className="absolute left-0 right-0 top-14 z-50 md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl shadow-lg"
+                className="absolute  left-0 right-0 top-14 z-50 md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl shadow-lg"
               >
                 <div className="px-6 py-4 space-y-4">
                   <Link
@@ -469,52 +469,63 @@ export default function Navbar() {
                         </>
                       ) : (
                         <>
-                          <Link
-                            href="/signin"
-                            className="block text-[#989898] hover:text-white transition-colors text-sm"
+                          <Button
+                            variant="outline"
+                            className="text-left w-full"
                           >
-                            Sign in
-                          </Link>
+                            <Link
+                              href="/signin"
+                              className="block text-[#989898] hover:text-white transition-colors text-sm"
+                            >
+                              Sign in
+                            </Link>
+                          </Button>
                           <div className="space-y-2 mt-2">
-                            <Link
-                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-arm64.dmg"
-                              className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
-                            >
-                              <Image
-                                src="/apple.svg"
-                                alt="Apple"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              Download for Mac (Apple Silicon)
-                            </Link>
-                            <Link
-                              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-x64.dmg"
-                              className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
-                            >
-                              <Image
-                                src="/apple.svg"
-                                alt="Apple"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              Download for Mac (Intel)
-                            </Link>
-                            <Link
-                              href="/waitlist"
-                              className="flex items-center gap-2 justify-center w-full bg-secondary hover:bg-secondary/90 text-white transition-all px-4 py-1.5 text-sm font-medium rounded-md"
-                            >
-                              <Image
-                                src="/windows.svg"
-                                alt="Windows"
-                                width={16}
-                                height={16}
-                                className="w-4 h-4"
-                              />
-                              Windows Waitlist
-                            </Link>
+                            <Button variant="default" className="w-full">
+                              <Link
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-arm64.dmg"
+                                className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                              >
+                                <Image
+                                  src="/apple.svg"
+                                  alt="Apple"
+                                  width={16}
+                                  height={16}
+                                  className="w-4 h-4"
+                                />
+                                Download for Mac (Apple Silicon)
+                              </Link>
+                            </Button>
+                            <Button variant="default" className="w-full">
+                              <Link
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-x64.dmg"
+                                className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                              >
+                                <Image
+                                  src="/apple.svg"
+                                  alt="Apple"
+                                  width={16}
+                                  height={16}
+                                  className="w-4 h-4"
+                                />
+                                Download for Mac (Intel)
+                              </Link>
+                            </Button>
+                            <Button variant="highlight" className="w-full">
+                              <Link
+                                href="/waitlist"
+                                className="flex items-center gap-2 justify-center w-full bg-secondary hover:bg-secondary/90 text-white transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                              >
+                                <Image
+                                  src="/windows.svg"
+                                  alt="Windows"
+                                  width={16}
+                                  height={16}
+                                  className="w-4 h-4"
+                                />
+                                Windows Waitlist
+                              </Link>
+                            </Button>
                           </div>
                         </>
                       )}

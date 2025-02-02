@@ -51,6 +51,11 @@ export async function middleware(request: NextRequest) {
     return response
   }
 
+  // Redirect to home if trying to access settings while not logged in
+  if (request.nextUrl.pathname === "/settings" && !session) {
+    return NextResponse.redirect(new URL("/", request.url))
+  }
+
   return response
 }
 

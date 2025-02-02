@@ -25,25 +25,38 @@ interface PaymentMethod {
   isDefault?: boolean
 }
 
-async function fetchSubscription(userId: string | undefined) {
-  if (!userId) return null
-  const { data } = await supabase
+async function fetchUserAndSubscription() {
+  const {
+    data: { session }
+  } = await supabase.auth.getSession()
+  if (!session) return { user: null, subscription: null }
+
+  const { data: subscription } = await supabase
     .from("subscriptions")
     .select("*")
-    .eq("user_id", userId)
+    .eq("user_id", session.user.id)
     .single()
-  return data
+
+  return { user: session.user, subscription }
 }
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account")
-  const { user, isSubscribed, loading } = useUser()
   const queryClient = useQueryClient()
-  const { data: subscription } = useQuery({
-    queryKey: ["subscription", user?.id],
-    queryFn: () => fetchSubscription(user?.id),
-    enabled: !!user?.id
+
+  const { data, isLoading: loading } = useQuery({
+    queryKey: ["user-settings"],
+    queryFn: fetchUserAndSubscription,
+    staleTime: 0, // Data is never fresh
+    refetchOnMount: true, // Fetch on every mount
+    refetchOnWindowFocus: true, // Fetch on window focus
+    refetchOnReconnect: true, // Fetch when reconnecting
+    refetchInterval: 0 // Fetch continuously
   })
+
+  const user = data?.user
+  const subscription = data?.subscription
+  const isSubscribed = subscription?.status === "active"
   const router = useRouter()
 
   // Billing state
