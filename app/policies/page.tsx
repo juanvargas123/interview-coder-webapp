@@ -79,6 +79,51 @@ export default function PoliciesPage() {
               </ul>
             </CardContent>
           </Card>
+
+          <Card className="bg-neutral-900/50 border-neutral-800">
+            <CardHeader>
+              <CardTitle className="text-2xl">Terms of Service</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-neutral-300">
+                By using Interview Coder, you agree to these terms of service:
+              </p>
+              <ul className="list-disc pl-6 text-neutral-300 space-y-2">
+                <li>
+                  <strong>License:</strong> We grant you a limited,
+                  non-exclusive, non-transferable license to use Interview Coder
+                  for your personal coding interview preparation.
+                </li>
+                <li>
+                  <strong>User Conduct:</strong> You agree not to:
+                  <ul className="list-disc pl-6 mt-2 space-y-1">
+                    <li>Share your account credentials with others</li>
+                    <li>Attempt to reverse engineer the software</li>
+                    <li>Use the service for any illegal purposes</li>
+                    <li>Interfere with or disrupt the service</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Content Rights:</strong> All content generated using
+                  our service is owned by you, but the software, branding, and
+                  infrastructure remain our intellectual property.
+                </li>
+                <li>
+                  <strong>Service Changes:</strong> We reserve the right to
+                  modify, suspend, or discontinue any part of the service with
+                  reasonable notice.
+                </li>
+                <li>
+                  <strong>Liability:</strong> The service is provided "as is"
+                  without warranties of any kind, either express or implied.
+                </li>
+              </ul>
+              <p className="text-neutral-300 mt-4">
+                These terms may be updated periodically. Continued use of the
+                service constitutes acceptance of any changes.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </main>
       <Footer />

@@ -70,6 +70,12 @@ export function Footer() {
               >
                 Cancellation Policy
               </Link>
+              <Link
+                href="/policies"
+                className="text-neutral-500 hover:text-neutral-300 text-sm"
+              >
+                Terms of Service
+              </Link>
             </div>
           </div>
 
