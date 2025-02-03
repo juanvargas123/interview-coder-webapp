@@ -177,7 +177,10 @@ export default function Navbar() {
             isLoading={githubLoading}
           />
           {!isSubscribed && (
-            <Button onClick={() => router.push("/")} className="relative">
+            <Button
+              onClick={() => router.push("/checkout")}
+              className="relative"
+            >
               <Lock className="w-4 h-4 mr-2 text-black" />
               Subscribe
             </Button>
@@ -346,9 +349,8 @@ export default function Navbar() {
 
               <div className="flex-1 flex items-center justify-center">
                 <div
-                  className="hidden md:flex items-center gap-8 transition-all duration-300"
+                  className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2"
                   style={{
-                    width: "100%",
                     justifyContent: "center"
                   }}
                 >

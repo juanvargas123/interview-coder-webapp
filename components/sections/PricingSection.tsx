@@ -61,6 +61,8 @@ export const PricingSection = () => {
     if (!session) {
       router.push("/signin")
       return
+    } else {
+      router.push("/checkout")
     }
   }
 

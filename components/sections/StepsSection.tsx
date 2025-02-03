@@ -343,7 +343,7 @@ export const StepsSection = () => {
                           className="w-full sm:w-auto px-6 py-2"
                         >
                           <Link
-                            href="/settings"
+                            href="/checkout"
                             className="flex items-center gap-2"
                           >
                             Subscribe Today ($20/month)
