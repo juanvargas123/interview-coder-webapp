@@ -50,9 +50,8 @@ export const HeroSection = () => {
             fontWeight: 500
           }}
         >
-          Interview Coder is an{" "}
-          <span className="highlighter-gradient">undetectable</span> desktop
-          application to help you pass your Leetcode interviews.
+          <span className="highlighter-gradient">Invisible</span> AI for
+          technical interviews.
         </motion.h1>
 
         <motion.div

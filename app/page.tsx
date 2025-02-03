@@ -7,12 +7,14 @@ import { Footer } from "@/components/sections/Footer"
 import { HeroSection } from "@/components/sections/HeroSection"
 import { PricingSection } from "@/components/sections/PricingSection"
 import { StepsSection } from "@/components/sections/StepsSection"
+import { CarouselSection } from "@/components/sections/CarouselSection"
 
 export default function Home() {
   return (
     <div className="relative w-screen overflow-x-hidden hero-gradient lg:px-0 px-4">
       <Navbar />
       <HeroSection />
+      <CarouselSection />
 
       <div id="subscription">
         <PricingSection />
