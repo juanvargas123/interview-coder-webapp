@@ -81,6 +81,11 @@ export default {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))"
       },
       keyframes: {
+        scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))"
+          }
+        },
         shake: {
           "0%, 100%": { transform: "translateX(0)" },
           "25%": { transform: "translateX(-5px)" },
@@ -101,7 +106,9 @@ export default {
       },
       animation: {
         shake: "shake 0.5s ease-in-out",
-        expandFromTopLeft: "expandFromTopLeft 0.5s ease-out forwards"
+        expandFromTopLeft: "expandFromTopLeft 0.5s ease-out forwards",
+        scroll:
+          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite"
       }
     }
   },
