@@ -1,15 +1,13 @@
 import axios from "axios"
 import { withTimeout, type ProblemInfo } from "../config"
+import { z } from "zod"
 
-// Helper function to clean markdown code blocks from response
-function cleanCodeFromMarkdown(content: string): string {
-  // Remove markdown code blocks if present
-  return content.replace(/^```[\w]*\n/, "").replace(/\n```$/, "")
-}
+const SolutionResponse = z.object({
+  solution: z.string()
+})
 
 export async function generateSolution(
   problemInfo: ProblemInfo,
-
   openaiApiKey?: string
 ): Promise<string> {
   if (!openaiApiKey) {
@@ -18,78 +16,28 @@ export async function generateSolution(
 
   console.log("Starting OpenAI solution generation...")
 
-  const promptContent = `You are a ${
-    problemInfo.language ?? "python"
-  } code generator. Your task is to generate a valid ${
-    problemInfo.language ?? "python"
-  } solution for the following problem.
-IMPORTANT: Return ONLY the ${
-    problemInfo.language ?? "python"
-  } code solution. No explanations, no markdown formatting, no additional text.
-
-PROBLEM DETAILS:
----------------
-Problem Statement:
-${problemInfo.problem_statement ?? "None"}
-
-Input Format:
-${problemInfo.input_format?.description ?? "None"}
-
-Parameters:
-${
-  problemInfo.input_format?.parameters
-    ?.map((p) => {
-      let typeStr = p.type
-      if (p.subtype) typeStr += ` of ${p.subtype}`
-      typeStr += p.nullable ? " | null" : " (required)"
-      return `- ${p.name}: ${typeStr}`
-    })
-    .join("\n") ?? "No parameters"
-}
-
-Output Format:
-${problemInfo.output_format?.description ?? "None"}
-Returns: ${problemInfo.output_format?.type ?? "None"}${
-    problemInfo.output_format?.subtype
-      ? ` of ${problemInfo.output_format.subtype}`
-      : ""
-  }${problemInfo.output_format?.nullable ? " | null" : " (never null)"}
-
-Constraints:
-${
-  problemInfo.constraints
-    ?.map((c) => {
-      let constraintStr = `- ${c.description}`
-      if (c.range) {
-        constraintStr += ` (${c.parameter}: ${c.range.min} to ${c.range.max})`
-      }
-      if (c.nullable !== undefined) {
-        constraintStr += c.nullable ? " (can be null)" : " (cannot be null)"
-      }
-      return constraintStr
-    })
-    .join("\n") ?? "No constraints"
-}
-
-Test Cases:
-${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
-
   const response = await withTimeout(
     axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
         model: "o3-mini",
         reasoning_effort: "high",
+        response_format: { type: "json_object" },
         messages: [
           {
+            role: "system",
+            content: `Generate a valid ${
+              problemInfo.language ?? "python"
+            } solution and return it as a JSON object with a 'solution' field containing the code as a string. The solution should be optimal, legible, and include in-line comments after every single line of code. You should try to optimize for legibility and minimize the use of external libraries. Try to format the solution as if you were solving a Leetcode question. Don't include any exmaples of how to use the function or anything, you should only provide the solution.`
+          },
+          {
             role: "user",
-            content:
-              `You are a ${
-                problemInfo.language ?? "python"
-              } code generator that only outputs valid ${
-                problemInfo.language ?? "python"
-              } code solutions. You should use a minimal amount of external libraries, and you should be writing code that is legible and the optimal solution in terms of time and space complexity. It is very important that this code is legible and understandable, so add comments next to relevant places in the code that explain what the code does. Absolutely no markdown. Write your answer in the style of a solution to a Leetcode problem and expect that the difficulty will be that of a medium-level Leetcode problem, making sure to go for the solution that is most optimal. Do not add any comments after the solution explaining how to use the function.` +
-              promptContent
+            content: `Please provide the solution in JSON format for the following problem:
+
+Problem Statement: ${problemInfo.problem_statement ?? "None"}
+Input Format: ${problemInfo.input_format?.description ?? "None"}
+Output Format: ${problemInfo.output_format?.description ?? "None"}
+Test Cases: ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
           }
         ]
       },
@@ -106,5 +54,8 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
     throw new Error("Invalid response from OpenAI API")
   }
 
-  return cleanCodeFromMarkdown(response.data.choices[0].message.content)
+  const parsedResponse = SolutionResponse.parse(
+    JSON.parse(response.data.choices[0].message.content)
+  )
+  return parsedResponse.solution
 }
