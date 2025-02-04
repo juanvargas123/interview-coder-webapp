@@ -190,7 +190,7 @@ export function HelpContent() {
 
                     <li>
                       Configure your language preferences (Python, Java,
-                      Javascript, Golang) in the{" "}
+                      Javascript, Golang, C++, Kotlin) in the{" "}
                       <Link href="/settings" className="underline">
                         settings
                       </Link>{" "}

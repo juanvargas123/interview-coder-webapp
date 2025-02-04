@@ -36,7 +36,7 @@ Quick Start Steps
 
 Application Settings
 You can manage your language preferences in the settings page.
-Currently, we offer support for Python, Java, Javascript, and Go.`
+Currently, we offer support for Python, Java, Javascript, Go, C++, and Kotlin.`
       },
       {
         id: "undetectability",

@@ -4,7 +4,13 @@ import { withTimeout } from "../config"
 export async function extractCodeFromImages(
   imageDataList: string[],
   apiKey: string,
-  language: "python" | "javascript" | "golang" | "java" = "python"
+  language:
+    | "python"
+    | "javascript"
+    | "golang"
+    | "java"
+    | "cpp"
+    | "kotlin" = "python"
 ) {
   console.log("Starting code extraction from images...")
 

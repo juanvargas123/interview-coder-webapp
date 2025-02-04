@@ -184,7 +184,7 @@ export default function HelpCenterContent() {
 
                     <li>
                       Configure your language preferences (Python, Java,
-                      Javascript, Golang) in the{" "}
+                      Javascript, Golang, C++, and Java) in the{" "}
                       <Link href="/settings" className="underline">
                         settings
                       </Link>{" "}
@@ -278,7 +278,7 @@ export default function HelpCenterContent() {
                   page.
                   <br></br>
                   <br></br> Currently, we offer support for Python, Java,
-                  Javascript, and Go.
+                  Javascript, Go, C++, and Kotlin.
                 </Box>
               </div>
             </div>
