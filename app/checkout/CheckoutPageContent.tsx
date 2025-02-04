@@ -1,15 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 import Navbar from "@/components/sections/Navbar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useUser } from "@/lib/hooks/use-user"
 import {
   createClientComponentClient,
   Session
 } from "@supabase/auth-helpers-nextjs"
-import { useUser } from "@/lib/hooks/use-user"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function CheckoutPageContent() {
   const { user, loading: userLoading, isSubscribed } = useUser()
