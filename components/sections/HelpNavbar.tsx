@@ -305,8 +305,10 @@ export function HelpNavbar() {
                 <Menu className="w-6 h-6" />
               </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="h-[80vh]">
-              <SheetTitle className="text-left">Documentation</SheetTitle>
+            <SheetContent side="bottom" className="h-[90vh] overflow-y-auto">
+              <SheetTitle className="text-left sticky top-0 bg-background/95 backdrop-blur-sm pb-4">
+                Documentation
+              </SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="flex-grow">
                   <NavContent className="mt-8" />

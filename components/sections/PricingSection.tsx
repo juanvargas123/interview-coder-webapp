@@ -8,7 +8,7 @@ import React from "react"
 import { Button } from "../ui/button"
 
 const GlowingLine = () => (
-  <div className="relative w-full max-w-[400px] mx-auto h-[80px] mb-16">
+  <div className="relative w-full max-w-[400px] mx-auto h-[40px] mb-8">
     {/* Left line container */}
     <div className="absolute left-0 top-[25px] w-[40%] sm:w-[160px] overflow-hidden">
       <motion.div
@@ -74,14 +74,14 @@ export const PricingSection = () => {
           <h2 className="text-3xl font-bold tracking-tight white-gradient sm:text-4xl">
             Interview Coder now uses o3-mini.
           </h2>
-          <p className="mt-6 text-lg leading-8 text-[#999999]">
+          <p className="text-lg leading-8 text-[#999999]">
             We shit on hards now. <br />
             <br />
           </p>
         </div>
 
-        <div className="mx-auto mt-16 max-w-2xl">
-          <div className="mt-10 flex justify-center">
+        <div className="mx-auto max-w-2xl">
+          <div className="flex justify-center">
             <Button
               variant="highlight"
               className="w-full max-w-md h-12"

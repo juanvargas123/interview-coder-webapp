@@ -12,7 +12,7 @@ import { VideoSection } from "@/components/sections/VideoSection"
 
 export default function Home() {
   return (
-    <div className="relative w-screen overflow-x-hidden hero-gradient lg:px-0 px-4">
+    <div className="relative w-screen overflow-x-hidden hero-gradient">
       <Navbar />
       <HeroSection />
       <CarouselSection />

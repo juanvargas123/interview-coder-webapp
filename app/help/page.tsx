@@ -6,9 +6,13 @@ export default function HelpCenter() {
     <div className="min-h-screen bg-background w-full overflow-x-hidden max-w-screen md:mt-0 mt-16">
       <Suspense
         fallback={
-          <div className="text-center space-y-4">
-            <h2 className="text-xl mb-4">Loading help center...</h2>
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mx-auto"></div>
+          <div className="h-[80vh] flex flex-col items-center justify-center">
+            <div className="space-y-6 text-center">
+              <div className="w-8 h-8 rounded-full border-2 border-primary/30 border-t-primary animate-spin mx-auto" />
+              <p className="text-muted-foreground text-sm font-medium">
+                Loading help center
+              </p>
+            </div>
           </div>
         }
       >

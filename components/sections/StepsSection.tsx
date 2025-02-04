@@ -75,7 +75,7 @@ export const StepsSection = () => {
     <>
       <HowToUseHeader />
 
-      <section className="relative">
+      <section className="relative lg:pl-0 pl-6">
         {steps.map((step, index) => (
           <div key={step.id} className={`py-6 lg:py-32`}>
             <div className="max-w-none mx-auto px-6">

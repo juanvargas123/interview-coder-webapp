@@ -375,7 +375,7 @@ export default function Navbar() {
                       href="/#proof"
                       className="text-[#989898] hover:text-white transition-colors text-sm"
                     >
-                      PROOF
+                      Proof
                       <Badge variant="highlight" className="ml-2">
                         NEW
                       </Badge>
@@ -423,7 +423,7 @@ export default function Navbar() {
                     href="/#proof"
                     className="block text-[#989898] hover:text-white transition-colors text-sm"
                   >
-                    PROOF
+                    Proof
                     <Badge variant="highlight" className="ml-2">
                       NEW
                     </Badge>

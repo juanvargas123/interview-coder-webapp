@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 
-const words = ["kill Leetcode", "fix Technical", "change Coding"]
 const faqs = [
   {
     question: "Is Interview Coder free?",
@@ -129,7 +128,7 @@ export function FaqSection() {
 
   return (
     <section className="py-24 relative">
-      <div className="container px-4 mx-auto">
+      <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4 tracking-tight">
             <span className="white-gradient font-inter">Common Questions</span>
@@ -139,7 +138,7 @@ export function FaqSection() {
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto rounded-2xl border border-neutral-700/40 divide-y divide-neutral-700/40 bg-neutral-900/20 backdrop-blur-sm">
+        <div className="mx-auto rounded-2xl border border-neutral-700/40 divide-y divide-neutral-700/40 bg-neutral-900/20 backdrop-blur-sm">
           {faqs.map((faq, index) => (
             <FaqItem
               key={index}
