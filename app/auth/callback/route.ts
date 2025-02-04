@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
     if (!error) {
       // After successful auth, redirect back to checkout
-      return NextResponse.redirect(`${origin}/checkout`)
+      return NextResponse.redirect(`${origin}`)
     }
   }
 

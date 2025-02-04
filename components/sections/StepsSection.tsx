@@ -2,7 +2,7 @@
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { useUser } from "@/lib/hooks/use-user"
-import { track, ANALYTICS_EVENTS } from '@/lib/mixpanel'
+import { track, ANALYTICS_EVENTS } from "@/lib/mixpanel"
 
 import { HowToUseHeader } from "./HowToUseHeader"
 import SubscribePage from "../ui/steps/subscribePage"
