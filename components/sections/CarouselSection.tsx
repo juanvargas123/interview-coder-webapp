@@ -42,7 +42,7 @@ const companyLogos = [
 export const CarouselSection = () => {
   return (
     <div className="flex flex-col items-center justify-center py-12 lg:py-20 overflow-hidden">
-      <h2 className="text-2xl lg:text-4xl font-bold text-center mb-8 ">
+      <h2 className="text-2xl lg:text-4xl font-bold text-center mb-8 white-gradient">
         Our users have gotten offers from
       </h2>
       <div className="w-full max-w-6xl">

@@ -8,6 +8,7 @@ import { HeroSection } from "@/components/sections/HeroSection"
 import { PricingSection } from "@/components/sections/PricingSection"
 import { StepsSection } from "@/components/sections/StepsSection"
 import { CarouselSection } from "@/components/sections/CarouselSection"
+import { VideoSection } from "@/components/sections/VideoSection"
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <HeroSection />
       <CarouselSection />
 
+      <VideoSection />
       <div id="subscription">
         <PricingSection />
       </div>

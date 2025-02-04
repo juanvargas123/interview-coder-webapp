@@ -13,7 +13,7 @@ export function HowToUseHeader() {
           duration: 0.8,
           ease: "easeInOut"
         }}
-        className="mt-32 text-center mb-10 sm:text-3xl lg:text-5xl font-bold tracking-tight leading-[1.1] max-w-4xl mx-auto"
+        className="mt-32 text-center !important mb-10 sm:text-3xl lg:text-5xl font-bold tracking-tight leading-[1.1] max-w-4xl mx-auto "
       >
         How to Use Interview Coder
       </motion.h2>

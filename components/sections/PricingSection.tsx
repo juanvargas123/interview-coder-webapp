@@ -68,14 +68,14 @@ export const PricingSection = () => {
 
   return (
     <section className="">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 mt-48">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 mt-16">
         <GlowingLine />
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Interview Coder just got a lot smarter.
+          <h2 className="text-3xl font-bold tracking-tight white-gradient sm:text-4xl">
+            Interview Coder now uses o3-mini.
           </h2>
           <p className="mt-6 text-lg leading-8 text-[#999999]">
-            Better prompts. 4o-mini to o3-mini. We smurf on hards now. <br />
+            We shit on hards now. <br />
             <br />
           </p>
         </div>
