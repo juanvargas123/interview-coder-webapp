@@ -32,7 +32,7 @@ export const VideoSection = () => {
             >
               <span className="white-gradient">ULTIMATE PROOF</span>
             </h2>
-            <p className="text-lg sm:text-lg text-[#999999]">
+            <p className="text-md sm:text-lg text-[#999999]">
               Watch me get an offer from Amazon using Interview Coder.
               Throughout this whole video, you'll see me use Interview Coder for
               both the OA and the final round.
