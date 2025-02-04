@@ -612,9 +612,7 @@ export default function HelpCenterContent() {
                       <p className="mt-2 text-sm text-zinc-300">
                         Due to an unresolved bug in Electron, some WebRTC-based
                         screen-sharing software may be able to see Interview
-                        Coder on MacOS while sharing your full screen. We
-                        recommend using the web view during interviews for 100%
-                        safety when using MacOS.
+                        Coder on MacOS while sharing your full screen.
                       </p>
                     </div>
                   </div>
