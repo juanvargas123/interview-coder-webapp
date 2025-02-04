@@ -16,8 +16,9 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <CarouselSection />
-
-      <VideoSection />
+      <div id="proof">
+        <VideoSection />
+      </div>
       <div id="subscription">
         <PricingSection />
       </div>

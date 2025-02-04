@@ -370,14 +370,22 @@ export default function Navbar() {
                       <span className="">Subscription</span>
                     </Link>
                   </div>
+                  <div>
+                    <Link
+                      href="/#proof"
+                      className="text-[#989898] hover:text-white transition-colors text-sm"
+                    >
+                      PROOF
+                      <Badge variant="highlight" className="ml-2">
+                        NEW
+                      </Badge>
+                    </Link>
+                  </div>
                   <Link
                     href="/help"
                     className="text-[#989898] hover:text-white transition-colors text-sm"
                   >
                     Help Center
-                    <Badge variant="highlight" className="ml-2">
-                      NEW
-                    </Badge>
                   </Link>
                 </div>
               </div>
@@ -410,6 +418,15 @@ export default function Navbar() {
                     className="block text-[#989898] hover:text-white transition-colors text-sm"
                   >
                     Subscription
+                  </Link>
+                  <Link
+                    href="/#proof"
+                    className="block text-[#989898] hover:text-white transition-colors text-sm"
+                  >
+                    PROOF
+                    <Badge variant="highlight" className="ml-2">
+                      NEW
+                    </Badge>
                   </Link>
                   <Link
                     href="/help"
