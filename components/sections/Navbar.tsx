@@ -362,12 +362,6 @@ export default function Navbar() {
                     justifyContent: "center"
                   }}
                 >
-                  <Link
-                    href="/#how-to-use"
-                    className="text-[#989898] hover:text-white transition-colors text-sm"
-                  >
-                    How to Use
-                  </Link>
                   <div>
                     <Link
                       href="/#subscription"
@@ -382,10 +376,10 @@ export default function Navbar() {
                     </Link>
                   </div>
                   <Link
-                    href="/#faq"
+                    href="/help"
                     className="text-[#989898] hover:text-white transition-colors text-sm"
                   >
-                    FAQ
+                    Help Center
                   </Link>
                 </div>
               </div>
@@ -414,22 +408,16 @@ export default function Navbar() {
               >
                 <div className="px-6 py-4 space-y-4">
                   <Link
-                    href="/"
+                    href="/#subscription"
                     className="block text-[#989898] hover:text-white transition-colors text-sm"
                   >
-                    How to Use
+                    Subscription
                   </Link>
                   <Link
-                    href="/"
+                    href="/help"
                     className="block text-[#989898] hover:text-white transition-colors text-sm"
                   >
-                    Pricing
-                  </Link>
-                  <Link
-                    href="/"
-                    className="block text-[#989898] hover:text-white transition-colors text-sm"
-                  >
-                    FAQ
+                    Help Center
                   </Link>
 
                   {!loading && (
