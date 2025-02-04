@@ -2,6 +2,7 @@
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { useUser } from "@/lib/hooks/use-user"
+import { track, ANALYTICS_EVENTS } from '@/lib/mixpanel'
 
 import { HowToUseHeader } from "./HowToUseHeader"
 import SubscribePage from "../ui/steps/subscribePage"
@@ -64,6 +65,10 @@ export const StepsSection = () => {
   const handleApiKeySubmit = (apiKey: string) => {
     // Handle API key submission
     console.log("API key submitted")
+  }
+
+  const handleSubscribeClick = () => {
+    track(ANALYTICS_EVENTS.SUBSCRIBE_BUTTON_CLICK)
   }
 
   return (
@@ -345,6 +350,7 @@ export const StepsSection = () => {
                           <Link
                             href="/checkout"
                             className="flex items-center gap-2"
+                            onClick={handleSubscribeClick}
                           >
                             Subscribe Today ($20/month)
                             <svg

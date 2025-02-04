@@ -1,5 +1,4 @@
 import { motion } from "framer-motion"
-import { LinkedinBadge } from "@/components/ui/linked-in-badge"
 import { Button } from "@/components/ui/button"
 import { HeroVideo } from "@/components/ui/hero-video"
 import { WingsBackground } from "@/components/ui/WingsBackground"
@@ -11,12 +10,30 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { track, ANALYTICS_EVENTS } from '@/lib/mixpanel'
 
 export const HeroSection = () => {
+  const handleMacDownloadClick = () => {
+    track(ANALYTICS_EVENTS.MAC_DOWNLOAD_CLICK)
+  }
+
+  const handleMacDownloadOptionClick = (option: string) => {
+    track(ANALYTICS_EVENTS.MAC_DOWNLOAD_OPTION_CLICK, { option })
+  }
+
+  const handleWindowsWaitlistClick = () => {
+    track(ANALYTICS_EVENTS.WINDOWS_WAITLIST_CLICK)
+  }
+
   return (
-    <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center lg:pt-36">
+    <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center lg:pt-36 pt-8">
       {/* <WingsBackground /> */}
-      <LinkedinBadge />
+      <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 mb-8">
+        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FFFF00_0%,transparent_50%,#FFFF00_100%)]" />
+        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+          now using o3-mini
+        </span>
+      </button>
       <div className="container relative z-10 px-4 text-center max-w-3xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, scale: 0.5 }}
@@ -49,7 +66,7 @@ export const HeroSection = () => {
         >
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-primary w-full sm:w-auto px-6 py-2">
+              <Button className="bg-primary w-full sm:w-auto px-6 py-2" onClick={handleMacDownloadClick}>
                 <div className="flex items-center gap-2">
                   <Image
                     src="/apple.svg"
@@ -67,6 +84,7 @@ export const HeroSection = () => {
                 <Link
                   href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-arm64.dmg"
                   className="w-full"
+                  onClick={() => handleMacDownloadOptionClick('Apple Silicon')}
                 >
                   Download for Mac (Apple Silicon)
                 </Link>
@@ -75,6 +93,7 @@ export const HeroSection = () => {
                 <Link
                   href="https://github.com/ibttf/interview-coder/releases/download/v1.0.8/Interview-Coder-x64.dmg"
                   className="w-full"
+                  onClick={() => handleMacDownloadOptionClick('Intel')}
                 >
                   Download for Mac (Intel)
                 </Link>
@@ -82,7 +101,7 @@ export const HeroSection = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           <Button variant="highlight" className="w-full sm:w-auto px-6 py-2">
-            <Link href="/waitlist" className="flex items-center gap-2">
+            <Link href="/waitlist" className="flex items-center gap-2" onClick={handleWindowsWaitlistClick}>
               <Image
                 src="/windows.svg"
                 alt="Windows"

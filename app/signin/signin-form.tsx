@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase/client"
 import Image from "next/image"
 import Navbar from "@/components/sections/Navbar"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { track, ANALYTICS_EVENTS } from '@/lib/mixpanel'
 
 export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -17,6 +18,11 @@ export default function SignInForm() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const next = searchParams.get("next")
+
+  useEffect(() => {
+    // Track sign in page view
+    track(ANALYTICS_EVENTS.SIGNIN_PAGE_VIEW);
+  }, []);
 
   async function signInWithEmail(e: React.FormEvent) {
     e.preventDefault()
