@@ -367,12 +367,7 @@ export default function Navbar() {
                       href="/#subscription"
                       className="text-[#989898] hover:text-white transition-colors text-sm"
                     >
-                      <span className="">
-                        Subscription
-                        <Badge variant="highlight" className="ml-2">
-                          NEW
-                        </Badge>
-                      </span>
+                      <span className="">Subscription</span>
                     </Link>
                   </div>
                   <Link
@@ -380,6 +375,9 @@ export default function Navbar() {
                     className="text-[#989898] hover:text-white transition-colors text-sm"
                   >
                     Help Center
+                    <Badge variant="highlight" className="ml-2">
+                      NEW
+                    </Badge>
                   </Link>
                 </div>
               </div>
