@@ -75,7 +75,7 @@ export const PricingSection = () => {
             Interview Coder just got a lot smarter.
           </h2>
           <p className="mt-6 text-lg leading-8 text-[#999999]">
-            Better prompts. 4o-mini to o1. We smurf on hards now. <br />
+            Better prompts. 4o-mini to o3-mini. We smurf on hards now. <br />
             <br />
           </p>
         </div>
