@@ -78,7 +78,8 @@ ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
     axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "o1-mini",
+        model: "o3-mini",
+        reasoning_effort: "high",
         messages: [
           {
             role: "user",

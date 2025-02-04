@@ -216,6 +216,14 @@ export default function Navbar() {
                   Settings
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/help"
+                  className="cursor-pointer text-[#ABABAB] hover:text-white px-3 py-2.5"
+                >
+                  Help Center
+                </Link>
+              </DropdownMenuItem>
               <div className="h-px bg-white/10 mx-3 my-1" />
               <DropdownMenuItem
                 onClick={handleSignOut}
