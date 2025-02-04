@@ -151,6 +151,17 @@ export function FaqSection() {
           ))}
         </div>
 
+        {/* Help Center Link */}
+        <div className="text-center mt-8">
+          <p className="text-neutral-500">
+            Have more questions? Visit our{" "}
+            <Link href="/help" className="text-primary hover:underline">
+              help center
+            </Link>{" "}
+            for detailed guides and support.
+          </p>
+        </div>
+
         {/* Divider */}
         <div className="max-w-xs mx-auto my-24">
           <div className="h-px bg-neutral-800" />
