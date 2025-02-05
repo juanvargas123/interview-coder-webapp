@@ -15,40 +15,28 @@ export function IOSNotice() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    // Log all Mixpanel properties to debug
-    const properties = mixpanel.get_distinct_id();
-    console.log('Mixpanel Distinct ID:', properties);
+    // Debug logging
+    console.log('Current user properties:', mixpanel.get_user_properties());
     
-    // Get all properties
-    const allProps = mixpanel._.info.properties;
-    console.log('All Mixpanel Properties:', allProps);
-    
-    // Try multiple methods to detect iOS
-    const os = mixpanel.get_property('$os');
-    const platform = mixpanel.get_property('$browser');
-    const userAgent = navigator.userAgent;
-    
-    console.log('Debug OS Detection:', {
-      mixpanelOS: os,
-      mixpanelPlatform: platform,
-      userAgent: userAgent,
-      isIOS: /iPad|iPhone|iPod/.test(userAgent)
-    });
-
-    // Use both Mixpanel and user agent for detection
-    const isIOS = os === 'iOS' || /iPad|iPhone|iPod/.test(userAgent);
-    console.log('Final isIOS determination:', isIOS);
-
-    if (isIOS) {
-      const hasShownNotice = localStorage.getItem('hasShownIOSNotice')
-      console.log('Has shown notice before:', hasShownNotice);
+    // Get current user data from Mixpanel
+    mixpanel.get_user_properties((user: any) => {
+      console.log('User properties callback:', user);
       
-      if (!hasShownNotice) {
-        console.log('Showing iOS notice');
-        setIsVisible(true)
-        track(ANALYTICS_EVENTS.IOS_NOTICE_SHOWN)
+      // Check if user is on iOS
+      const isIOS = user && user['$os'] === 'iOS';
+      console.log('Is iOS?', isIOS, 'OS:', user?.['$os']);
+
+      if (isIOS) {
+        const hasShownNotice = localStorage.getItem('hasShownIOSNotice')
+        console.log('Has shown notice before:', hasShownNotice);
+        
+        if (!hasShownNotice) {
+          console.log('Showing iOS notice');
+          setIsVisible(true)
+          track(ANALYTICS_EVENTS.IOS_NOTICE_SHOWN)
+        }
       }
-    }
+    });
   }, [])
 
   const closeBanner = () => {
