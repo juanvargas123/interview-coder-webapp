@@ -2,8 +2,7 @@ import "./globals.css"
 import { Inter } from "next/font/google"
 import { ReactQueryProvider } from "@/lib/react-query/provider"
 import { Analytics } from "@vercel/analytics/react"
-import mixpanel from 'mixpanel-browser';
-import { IOSNotice } from "@/components/ui/ios-notice"
+import mixpanel from 'mixpanel-browser'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,7 +25,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReactQueryProvider>
           {children}
-          <IOSNotice />
         </ReactQueryProvider>
         <Analytics />
       </body>

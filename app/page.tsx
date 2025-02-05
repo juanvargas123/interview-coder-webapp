@@ -9,6 +9,7 @@ import { PricingSection } from "@/components/sections/PricingSection"
 import { StepsSection } from "@/components/sections/StepsSection"
 import { CarouselSection } from "@/components/sections/CarouselSection"
 import { VideoSection } from "@/components/sections/VideoSection"
+import { IOSNotice } from "@/components/ui/ios-notice"
 
 export default function Home() {
   return (
@@ -31,6 +32,7 @@ export default function Home() {
         <FaqSection />
       </div>
       <Footer />
+      <IOSNotice />
     </div>
   )
 }
