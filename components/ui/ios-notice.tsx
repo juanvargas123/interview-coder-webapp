@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from './button'
 import { X, Mail, Repeat } from 'lucide-react'
 import { track, ANALYTICS_EVENTS } from '@/lib/mixpanel'
+import mixpanel from 'mixpanel-browser'
 
 export function IOSNotice() {
   const [isVisible, setIsVisible] = useState(false)
@@ -13,10 +14,9 @@ export function IOSNotice() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    // Check if the user is on iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+    // Check if the user is on iOS using Mixpanel
+    const isIOS = mixpanel.get_property('$os') === 'iOS'
     if (isIOS) {
-      // Check if we've shown the notice before
       const hasShownNotice = localStorage.getItem('hasShownIOSNotice')
       if (!hasShownNotice) {
         setIsVisible(true)
