@@ -20,8 +20,8 @@ const supabase = createClient(
 )
 
 // We assume you have two secrets set in your .env file:
-// STRIPE_WEBHOOK_SECRET_CO for interviewcoder.co
-// STRIPE_WEBHOOK_SECRET_NET for interviewcoder.net
+// STRIPE_WEBHOOK_SECRET for interviewcoder.co
+// STRIPE_WEBHOOK_SECRET_SECONDARY for interviewcoder.net
 export async function POST(req: Request) {
   const body = await req.text()
   const signature = req.headers.get("stripe-signature")
@@ -50,11 +50,11 @@ export async function POST(req: Request) {
     hostname.includes("interviewcoder.net") ||
     host?.includes("interviewcoder.net")
   ) {
-    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_NET!
+    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_SECONDARY!
     console.log("Using .NET webhook secret")
   } else {
     // Default to .co for production
-    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_CO!
+    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
     console.log("Using .CO webhook secret")
   }
 
