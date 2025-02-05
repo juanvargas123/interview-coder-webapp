@@ -18,6 +18,11 @@ export const ANALYTICS_EVENTS = {
   MAC_DOWNLOAD_OPTION_CLICK: 'Mac Download Option Click',
   SUBSCRIBE_BUTTON_CLICK: 'Subscribe Button Click',
   SIGNIN_PAGE_VIEW: 'Sign In Page View',
+  IOS_NOTICE_SHOWN: 'iOS Notice Shown',
+  IOS_NOTICE_CLOSED: 'iOS Notice Closed',
+  IOS_EMAIL_REMINDER_SENT: 'iOS Email Reminder Sent',
+  IOS_HANDOFF_STEPS_SHOWN: 'iOS Handoff Steps Shown',
+  MAC_DOWNLOAD_LINK_EMAIL_SENT: 'Mac Download Link Email Sent',
 } as const;
 
 // Type for our event names

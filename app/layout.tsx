@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import { ReactQueryProvider } from "@/lib/react-query/provider"
 import { Analytics } from "@vercel/analytics/react"
 import mixpanel from 'mixpanel-browser';
+import { IOSNotice } from "@/components/ui/ios-notice"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,7 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          {children}
+          <IOSNotice />
+        </ReactQueryProvider>
         <Analytics />
       </body>
     </html>
