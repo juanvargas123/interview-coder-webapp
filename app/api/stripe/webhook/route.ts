@@ -25,24 +25,46 @@ const supabase = createClient(
 export async function POST(req: Request) {
   const body = await req.text()
   const signature = req.headers.get("stripe-signature")
+  const url = new URL(req.url)
+  const hostname = url.hostname
+  const host = req.headers.get("host")
 
-  // Determine the domain from the request:
-  // e.g. if your webhook is https://interviewcoder.co/api/stripe/webhook,
-  // new URL(req.url).hostname should be "interviewcoder.co"
-  const { hostname } = new URL(req.url)
+  // Debug logging
+  console.log("Webhook request details:", {
+    url: req.url,
+    hostname,
+    host,
+    headers: Object.fromEntries(req.headers.entries())
+  })
 
-  // Pick the correct secret based on the hostname.
-  // Adjust the comparison to match exactly your domain strings.
-  // For example, if you might have "www.interviewcoder.co" vs "interviewcoder.co",
-  // be sure to handle that if necessary.
+  // Pick the correct secret based on the hostname or host header
   let webhookSecret: string
 
-  if (hostname === "interviewcoder.net") {
+  // For local development
+  if (hostname === "localhost" || host?.includes("localhost")) {
+    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET! // Use the CLI webhook secret
+    console.log("Using local development webhook secret")
+  }
+  // Production domains
+  else if (
+    hostname.includes("interviewcoder.net") ||
+    host?.includes("interviewcoder.net")
+  ) {
     webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_NET!
+    console.log("Using .NET webhook secret")
   } else {
-    // default to .co if not .net
-    // (or do additional checks if you have multiple subdomains)
+    // Default to .co for production
     webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_CO!
+    console.log("Using .CO webhook secret")
+  }
+
+  // Verify we have a webhook secret
+  if (!webhookSecret) {
+    console.error("No webhook secret available for domain:", { hostname, host })
+    return NextResponse.json(
+      { error: "Webhook secret not configured for this domain" },
+      { status: 500 }
+    )
   }
 
   if (!signature) {
@@ -55,9 +77,15 @@ export async function POST(req: Request) {
   try {
     // Construct the event using the chosen secret
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
-    console.log(`Received webhook event (${hostname}):`, event.type)
+    console.log(`Received webhook event (${hostname || host}):`, event.type)
   } catch (err) {
-    console.error("Error verifying webhook signature:", err)
+    console.error("Error verifying webhook signature:", {
+      error: err,
+      hostname,
+      host,
+      hasSecret: !!webhookSecret,
+      secretPrefix: webhookSecret?.substring(0, 8)
+    })
     return NextResponse.json(
       {
         error: `Webhook Error: ${
