@@ -3,14 +3,9 @@ import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  // Use the Stripe API version you need
   apiVersion: "2024-12-18.acacia"
 })
-
-// Define webhook secrets for different endpoints
-const webhookSecrets = {
-  default: process.env.STRIPE_WEBHOOK_SECRET!,
-  secondary: process.env.STRIPE_WEBHOOK_SECRET_SECONDARY!
-}
 
 // Create a Supabase client with admin privileges
 const supabase = createClient(
@@ -24,17 +19,31 @@ const supabase = createClient(
   }
 )
 
+// We assume you have two secrets set in your .env file:
+// STRIPE_WEBHOOK_SECRET_CO for interviewcoder.co
+// STRIPE_WEBHOOK_SECRET_NET for interviewcoder.net
 export async function POST(req: Request) {
   const body = await req.text()
   const signature = req.headers.get("stripe-signature")
-  const url = new URL(req.url)
 
-  // Determine which webhook secret to use based on the path
-  // Example: /api/stripe/webhook/secondary for secondary webhook
-  const isSecondaryWebhook = url.pathname.endsWith("/secondary")
-  const webhookSecret = isSecondaryWebhook
-    ? webhookSecrets.secondary
-    : webhookSecrets.default
+  // Determine the domain from the request:
+  // e.g. if your webhook is https://interviewcoder.co/api/stripe/webhook,
+  // new URL(req.url).hostname should be "interviewcoder.co"
+  const { hostname } = new URL(req.url)
+
+  // Pick the correct secret based on the hostname.
+  // Adjust the comparison to match exactly your domain strings.
+  // For example, if you might have "www.interviewcoder.co" vs "interviewcoder.co",
+  // be sure to handle that if necessary.
+  let webhookSecret: string
+
+  if (hostname === "interviewcoder.net") {
+    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_NET!
+  } else {
+    // default to .co if not .net
+    // (or do additional checks if you have multiple subdomains)
+    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_CO!
+  }
 
   if (!signature) {
     console.error("No signature found in webhook request")
@@ -44,13 +53,9 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
+    // Construct the event using the chosen secret
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
-    console.log(
-      `Received webhook event on ${
-        isSecondaryWebhook ? "secondary" : "primary"
-      } endpoint:`,
-      event.type
-    )
+    console.log(`Received webhook event (${hostname}):`, event.type)
   } catch (err) {
     console.error("Error verifying webhook signature:", err)
     return NextResponse.json(
@@ -64,7 +69,10 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Handle subscription updates
+    // ─────────────────────────────────────────────
+    //  Handle your event types below (UNCHANGED)
+    // ─────────────────────────────────────────────
+
     if (event.type === "customer.subscription.updated") {
       const subscription = event.data.object as Stripe.Subscription
       console.log("Processing subscription update:", {
@@ -73,10 +81,8 @@ export async function POST(req: Request) {
         cancelAt: subscription.cancel_at
       })
 
-      // Try to get user_id from metadata first
       let userId = subscription.metadata.user_id
 
-      // If not in metadata, try to find it in the database
       if (!userId) {
         console.log("No user_id in metadata, searching in database...")
         const { data: sub } = await supabase
@@ -96,7 +102,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "No user_id found" }, { status: 400 })
       }
 
-      // Update subscription in database
       const { error: updateError } = await supabase
         .from("subscriptions")
         .update({
@@ -153,7 +158,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ received: true })
     }
 
-    // Handle checkout session completion and payment success
+    // Handle checkout.session.completed and payment_intent.succeeded
     if (
       event.type === "checkout.session.completed" ||
       event.type === "payment_intent.succeeded"
@@ -188,20 +193,16 @@ export async function POST(req: Request) {
           creditsAmount
         })
 
-        // If this is just a setup session (adding a card), return early
+        // If this is just a setup session, return early
         if (isSetupMode) {
-          console.log("Setup session completed, no subscription update needed")
+          console.log("Setup session completed; no subscription update needed.")
           return NextResponse.json({ received: true })
         }
 
         // Handle credits purchase
         if (isCreditsPayment && userId && creditsAmount) {
-          console.log("Processing credits purchase:", {
-            userId,
-            creditsAmount
-          })
+          console.log("Processing credits purchase:", { userId, creditsAmount })
 
-          // Update credits in the subscriptions table
           const { error: creditsError } = await supabase.rpc(
             "increment_credits",
             {
@@ -229,12 +230,10 @@ export async function POST(req: Request) {
             subscriptionId
           })
 
-          // Get subscription details from Stripe
           const subscription = await stripe.subscriptions.retrieve(
             subscriptionId
           )
 
-          // Create or update subscription record
           const { error: subscriptionError } = await supabase
             .from("subscriptions")
             .upsert({
@@ -282,14 +281,13 @@ export async function POST(req: Request) {
           ? parseInt(paymentIntent.metadata.credits_amount)
           : undefined
 
-        // Handle credits purchase for payment intent
+        // Handle credits purchase
         if (isCreditsPayment && userId && creditsAmount) {
           console.log("Processing credits purchase from payment intent:", {
             userId,
             creditsAmount
           })
 
-          // Update credits in the subscriptions table
           const { error: creditsError } = await supabase.rpc(
             "increment_credits",
             {
@@ -310,7 +308,7 @@ export async function POST(req: Request) {
           return NextResponse.json({ received: true })
         }
 
-        // If this is a subscription-related payment, get the subscription ID
+        // If this is a subscription-related payment
         if (paymentIntent.metadata?.subscriptionId) {
           subscriptionId = paymentIntent.metadata.subscriptionId
           console.log("Payment intent details:", {
@@ -320,7 +318,7 @@ export async function POST(req: Request) {
             metadata: paymentIntent.metadata
           })
         } else {
-          // If no subscription ID, this might be a one-time payment or setup
+          // Otherwise, probably a one-time payment or setup
           console.log("Payment succeeded without subscription:", {
             userId,
             customerId,
@@ -342,22 +340,20 @@ export async function POST(req: Request) {
         )
       }
 
-      // Only proceed with subscription update if we have a subscription ID
+      // Only proceed if we have a subscription ID
       if (!subscriptionId) {
         console.log("No subscription ID found, skipping subscription update")
         return NextResponse.json({ received: true })
       }
 
-      // Get subscription details from Stripe
+      // Retrieve subscription details
       const subscription = await stripe.subscriptions.retrieve(subscriptionId)
       console.log("Retrieved subscription details:", {
         status: subscription.status,
         currentPeriodEnd: subscription.current_period_end
       })
 
-      console.log("Creating/updating subscription for user:", userId)
-
-      // Upsert subscription record using admin client
+      // Upsert subscription in DB
       const { error: subscriptionError } = await supabase
         .from("subscriptions")
         .upsert({
@@ -394,6 +390,7 @@ export async function POST(req: Request) {
       console.log("Unhandled event type:", event.type)
     }
 
+    // For any unhandled events, just respond OK
     return NextResponse.json({ received: true })
   } catch (err) {
     console.error("Error processing webhook:", err)
