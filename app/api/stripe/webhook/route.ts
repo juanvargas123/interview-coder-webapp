@@ -5,7 +5,12 @@ import { createClient } from "@supabase/supabase-js"
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-12-18.acacia"
 })
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+
+// Define webhook secrets for different endpoints
+const webhookSecrets = {
+  default: process.env.STRIPE_WEBHOOK_SECRET!,
+  secondary: process.env.STRIPE_WEBHOOK_SECRET_SECONDARY!
+}
 
 // Create a Supabase client with admin privileges
 const supabase = createClient(
@@ -22,6 +27,14 @@ const supabase = createClient(
 export async function POST(req: Request) {
   const body = await req.text()
   const signature = req.headers.get("stripe-signature")
+  const url = new URL(req.url)
+
+  // Determine which webhook secret to use based on the path
+  // Example: /api/stripe/webhook/secondary for secondary webhook
+  const isSecondaryWebhook = url.pathname.endsWith("/secondary")
+  const webhookSecret = isSecondaryWebhook
+    ? webhookSecrets.secondary
+    : webhookSecrets.default
 
   if (!signature) {
     console.error("No signature found in webhook request")
@@ -32,7 +45,12 @@ export async function POST(req: Request) {
 
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
-    console.log("Received webhook event:", event.type)
+    console.log(
+      `Received webhook event on ${
+        isSecondaryWebhook ? "secondary" : "primary"
+      } endpoint:`,
+      event.type
+    )
   } catch (err) {
     console.error("Error verifying webhook signature:", err)
     return NextResponse.json(
