@@ -92,7 +92,11 @@ export default function PoliciesPage() {
                 <li>
                   <strong>License:</strong> We grant you a limited,
                   non-exclusive, non-transferable license to use Interview Coder
-                  for your personal coding interview preparation.
+                  for your personal coding interview preparation. This tool is
+                  NOT intended to be used in a real interview. The purpose of
+                  the tool is purely illustrative and all of our marketing
+                  efforts are for the purpose of showing big tech companies how
+                  easy it would be to game their broken interview processes.
                 </li>
                 <li>
                   <strong>User Conduct:</strong> You agree not to:
