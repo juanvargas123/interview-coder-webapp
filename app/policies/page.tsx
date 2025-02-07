@@ -34,7 +34,10 @@ export default function PoliciesPage() {
                   churlee12@gmail.com or 4709192464.
                 </li>
 
-                <li>Provide your purchase details and reason for refund</li>
+                <li>
+                  Provide your purchase details, reason for refund, and video
+                  evidence of the software not working.
+                </li>
                 <li>Refunds will be processed within 5-7 business days</li>
               </ul>
             </CardContent>
