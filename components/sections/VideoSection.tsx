@@ -38,8 +38,15 @@ export const VideoSection = () => {
               both the OA and the final round.
               <br />
               <br />
-              Skeptical? Email me @churlee12@gmail.com for any extra proof you
-              need.
+              Skeptical? Watch the entire, uncut technical interview{" "}
+              <a
+                href="https://youtu.be/rcH813f5vCE"
+                target="_blank"
+                className="underline hover:text-gray-400 transition-colors"
+              >
+                here
+              </a>
+              .
             </p>
           </motion.div>
 

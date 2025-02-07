@@ -77,7 +77,12 @@ export const StepsSection = () => {
 
       <section className="relative lg:pl-0 pl-6">
         {steps.map((step, index) => (
-          <div key={step.id} className={`py-6 lg:py-32`}>
+          <div
+            key={step.id}
+            className={`py-6 ${
+              index === 2 || index === 3 ? "lg:py-16" : "lg:py-32"
+            }`}
+          >
             <div className="max-w-none mx-auto px-6">
               <div
                 className={`lg:ml-[10%] relative h-fit ${

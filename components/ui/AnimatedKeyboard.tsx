@@ -1,20 +1,74 @@
 import styles from "@/styles/Keyboard.module.css"
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 
 const KeyboardKey = ({
   children,
   isGlowing = false,
   isSpace = false,
-  isModifier = false
-}) => (
-  <div
-    className={`${styles.key} ${isGlowing ? styles.glowing : ""} ${
-      isSpace ? styles.spaceKey : ""
-    } ${isModifier ? styles.modifierKey : ""}`}
-  >
-    <div className={styles.alignCenter}>{children}</div>
-  </div>
-)
+  isModifier = false,
+  delay = 0
+}) => {
+  const glowVariants = {
+    initial: {
+      boxShadow: "none",
+      border: "1px solid rgba(255, 255, 255, 0.08)",
+      background: "rgba(20, 20, 20, 0.95)"
+    },
+    animate: {
+      boxShadow:
+        "0 0 1.875rem rgba(255, 238, 0, 0.4), 0 0 3.75rem rgba(255, 238, 0, 0.2), 0 0 5.625rem rgba(255, 238, 0, 0.1)",
+      border: "0.0625rem solid rgba(255, 238, 0, 0.6)",
+      background: "rgba(255, 238, 0, 0.08)",
+      transition: {
+        duration: 0.3,
+        delay: delay
+      }
+    }
+  }
+
+  return (
+    <motion.div
+      className={`${styles.key} ${isGlowing ? styles.glowing : ""} ${
+        isSpace ? styles.spaceKey : ""
+      } ${isModifier ? styles.modifierKey : ""}`}
+      variants={isGlowing ? glowVariants : undefined}
+      initial={isGlowing ? "initial" : undefined}
+      animate={isGlowing ? "animate" : undefined}
+    >
+      <motion.div
+        className={styles.alignCenter}
+        animate={
+          isGlowing
+            ? {
+                color: "rgba(255, 238, 0, 1)",
+                textShadow:
+                  "0 0 15px rgba(255, 238, 0, 0.9), 0 0 30px rgba(255, 238, 0, 0.6)"
+              }
+            : undefined
+        }
+        initial={
+          isGlowing
+            ? {
+                color: "rgba(255, 255, 255, 0.9)",
+                textShadow: "none"
+              }
+            : undefined
+        }
+        transition={
+          isGlowing
+            ? {
+                duration: 0.3,
+                delay: delay
+              }
+            : undefined
+        }
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  )
+}
 
 const KeyboardRow = ({ children, isBottom = false }) => (
   <div className={`${styles.keyboardRow} ${isBottom ? styles.bottomRow : ""}`}>
@@ -108,7 +162,7 @@ export const AnimatedKeyboard = () => {
 
           <KeyboardRow>
             {["Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"].map((key) => (
-              <KeyboardKey key={key} isGlowing={key === "B"}>
+              <KeyboardKey key={key} isGlowing={key === "B"} delay={0.5}>
                 <span className={styles.primary}>{key}</span>
               </KeyboardKey>
             ))}
@@ -127,7 +181,7 @@ export const AnimatedKeyboard = () => {
                 <span className={styles.icon}>⌥</span>
               </div>
             </KeyboardKey>
-            <KeyboardKey isModifier isGlowing>
+            <KeyboardKey isModifier isGlowing delay={0.5}>
               <div className={styles.commandKey}>
                 <span>command</span>
                 <span className={styles.icon}>⌘</span>

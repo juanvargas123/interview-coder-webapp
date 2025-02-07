@@ -98,7 +98,7 @@ export const CompanySection = () => {
             ))}
           </div>
           <p className="text-center text-sm text-gray-500 mt-8 px-4">
-            * Some platforms may detect Interview Coder. See our{" "}
+            * Undetectability may not work with some versions of MacOS. See our{" "}
             <Link
               href="/help?section=shows-when-sharing"
               className="underline hover:text-gray-400 transition-colors"
