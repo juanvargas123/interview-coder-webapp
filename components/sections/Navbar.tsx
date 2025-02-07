@@ -72,7 +72,11 @@ const GitHubStarsButton = ({
   )
 }
 
-export default function Navbar() {
+interface NavbarProps {
+  showBanner: boolean
+}
+
+export default function Navbar({ showBanner }: NavbarProps) {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [windowWidth, setWindowWidth] = useState(0)
@@ -125,7 +129,6 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Calculate progress as percentage (0 to 1) up to 10% of screen height
       const progress = Math.min(1, window.scrollY / (window.innerHeight * 0.1))
       setScrollProgress(progress)
     }
@@ -305,7 +308,12 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="fixed left-0 top-0 w-full z-50 flex justify-center pt-2 md:pt-0">
+      <div
+        className={cn(
+          "fixed left-0 top-0 w-full z-50 flex justify-center pt-2 md:pt-0 transition-all duration-300",
+          showBanner ? "mt-[34px]" : "mt-0"
+        )}
+      >
         <div
           className="w-full px-4 flex justify-center"
           style={{

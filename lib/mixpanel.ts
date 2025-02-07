@@ -1,14 +1,24 @@
 import mixpanel from "mixpanel-browser"
 
 // Initialize Mixpanel with your project token
+let mixpanelInitialized = false
+let mixpanelInstance: typeof mixpanel | null = null
+
 if (typeof window !== "undefined") {
-  mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || "", {
-    debug: process.env.NODE_ENV === "development",
-    track_pageview: true,
-    persistence: "localStorage",
-    api_host: "https://api-eu.mixpanel.com",
-    property_blacklist: ["$current_url", "$initial_referrer", "$referrer"]
-  })
+  try {
+    mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || "", {
+      debug: process.env.NODE_ENV === "development",
+      track_pageview: true,
+      persistence: "localStorage",
+      api_host: "https://api-eu.mixpanel.com",
+      property_blacklist: ["$current_url", "$initial_referrer", "$referrer"]
+    })
+    mixpanelInitialized = true
+    mixpanelInstance = mixpanel
+  } catch (error) {
+    console.error("Failed to initialize Mixpanel:", error)
+    mixpanelInstance = null
+  }
 }
 
 // Define event names as constants to avoid typos
@@ -31,17 +41,37 @@ export const ANALYTICS_EVENTS = {
 export type AnalyticsEvent =
   (typeof ANALYTICS_EVENTS)[keyof typeof ANALYTICS_EVENTS]
 
+// Helper function to check if Mixpanel is available
+const isMixpanelAvailable = () => {
+  return (
+    typeof window !== "undefined" &&
+    mixpanelInitialized &&
+    mixpanelInstance !== null
+  )
+}
+
+// Helper function to safely get Mixpanel instance
+const getMixpanel = () => {
+  if (!isMixpanelAvailable()) {
+    return null
+  }
+  return mixpanelInstance
+}
+
 // Track an event with optional properties
 export const track = (
   event: AnalyticsEvent,
   properties?: Record<string, any>
 ) => {
+  const mp = getMixpanel()
+  if (!mp) return
+
   try {
     console.log("🔍 Tracking event:", event, properties)
-    mixpanel.track(event, {
+    mp.track(event, {
       ...properties,
       timestamp: new Date().toISOString(),
-      url: typeof window !== "undefined" ? window.location.href : ""
+      url: window.location.href
     })
     console.log("✅ Event tracked successfully")
   } catch (error) {
@@ -51,14 +81,18 @@ export const track = (
 
 // Track page views
 export const trackPageView = (pageName: string) => {
+  if (!isMixpanelAvailable()) return
   track(ANALYTICS_EVENTS.PAGE_VIEW, { page: pageName })
 }
 
 // Set user properties
 export const setUserProperties = (properties: Record<string, any>) => {
+  const mp = getMixpanel()
+  if (!mp) return
+
   try {
     console.log("🔍 Setting user properties:", properties)
-    mixpanel.people.set(properties)
+    mp.people.set(properties)
     console.log("✅ User properties set successfully")
   } catch (error) {
     console.error("❌ Mixpanel set properties error:", error)
@@ -67,21 +101,32 @@ export const setUserProperties = (properties: Record<string, any>) => {
 
 // Get user properties
 export const getUserProperties = async () => {
+  const mp = getMixpanel()
+  if (!mp) {
+    console.warn("⚠️ Mixpanel not available")
+    return null
+  }
+
   try {
     console.log("🔍 Getting user properties")
-    const distinctId = mixpanel.get_distinct_id()
+    let distinctId
+    try {
+      distinctId = mp.get_distinct_id()
+    } catch (error) {
+      console.warn("⚠️ Could not get distinct ID:", error)
+      return null
+    }
+
     if (!distinctId) {
       console.warn("⚠️ No distinct ID found")
       return null
     }
+
     return await new Promise((resolve) => {
-      mixpanel.get_property(
-        "$properties",
-        (properties: Record<string, any>) => {
-          console.log("✅ User properties retrieved successfully:", properties)
-          resolve(properties)
-        }
-      )
+      mp.get_property("$properties", (properties: Record<string, any>) => {
+        console.log("✅ User properties retrieved successfully:", properties)
+        resolve(properties)
+      })
     })
   } catch (error) {
     console.error("❌ Mixpanel get properties error:", error)
@@ -91,9 +136,12 @@ export const getUserProperties = async () => {
 
 // Identify a user
 export const identify = (userId: string) => {
+  const mp = getMixpanel()
+  if (!mp) return
+
   try {
     console.log("🔍 Identifying user:", userId)
-    mixpanel.identify(userId)
+    mp.identify(userId)
     console.log("✅ User identified successfully")
   } catch (error) {
     console.error("❌ Mixpanel identify error:", error)
@@ -102,9 +150,12 @@ export const identify = (userId: string) => {
 
 // Reset user identification
 export const reset = () => {
+  const mp = getMixpanel()
+  if (!mp) return
+
   try {
     console.log("🔍 Resetting user identification")
-    mixpanel.reset()
+    mp.reset()
     console.log("✅ User reset successfully")
   } catch (error) {
     console.error("❌ Mixpanel reset error:", error)

@@ -10,11 +10,32 @@ import { StepsSection } from "@/components/sections/StepsSection"
 import { CarouselSection } from "@/components/sections/CarouselSection"
 import { VideoSection } from "@/components/sections/VideoSection"
 import { IOSNotice } from "@/components/ui/ios-notice"
+import {
+  PriceIncreaseBanner,
+  BANNER_DISMISSED_KEY
+} from "@/components/sections/PriceIncreaseBanner"
+import { useEffect, useState } from "react"
 
 export default function Home() {
+  const [showBanner, setShowBanner] = useState(false)
+
+  useEffect(() => {
+    // Check if banner was previously dismissed
+    const isDismissed = localStorage.getItem(BANNER_DISMISSED_KEY)
+    if (!isDismissed) {
+      setShowBanner(true)
+    }
+  }, [])
+
+  const handleDismiss = () => {
+    localStorage.setItem(BANNER_DISMISSED_KEY, "true")
+    setShowBanner(false)
+  }
+
   return (
     <div className="relative w-screen overflow-x-hidden hero-gradient">
-      <Navbar />
+      <PriceIncreaseBanner isVisible={showBanner} onDismiss={handleDismiss} />
+      <Navbar showBanner={showBanner} />
       <HeroSection />
       <CarouselSection />
       <div id="proof">

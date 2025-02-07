@@ -7,7 +7,7 @@ export const VideoSection = () => {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   return (
-    <section className="mx-auto max-w-7xl px-6 lg:px-8 mt-24">
+    <section className="mx-auto max-w-7xl px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
