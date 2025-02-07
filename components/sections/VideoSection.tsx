@@ -30,7 +30,7 @@ export const VideoSection = () => {
                 textShadow: "0 0 20px rgba(255, 255, 255, 0.3)"
               }}
             >
-              <span className="white-gradient">ULTIMATE PROOF</span>
+              <span className="white-gradient">Proof</span>
             </h2>
             <p className="text-md sm:text-lg text-[#999999]">
               Watch me get an offer from Amazon using Interview Coder.

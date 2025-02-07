@@ -215,7 +215,7 @@ export default function CheckoutPageContent() {
   if (magicLinkSent) {
     return (
       <div className="min-h-screen bg-black">
-        <Navbar />
+        <Navbar showBanner={false} />
         <div className="flex items-center justify-center min-h-screen px-4">
           <div className="text-center space-y-4">
             <h2 className="text-xl mb-4">Check your email to continue</h2>
@@ -233,7 +233,7 @@ export default function CheckoutPageContent() {
   if (isRateLimited) {
     return (
       <div className="min-h-screen bg-black">
-        <Navbar />
+        <Navbar showBanner={false} />
         <div className="flex items-center justify-center min-h-screen px-4">
           <div className="text-center space-y-4">
             <h2 className="text-xl mb-4">
@@ -252,7 +252,7 @@ export default function CheckoutPageContent() {
   if (isValidatingToken) {
     return (
       <div className="min-h-screen bg-black">
-        <Navbar />
+        <Navbar showBanner={false} />
         <div className="flex items-center justify-center min-h-screen px-4">
           <div className="text-center space-y-4">
             <h2 className="text-xl mb-4">Validating your checkout link...</h2>
@@ -266,7 +266,7 @@ export default function CheckoutPageContent() {
   if (authError) {
     return (
       <div className="min-h-screen bg-black">
-        <Navbar />
+        <Navbar showBanner={false} />
         <div className="flex items-center justify-center min-h-screen px-4">
           <div className="text-center space-y-4">
             <h2 className="text-xl mb-4 text-red-400">{authError}</h2>
@@ -286,7 +286,7 @@ export default function CheckoutPageContent() {
   if (tokenData && (!session || session.user.id !== tokenData.user_id)) {
     return (
       <div className="min-h-screen bg-black">
-        <Navbar />
+        <Navbar showBanner={false} />
         <div className="flex items-center justify-center min-h-screen px-4">
           <div className="text-center space-y-4">
             <h2 className="text-xl mb-4">
@@ -372,7 +372,7 @@ export default function CheckoutPageContent() {
 
   return (
     <div className="min-h-screen bg-black">
-      <Navbar />
+      <Navbar showBanner={false} />
       <div className="max-w-3xl mx-auto px-4 pt-28 pb-12">
         <div className="space-y-8">
           {/* Pricing details */}

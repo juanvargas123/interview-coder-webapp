@@ -73,10 +73,10 @@ const GitHubStarsButton = ({
 }
 
 interface NavbarProps {
-  showBanner: boolean
+  showBanner?: boolean
 }
 
-export default function Navbar({ showBanner }: NavbarProps) {
+export default function Navbar({ showBanner = false }: NavbarProps) {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [windowWidth, setWindowWidth] = useState(0)

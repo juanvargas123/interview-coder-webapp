@@ -612,7 +612,10 @@ export default function HelpCenterContent() {
                       <p className="mt-2 text-sm text-zinc-300">
                         Due to an unresolved bug in Electron, some WebRTC-based
                         screen-sharing software may be able to see Interview
-                        Coder on MacOS while sharing your full screen.
+                        Coder on MacOS while sharing your full screen. To see if
+                        you're affected, download the application and try to
+                        screen-share. If it shows, then you're affected. Please
+                        be careful to note this as we do not offer refunds.
                       </p>
                     </div>
                   </div>
@@ -736,10 +739,10 @@ export default function HelpCenterContent() {
                     <p className="mt-2 text-sm text-zinc-300">
                       Due to an unresolved bug in Electron, some WebRTC-based
                       screen-sharing software may be able to see Interview Coder
-                      on MacOS while sharing your full screen. If this is
-                      happening to you, please contact us at churlee12@gmail.com
-                      or 4709192464 and let us know your operating system for a
-                      full refund.
+                      on MacOS while sharing your full screen. To see if you're
+                      affected, download the application without subscribing and
+                      try to screen-share. If it shows, then you're affected.
+                      Please be careful to note this as we do not offer refunds.
                     </p>
                   </div>
                 </div>
@@ -828,12 +831,19 @@ export default function HelpCenterContent() {
                 <Box>
                   <div className="space-y-4">
                     <div>
-                      <SectionHeading>Money-Back Guarantee</SectionHeading>
+                      <SectionHeading>Refund Policy</SectionHeading>
                       <p className="mt-2 text-sm text-zinc-300">
-                        We offer a 24-hour money-back guarantee for our software
-                        subscription. If you're not satisfied with our service,
-                        you can request a full refund within 24 hours of your
-                        purchase by contacting our customer service team.
+                        We offer a 24-hour refund policy for our software
+                        subscription ONLY in the condition that you are able to
+                        show video evidence that it is not working on your
+                        computer. Concerns like{" "}
+                        <a
+                          href="/help?section=shows-when-sharing"
+                          className="underline"
+                        >
+                          detection by screen-sharing software
+                        </a>
+                        , or slowness in solution generation are not refundable.
                       </p>
                     </div>
 
@@ -843,12 +853,12 @@ export default function HelpCenterContent() {
                         <Step
                           number={1}
                           title="Contact Support"
-                          description="Email us at churlee12@gmail.com or call 4709192464"
+                          description="Email us at churlee12@gmail.com or text 4709192464"
                         />
                         <Step
                           number={2}
                           title="Provide Details"
-                          description="Include your purchase details and reason for refund"
+                          description="Include your purchase details and proof of the software not working on your machine"
                         />
                         <Step
                           number={3}

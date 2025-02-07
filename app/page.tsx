@@ -7,7 +7,7 @@ import { Footer } from "@/components/sections/Footer"
 import { HeroSection } from "@/components/sections/HeroSection"
 import { PricingSection } from "@/components/sections/PricingSection"
 import { StepsSection } from "@/components/sections/StepsSection"
-import { CarouselSection } from "@/components/sections/CarouselSection"
+import { CompanySection } from "@/components/sections/CompanySection"
 import { VideoSection } from "@/components/sections/VideoSection"
 import { IOSNotice } from "@/components/ui/ios-notice"
 import {
@@ -37,7 +37,7 @@ export default function Home() {
       <PriceIncreaseBanner isVisible={showBanner} onDismiss={handleDismiss} />
       <Navbar showBanner={showBanner} />
       <HeroSection />
-      <CarouselSection />
+      <CompanySection />
       <div id="proof">
         <VideoSection />
       </div>

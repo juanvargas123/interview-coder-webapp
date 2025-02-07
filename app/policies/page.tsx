@@ -16,10 +16,16 @@ export default function PoliciesPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-neutral-300">
-                We offer a 24-hour money-back guarantee for our software
-                subscription. If you're not satisfied with our service, you can
-                request a full refund within 24 hours of your purchase by
-                contacting our customer service team.
+                We offer a 24-hour refund policy for our software subscription
+                ONLY in the condition that you are able to show video evidence
+                that it is not working on your computer. Concerns like{" "}
+                <a
+                  href="/help?section=shows-when-sharing"
+                  className="underline"
+                >
+                  detection by screen-sharing software
+                </a>
+                , or slowness in solution generation are not refundable.
               </p>
               <p className="text-neutral-300">To request a refund:</p>
               <ul className="list-disc pl-6 text-neutral-300 space-y-2">

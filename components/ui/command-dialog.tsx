@@ -69,8 +69,7 @@ You can cancel your subscription anytime from the settings page. After cancellat
         title: "Refund Policy",
         fullText: `Learn about our money-back guarantee and refund process.
 
-Money-Back Guarantee
-We offer a 24-hour money-back guarantee for our software subscription.`
+We offer a 24-hour refund policy for our software subscription ONLY in the condition that you are able to show video evidence that it is not working on your computer. Concerns like detection by screen-sharing software, or slowness in solution generation are not refundable.`
       }
     ]
   },
