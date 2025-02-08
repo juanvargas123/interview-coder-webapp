@@ -231,6 +231,19 @@ export default function HelpCenterContent() {
                   </div>
                 </Box>
 
+                <Box className="mt-8">
+                  <SectionHeading>Getting Started Tutorial</SectionHeading>
+                  <div className="mt-4 aspect-video w-full">
+                    <iframe
+                      className="w-full h-full rounded-lg"
+                      src="https://www.youtube.com/embed/w5LYB2u9-ho"
+                      title="Getting Started Tutorial"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                </Box>
+
                 <CardGrid className="mt-12">
                   <NavigationCard
                     href="/help?section=configuration"
