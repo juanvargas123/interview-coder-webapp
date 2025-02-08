@@ -17,7 +17,7 @@ export const PriceIncreaseBanner = ({
   useEffect(() => {
     if (!isVisible) return
 
-    const endTime = new Date("2025-02-08T14:00:00-05:00").getTime()
+    const endTime = new Date("2025-02-09T14:00:00-05:00").getTime()
 
     const updateTime = () => {
       const now = new Date().getTime()
