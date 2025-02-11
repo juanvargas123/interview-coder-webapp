@@ -14,7 +14,7 @@ const SubscribePage = () => {
           </h2>
           <p className="text-gray-400 text-xs sm:text-sm mt-2 mb-4 sm:mb-6">
             To continue using Interview Coder, you'll need to subscribe
-            ($20/month)
+            ($40/month)
           </p>
 
           {/* Keyboard Shortcuts */}

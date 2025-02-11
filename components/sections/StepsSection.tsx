@@ -357,7 +357,7 @@ export const StepsSection = () => {
                             className="flex items-center gap-2"
                             onClick={handleSubscribeClick}
                           >
-                            Subscribe Today ($20/month)
+                            Subscribe Today ($40/month)
                             <svg
                               className="ml-2 w-5 h-5 transform transition-transform group-hover:translate-x-1"
                               fill="none"

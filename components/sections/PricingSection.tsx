@@ -89,7 +89,7 @@ export const PricingSection = () => {
             >
               <div className="flex gap-2 items-center justify-center w-full text-base">
                 <BadgeCheck className="w-5 h-5" />
-                Subscribe today ($20/month)
+                Subscribe today ($40/month)
               </div>
             </Button>
           </div>

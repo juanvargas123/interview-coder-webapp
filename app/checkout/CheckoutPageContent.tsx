@@ -382,7 +382,7 @@ export default function CheckoutPageContent() {
                 Subscribe to Interview Coder
               </h2>
               <div className="text-4xl lg:text-5xl font-bold mb-2">
-                $20 / month
+                $40 / month
               </div>
             </div>
 
@@ -391,7 +391,7 @@ export default function CheckoutPageContent() {
                 <span className="text-sm lg:text-base">Subscription</span>
                 <div className="text-right">
                   <div className="text-xs lg:text-sm text-[#999999]">
-                    $20/month
+                    $40/month
                   </div>
                 </div>
               </div>
