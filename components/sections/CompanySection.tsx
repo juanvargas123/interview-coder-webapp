@@ -13,7 +13,7 @@ const companyLogos = [
     width: "w-32",
     height: "h-32",
     tooltip:
-      "Zoom\n(Doesn't work on versions 6.1.6+, downgrade if this applies to you)"
+      "Zoom\n(Doesn't work on versions 6.16+, downgrade if this applies to you)"
   },
   {
     name: "Hackerrank",
