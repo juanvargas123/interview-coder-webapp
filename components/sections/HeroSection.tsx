@@ -26,7 +26,7 @@ export const HeroSection = () => {
   }
 
   return (
-    <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center lg:pt-36 pt-24">
+    <main className="relative min-h-[90vh] overflow-hidden flex flex-col items-center justify-center pt-36">
       {/* <WingsBackground /> */}
       <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 mb-8">
         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FFFF00_0%,transparent_50%,#FFFF00_100%)]" />

@@ -17,7 +17,6 @@ export default function CheckoutPageContent() {
   const [tokenData, setTokenData] = useState<{ user_id: string } | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [isValidatingToken, setIsValidatingToken] = useState(true)
-
   const [authError, setAuthError] = useState<string | null>(null)
   const searchParams = useSearchParams()
   const supabase = createClientComponentClient()
@@ -31,10 +30,6 @@ export default function CheckoutPageContent() {
     amount_off?: number | null
   } | null>(null)
   const [total, setTotal] = useState(20.0)
-
-  const [isRateLimited, setIsRateLimited] = useState(false)
-  const [rateLimitSeconds, setRateLimitSeconds] = useState(0)
-  const [magicLinkSent, setMagicLinkSent] = useState(false)
 
   useEffect(() => {
     // Get initial session
@@ -103,73 +98,6 @@ export default function CheckoutPageContent() {
           }
           return
         }
-
-        // If we have a valid token but no session, get the user's email from their user_id
-        if (!session) {
-          console.log(
-            "No session found, looking up user with ID:",
-            data.user_id
-          )
-
-          // Get user email from our API endpoint
-          const response = await fetch(
-            `/api/auth/get-user?userId=${data.user_id}`
-          )
-          const userData = await response.json()
-
-          console.log("User lookup result:", userData)
-
-          if (!response.ok || !userData.email) {
-            console.log("Failed to find user email. Error:", userData.error)
-            throw new Error("Could not find user email")
-          }
-
-          console.log("Found user email:", userData.email)
-
-          // Mark token as used BEFORE sending the sign in email
-          const updateResponse = await fetch("/api/auth/update-token", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ token })
-          })
-
-          if (!updateResponse.ok) {
-            console.log(
-              "Failed to mark token as used:",
-              await updateResponse.json()
-            )
-            throw new Error("Failed to process checkout link")
-          }
-
-          // Try to sign in with a passwordless link
-          const { error: signInError } = await supabase.auth.signInWithOtp({
-            email: userData.email,
-            options: {
-              shouldCreateUser: false,
-              emailRedirectTo:
-                typeof window !== "undefined"
-                  ? `${window.location.origin}/auth/callback`
-                  : `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
-            }
-          })
-
-          if (signInError) {
-            console.log("Sign in error:", signInError)
-            // Check if it's a rate limit error
-            if (signInError.message?.includes("security purposes")) {
-              const seconds = signInError.message.match(/\d+/)?.[0]
-              setRateLimitSeconds(Number(seconds) || 60)
-              setIsRateLimited(true)
-              return
-            }
-            throw signInError
-          }
-
-          setMagicLinkSent(true)
-          return
-        }
       } catch (error) {
         console.error("Token error:", error)
         if (error instanceof Error) {
@@ -185,8 +113,6 @@ export default function CheckoutPageContent() {
             setAuthError(
               "This checkout link has expired. Please request a new one."
             )
-          } else if (error.message === "Could not find user email") {
-            setAuthError("Could not find your account. Please contact support.")
           } else {
             setAuthError(
               "Something went wrong. Please try again or contact support."
@@ -209,44 +135,6 @@ export default function CheckoutPageContent() {
   if (!userLoading && !user && !searchParams.get("token")) {
     router.push("/signin")
     return null
-  }
-
-  // Show magic link sent message
-  if (magicLinkSent) {
-    return (
-      <div className="min-h-screen bg-black">
-        <Navbar showBanner={false} />
-        <div className="flex items-center justify-center min-h-screen px-4">
-          <div className="text-center space-y-4">
-            <h2 className="text-xl mb-4">Check your email to continue</h2>
-            <p className="text-gray-400">
-              We've sent you a secure sign in link. Click the link in your email
-              to continue to checkout.
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Show rate limit message
-  if (isRateLimited) {
-    return (
-      <div className="min-h-screen bg-black">
-        <Navbar showBanner={false} />
-        <div className="flex items-center justify-center min-h-screen px-4">
-          <div className="text-center space-y-4">
-            <h2 className="text-xl mb-4">
-              Please check your email for a sign in link
-            </h2>
-            <p className="text-gray-400">
-              For security reasons, we can only send one email every{" "}
-              {rateLimitSeconds} seconds.
-            </p>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   if (isValidatingToken) {
@@ -290,9 +178,14 @@ export default function CheckoutPageContent() {
         <div className="flex items-center justify-center min-h-screen px-4">
           <div className="text-center space-y-4">
             <h2 className="text-xl mb-4">
-              Please wait while we sign you in...
+              Please sign in to continue checkout
             </h2>
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mx-auto"></div>
+            <Button
+              onClick={() => router.push("/signin")}
+              className="flex items-center gap-2"
+            >
+              Sign In
+            </Button>
           </div>
         </div>
       </div>
