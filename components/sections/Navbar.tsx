@@ -272,7 +272,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
           >
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.11/Interview-Coder-arm64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.12/Interview-Coder-arm64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
@@ -287,7 +287,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.11/Interview-Coder-x64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.12/Interview-Coder-x64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
@@ -504,7 +504,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                           <div className="space-y-2 mt-2">
                             <Button variant="default" className="w-full">
                               <Link
-                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.11/Interview-Coder-arm64.dmg"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.12/Interview-Coder-arm64.dmg"
                                 className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image
@@ -519,7 +519,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                             </Button>
                             <Button variant="default" className="w-full">
                               <Link
-                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.11/Interview-Coder-x64.dmg"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.12/Interview-Coder-x64.dmg"
                                 className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image
