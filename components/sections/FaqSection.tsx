@@ -45,7 +45,7 @@ const faqs = [
   {
     question: "What programming languages are supported?",
     answer:
-      "Python, Golang, Java, Javascript, C++, and Kotlin. You can edit your preferred langauge in the app or in your settings."
+      "Python, Golang, Java, Javascript, C++, Kotlin, and Swift. You can edit your preferred langauge in the app or in your settings."
   },
   ,
   {

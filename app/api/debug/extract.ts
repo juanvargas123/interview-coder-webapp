@@ -10,7 +10,8 @@ export async function extractCodeFromImages(
     | "golang"
     | "java"
     | "cpp"
-    | "kotlin" = "python"
+    | "kotlin"
+    | "swift" = "python"
 ) {
   console.log("Starting code extraction from images...")
 
@@ -29,7 +30,7 @@ export async function extractCodeFromImages(
   // Construct the extraction prompt
   const extractionPrompt = `Extract all relevant information from the provided images. Important notes:
 1. Extract all visible ${language} code, maintaining exact indentation and formatting
-2. Combine code from multiple images if present
+2. Combine code from multiple images if present 
 3. Include all visible comments
 4. If there are any visible problem statements or question text, include those as well
 5. Do not add any improvements or modifications

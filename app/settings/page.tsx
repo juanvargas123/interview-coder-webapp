@@ -378,6 +378,7 @@ export default function SettingsPage() {
                                   <option value="golang">Golang</option>
                                   <option value="cpp">C++</option>
                                   <option value="kotlin">Kotlin</option>
+                                  <option value="swift">Swift</option>
                                 </select>
                                 <p className="text-[13px] lg:text-sm text-gray-400 mt-2">
                                   This will be used as the default language for
