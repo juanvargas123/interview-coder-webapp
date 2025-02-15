@@ -2,8 +2,16 @@
 import { NextResponse } from "next/server"
 import axios from "axios"
 import { withTimeout, type ProblemInfo } from "../config"
-import { generateSolution } from "./solution"
+import { z } from "zod"
+
 export const maxDuration = 300
+
+const SolutionResponse = z.object({
+  thoughts: z.array(z.string()),
+  code: z.string(),
+  time_complexity: z.string(),
+  space_complexity: z.string()
+})
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +26,6 @@ export async function POST(request: Request) {
     })
 
     const openaiApiKey = process.env.OPENAI_API_KEY
-    const anthropicApiKey = process.env.ANTHROPIC_API_KEY
     if (!openaiApiKey) {
       console.log("OpenAI API key is not configured")
       return NextResponse.json(
@@ -26,102 +33,59 @@ export async function POST(request: Request) {
         { status: 500 }
       )
     }
-    if (!anthropicApiKey) {
-      console.log("Anthropic API key is not configured")
-      return NextResponse.json(
-        { error: "Anthropic API key is not configured" },
-        { status: 500 }
-      )
-    }
 
     try {
-      // Generate the solution using o1-mini
-      console.log(`Generating ${problemInfo.language} solution...`)
-      const solution = await generateSolution(problemInfo, openaiApiKey)
-      console.log("Solution generated successfully")
-
-      // Then analyze the solution using DeepSeek
-      console.log("Starting solution analysis...")
-
-      const analysisPrompt = `You must respond with ONLY a valid JSON object, no markdown, no code blocks, no additional text.
-The JSON object must have exactly these fields:
-{
-  "thoughts": [3 short, conversational thoughts about the solution, said as if you were explaining the process of arriving to the solution before you wrote it to a school teacher, demonstrating your thoughts and understanding of the problem. Keep it short and concise and only mention key points, data structures, algorithms, and core concepts used.],
-  "time_complexity": "runtime analysis",
-  "space_complexity": "memory usage analysis"
-}
-
-Code:
-${solution}`
-
-      console.log("Analysis prompt length:", analysisPrompt.length)
-      console.log("Making API request for analysis...")
+      console.log(`Generating ${problemInfo.language} solution and analysis...`)
 
       const response = await withTimeout(
         axios.post(
-          "https://api.anthropic.com/v1/messages",
+          "https://api.openai.com/v1/chat/completions",
           {
-            model: "claude-3-sonnet-20240229",
-            max_tokens: 4000,
-            temperature: 0,
-            system:
-              "You are a code analyzer that MUST return ONLY valid JSON with no markdown, no code blocks, and no additional text. Your response should be parseable by JSON.parse() directly.",
+            model: "o3-mini",
+            reasoning_effort: "high",
+            response_format: { type: "json_object" },
             messages: [
               {
+                role: "system",
+                content: `You are a coding assistant that generates solutions and analyzes them. You must return a JSON object with exactly these fields:
+{
+  "thoughts": [3 short, conversational thoughts about your solution approach, as if explaining to a teacher. It's important that you explain your thought process and reasoning for the solution, not just the solution itself, and make sure you talk through it progressively, as if you're arriving at the solution step by step, not as if you're explaining the solution itself. Only talk about the code and the logic, do not mention the fact that every line of code is commented.],
+  "code": "The complete ${
+    problemInfo.language ?? "python"
+  } solution as a string. Make it optimal, legible, and include inline comments after every line. Only write the function, not the test cases or an example of how to use it.",
+  "time_complexity": "Must start with big-O notation (e.g., O(n)) followed by a brief explanation of why",
+  "space_complexity": "Must start with big-O notation (e.g., O(n)) followed by a brief explanation of why"
+}`
+              },
+              {
                 role: "user",
-                content: analysisPrompt
+                content: `Generate a solution and analysis for this problem:
+
+Problem Statement: ${problemInfo.problem_statement ?? "None"}
+Input Format: ${problemInfo.input_format?.description ?? "None"}
+Output Format: ${problemInfo.output_format?.description ?? "None"}
+Test Cases: ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
               }
             ]
           },
           {
             headers: {
               "Content-Type": "application/json",
-              "anthropic-version": "2023-06-01",
-              "x-api-key": anthropicApiKey
+              Authorization: `Bearer ${openaiApiKey}`
             }
           }
         )
       )
 
-      console.log("Received analysis response")
-      console.log("Full API Response:", JSON.stringify(response.data, null, 2))
-
-      if (!response.data?.content || !response.data.content[0]?.text) {
-        console.error(
-          "Invalid or empty response from Claude API:",
-          response.data
-        )
-        throw new Error("Invalid response from Claude API during analysis")
+      if (!response.data?.choices?.[0]?.message?.content) {
+        throw new Error("Invalid response from OpenAI API")
       }
 
-      const analysisContent = response.data.content[0].text.trim()
+      const result = SolutionResponse.parse(
+        JSON.parse(response.data.choices[0].message.content)
+      )
 
-      try {
-        // Find the first occurrence of a JSON object
-        const jsonMatch = analysisContent.match(/\{[\s\S]*?\}/)
-        if (!jsonMatch) {
-          throw new Error("Could not find JSON object in response")
-        }
-
-        const jsonStr = jsonMatch[0]
-        const analysis = JSON.parse(jsonStr)
-        console.log("Analysis parsed successfully")
-
-        // Combine the solution and analysis
-        return NextResponse.json({
-          ...analysis,
-          code: solution
-        })
-      } catch (parseError: any) {
-        console.error("Error parsing analysis response:", {
-          error: parseError.message,
-          content: analysisContent
-        })
-        return NextResponse.json(
-          { error: "Failed to parse analysis response as JSON" },
-          { status: 500 }
-        )
-      }
+      return NextResponse.json(result)
     } catch (error: any) {
       console.error("Error in API request:", {
         message: error.message,
@@ -132,9 +96,8 @@ ${solution}`
       if (error.response?.status === 401) {
         return NextResponse.json(
           {
-            error: error.config?.url?.includes("anthropic")
-              ? "Please close this window and re-enter a valid Anthropic API key."
-              : "Please close this window and re-enter a valid OpenAI API key."
+            error:
+              "Please close this window and re-enter a valid OpenAI API key."
           },
           { status: 401 }
         )
