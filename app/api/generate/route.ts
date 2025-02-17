@@ -47,7 +47,7 @@ export async function POST(request: Request) {
             messages: [
               {
                 role: "system",
-                content: `You are a coding assistant that generates solutions and analyzes them. You must return a JSON object with exactly these fields:
+                content: `You are a coding assistant that generates solutions and analyzes them for Leetcode-style questions only. Do not return anything if the problem is not a Leetcode-style question. You must return a JSON object with exactly these fields:
 {
   "thoughts": [3 short, conversational thoughts about your solution approach, as if explaining to a teacher. It's important that you explain your thought process and reasoning for the solution, not just the solution itself, and make sure you talk through it progressively, as if you're arriving at the solution step by step, not as if you're explaining the solution itself. Only talk about the code and the logic, do not mention the fact that every line of code is commented.],
   "code": "The complete ${
