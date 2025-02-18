@@ -41,7 +41,8 @@ export async function POST(request: Request) {
 
       const completion = await withTimeout(
         openai.beta.chat.completions.parse({
-          model: "gpt-4o-2024-08-06",
+          model: "o3-mini",
+          reasoning_effort: "high",
           messages: [
             {
               role: "system",
