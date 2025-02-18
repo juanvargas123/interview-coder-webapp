@@ -1,11 +1,9 @@
 "use client"
 
-import { supabase } from "@/lib/supabase/client"
 import { motion } from "framer-motion"
-import { BadgeCheck } from "lucide-react"
-import { useRouter } from "next/navigation"
-import React from "react"
+import Link from "next/link"
 import { Button } from "../ui/button"
+import { BadgeCheck } from "lucide-react"
 
 const GlowingLine = () => (
   <div className="relative w-full max-w-[400px] mx-auto h-[40px] mb-8">
@@ -34,7 +32,7 @@ const GlowingLine = () => (
     {/* Extra glow layer for center */}
     <div className="absolute left-1/2 -translate-x-1/2 top-[25px] w-[40px] h-[2px] bg-[#FFFF00] blur-[4px]" />
 
-    {/* PRO text with glow */}
+    {/* Undetectable text with glow */}
     <div className="absolute left-1/2 -translate-x-1/2 top-0">
       <div className="relative">
         <div className="absolute -inset-1 bg-[#FFFF00]/30 blur-[10px]" />
@@ -51,32 +49,18 @@ const GlowingLine = () => (
   </div>
 )
 
-export const PricingSection = () => {
-  const router = useRouter()
-
-  const handleSubscribeClick = async () => {
-    const {
-      data: { session }
-    } = await supabase.auth.getSession()
-    if (!session) {
-      router.push("/signin")
-      return
-    } else {
-      router.push("/checkout")
-    }
-  }
-
+const UndetectabilitySection = () => {
   return (
     <section className="">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 mt-16">
         <GlowingLine />
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight white-gradient sm:text-4xl">
-            Interview Coder now uses o3-mini.
+          <h2 className="text-2xl font-bold tracking-tight white-gradient sm:text-3xl">
+            How is it undetectable?
           </h2>
-          <p className="text-lg leading-8 text-[#999999]">
-            We shit on hards now. <br />
-            <br />
+          <p className="text-lg leading-8 text-[#999999] mb-8">
+            Interview Coder has the most robust undetectability features on the
+            planet.
           </p>
         </div>
 
@@ -85,12 +69,14 @@ export const PricingSection = () => {
             <Button
               variant="highlight"
               className="w-full max-w-md h-12"
-              onClick={handleSubscribeClick}
+              asChild
             >
-              <div className="flex gap-2 items-center justify-center w-full text-base">
-                <BadgeCheck className="w-5 h-5" />
-                Subscribe today ($40/month)
-              </div>
+              <Link href="/help?section=undetectability">
+                <div className="flex gap-2 items-center justify-center w-full text-base">
+                  <BadgeCheck className="w-5 h-5" />
+                  See how we do it
+                </div>
+              </Link>
             </Button>
           </div>
         </div>
@@ -98,3 +84,5 @@ export const PricingSection = () => {
     </section>
   )
 }
+
+export default UndetectabilitySection

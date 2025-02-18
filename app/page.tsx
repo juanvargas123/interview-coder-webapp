@@ -15,6 +15,7 @@ import {
   BANNER_DISMISSED_KEY
 } from "@/components/sections/PriceIncreaseBanner"
 import { useEffect, useState } from "react"
+import UndetectabilitySection from "@/components/sections/UndetectabilitySection"
 
 export default function Home() {
   const [showBanner, setShowBanner] = useState(false)
@@ -41,9 +42,10 @@ export default function Home() {
       <div id="proof">
         <VideoSection />
       </div>
-      <div id="subscription">
-        <PricingSection />
+      <div id="undetectability">
+        <UndetectabilitySection />
       </div>
+
       <div id="how-to-use">
         <StepsSection />
       </div>
