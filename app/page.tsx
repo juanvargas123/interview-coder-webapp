@@ -5,7 +5,7 @@ import { CommandsSection } from "@/components/sections/CommandsSection"
 import { FaqSection } from "@/components/sections/FaqSection"
 import { Footer } from "@/components/sections/Footer"
 import { HeroSection } from "@/components/sections/HeroSection"
-import { PricingSection } from "@/components/sections/PricingSection"
+
 import { StepsSection } from "@/components/sections/StepsSection"
 import { CompanySection } from "@/components/sections/CompanySection"
 import { VideoSection } from "@/components/sections/VideoSection"
