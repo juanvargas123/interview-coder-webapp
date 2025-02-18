@@ -21,8 +21,7 @@ export async function POST(request: Request) {
     const problemInfo = (await request.json()) as ProblemInfo
     console.log("Received problem info:", {
       hasStatement: !!problemInfo.problem_statement,
-      hasInputFormat: !!problemInfo.input_format,
-      hasOutputFormat: !!problemInfo.output_format,
+
       numTestCases: problemInfo.test_cases?.length
     })
 

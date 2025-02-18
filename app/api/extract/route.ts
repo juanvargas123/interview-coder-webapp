@@ -1,8 +1,15 @@
 // app/api/extract/route.ts
 import { NextResponse } from "next/server"
-import axios from "axios"
+import OpenAI from "openai"
+import { z } from "zod"
 import { withTimeout } from "../config"
+
 export const maxDuration = 300
+
+const ExtractResponse = z.object({
+  problem_statement: z.string(),
+  test_cases: z.array(z.any()).default([])
+})
 
 export async function POST(request: Request) {
   try {
@@ -28,239 +35,59 @@ export async function POST(request: Request) {
 
     // Prepare the image contents for the message
     const imageContents = imageDataList.map((imageData) => ({
-      type: "image_url",
+      type: "image_url" as const,
       image_url: {
         url: `data:image/jpeg;base64,${imageData}`
       }
     }))
 
-    // Construct the messages to send to the model
-    const messages = [
-      {
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text:
-              "Extract the following information from this coding problem image:\n" +
-              "1. ENTIRE Problem statement (what needs to be solved)\n" +
-              "2. Input/Output format\n" +
-              "3. Constraints on the input\n" +
-              "4. Example test cases\n" +
-              "Format each test case exactly like this:\n" +
-              "{'input': {'args': [nums, target]}, 'output': {'result': [0,1]}}\n" +
-              "Note: test cases must have 'input.args' as an array of arguments in order,\n" +
-              "'output.result' containing the expected return value.\n" +
-              "Example for two_sum([2,7,11,15], 9) returning [0,1]:\n" +
-              "{'input': {'args': [[2,7,11,15], 9]}, 'output': {'result': [0,1]}}\n"
-          },
-          ...imageContents
-        ]
-      }
-    ]
-
-    // Define the function schema (same as before)
-    const functions = [
-      {
-        name: "extract_problem_details",
-        description:
-          "Extract and structure the key components of a coding problem",
-        parameters: {
-          type: "object",
-          properties: {
-            problem_statement: {
-              type: "string",
-              description:
-                "The ENTIRE main problem statement describing what needs to be solved"
-            },
-            input_format: {
-              type: "object",
-              properties: {
-                description: {
-                  type: "string",
-                  description: "Description of the input format"
-                },
-                parameters: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      name: {
-                        type: "string",
-                        description: "Name of the parameter"
-                      },
-                      type: {
-                        type: "string",
-                        enum: [
-                          "number",
-                          "string",
-                          "array",
-                          "array2d",
-                          "array3d",
-                          "matrix",
-                          "tree",
-                          "graph"
-                        ],
-                        description: "Type of the parameter"
-                      },
-                      subtype: {
-                        type: "string",
-                        enum: ["integer", "float", "string", "char", "boolean"],
-                        description:
-                          "For arrays, specifies the type of elements"
-                      }
-                    },
-                    required: ["name", "type"]
-                  }
-                }
-              },
-              required: ["description", "parameters"]
-            },
-            output_format: {
-              type: "object",
-              properties: {
-                description: {
-                  type: "string",
-                  description: "Description of the expected output format"
-                },
-                type: {
-                  type: "string",
-                  enum: [
-                    "number",
-                    "string",
-                    "array",
-                    "array2d",
-                    "array3d",
-                    "matrix",
-                    "boolean"
-                  ],
-                  description: "Type of the output"
-                },
-                subtype: {
-                  type: "string",
-                  enum: ["integer", "float", "string", "char", "boolean"],
-                  description: "For arrays, specifies the type of elements"
-                }
-              },
-              required: ["description", "type"]
-            },
-            constraints: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  description: {
-                    type: "string",
-                    description: "Description of the constraint"
-                  },
-                  parameter: {
-                    type: "string",
-                    description: "The parameter this constraint applies to"
-                  },
-                  range: {
-                    type: "object",
-                    properties: {
-                      min: { type: "number" },
-                      max: { type: "number" }
-                    }
-                  }
-                },
-                required: ["description"]
-              }
-            },
-            test_cases: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  input: {
-                    type: "object",
-                    properties: {
-                      args: {
-                        type: "array",
-                        items: {
-                          anyOf: [
-                            { type: "integer" },
-                            { type: "string" },
-                            {
-                              type: "array",
-                              items: {
-                                anyOf: [
-                                  { type: "integer" },
-                                  { type: "string" },
-                                  { type: "boolean" },
-                                  { type: "null" }
-                                ]
-                              }
-                            },
-                            { type: "object" },
-                            { type: "boolean" },
-                            { type: "null" }
-                          ]
-                        }
-                      }
-                    },
-                    required: ["args"]
-                  },
-                  output: {
-                    type: "object",
-                    properties: {
-                      result: {
-                        anyOf: [
-                          { type: "integer" },
-                          { type: "string" },
-                          {
-                            type: "array",
-                            items: {
-                              anyOf: [
-                                { type: "integer" },
-                                { type: "string" },
-                                { type: "boolean" },
-                                { type: "null" }
-                              ]
-                            }
-                          },
-                          { type: "object" },
-                          { type: "boolean" },
-                          { type: "null" }
-                        ]
-                      }
-                    },
-                    required: ["result"]
-                  }
-                },
-                required: ["input", "output"]
-              },
-              minItems: 1
-            }
-          },
-          required: ["problem_statement"]
-        }
-      }
-    ]
-
-    // Prepare the request payload
-    const payload = {
-      model: "gpt-4o-mini",
-      messages: messages,
-      functions: functions,
-      function_call: { name: "extract_problem_details" },
-      max_tokens: 4096
-    }
+    const openai = new OpenAI({ apiKey })
 
     try {
-      const response = await withTimeout(
-        axios.post("https://api.openai.com/v1/chat/completions", payload, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`
-          }
+      const completion = await withTimeout(
+        openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          response_format: { type: "json_object" },
+          messages: [
+            {
+              role: "system",
+              content: `You are a coding problem extractor that analyzes images of coding problems. You must return a JSON object with exactly these fields:
+{
+  "problem_statement": "The complete problem description of what needs to be solved",
+  "test_cases": [
+    {
+      "input": { "args": [arg1, arg2, ...] },
+      "output": { "result": expectedResult }
+    },
+    ...more test cases if available...
+  ]
+}
+
+If no test cases are visible in the image, return an empty array for test_cases. When test cases are present, try to format them with input args and output result, but any reasonable test case format is acceptable.`
+            },
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text" as const,
+                  text: "Extract the complete problem statement and any test cases from this image. Format the response exactly as specified."
+                },
+                ...imageContents
+              ]
+            }
+          ]
         })
       )
 
-      const functionCallArguments =
-        response.data.choices[0].message.function_call.arguments
-      return NextResponse.json(JSON.parse(functionCallArguments))
+      if (!completion.choices[0]?.message?.content) {
+        throw new Error("Invalid response from OpenAI API")
+      }
+
+      const result = ExtractResponse.parse(
+        JSON.parse(completion.choices[0].message.content)
+      )
+
+      return NextResponse.json(result)
     } catch (error: any) {
       if (error.response?.status === 401) {
         return NextResponse.json(
