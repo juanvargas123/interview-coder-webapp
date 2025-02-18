@@ -41,7 +41,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight leading-[1.3]"
         >
-          <span className="white-gradient pb-6  ">Screw Leetcode.</span>
+          <span className="white-gradient pb-6  ">F*ck Leetcode.</span>
         </motion.h2>
 
         <motion.h1

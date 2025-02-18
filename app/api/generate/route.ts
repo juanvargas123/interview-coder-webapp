@@ -3,6 +3,7 @@ import { NextResponse } from "next/server"
 import OpenAI from "openai"
 import { zodResponseFormat } from "openai/helpers/zod"
 import { withTimeout, type ProblemInfo } from "../config"
+import { verifyAuth } from "../auth"
 import { z } from "zod"
 
 export const maxDuration = 300
@@ -16,6 +17,15 @@ const SolutionResponse = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Verify authentication
+    const authResult = await verifyAuth()
+    if ("error" in authResult) {
+      return NextResponse.json(
+        { error: authResult.error },
+        { status: authResult.status }
+      )
+    }
+
     console.log("Starting POST request processing...")
 
     const problemInfo = (await request.json()) as ProblemInfo

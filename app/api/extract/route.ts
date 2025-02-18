@@ -3,6 +3,7 @@ import { NextResponse } from "next/server"
 import OpenAI from "openai"
 import { z } from "zod"
 import { withTimeout } from "../config"
+import { verifyAuth } from "../auth"
 
 export const maxDuration = 300
 
@@ -13,6 +14,15 @@ const ExtractResponse = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Verify authentication
+    const authResult = await verifyAuth()
+    if ("error" in authResult) {
+      return NextResponse.json(
+        { error: authResult.error },
+        { status: authResult.status }
+      )
+    }
+
     const { imageDataList } = await request.json()
 
     if (!imageDataList || !Array.isArray(imageDataList)) {
@@ -89,11 +99,17 @@ If no test cases are visible in the image, return an empty array for test_cases.
 
       return NextResponse.json(result)
     } catch (error: any) {
+      console.error("Error in API request:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      })
+
       if (error.response?.status === 401) {
         return NextResponse.json(
           {
             error:
-              "Please close this window and re-enter a valid Open AI API key."
+              "Please close this window and re-enter a valid OpenAI API key."
           },
           { status: 401 }
         )
@@ -102,7 +118,7 @@ If no test cases are visible in the image, return an empty array for test_cases.
         return NextResponse.json(
           {
             error:
-              "API Key out of credits. Please refill your OpenAI API credits and try again."
+              "API Key rate limit exceeded. Please try again in a few minutes."
           },
           { status: 429 }
         )
@@ -113,6 +129,10 @@ If no test cases are visible in the image, return an empty array for test_cases.
       )
     }
   } catch (error: any) {
+    console.error("Outer error handler:", {
+      message: error.message,
+      stack: error.stack
+    })
     return NextResponse.json(
       { error: error.message || "An unknown error occurred" },
       { status: 500 }
