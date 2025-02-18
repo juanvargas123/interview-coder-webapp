@@ -1,6 +1,7 @@
 // app/api/generate/route.ts
 import { NextResponse } from "next/server"
-import axios from "axios"
+import OpenAI from "openai"
+import { zodResponseFormat } from "openai/helpers/zod"
 import { withTimeout, type ProblemInfo } from "../config"
 import { z } from "zod"
 
@@ -37,53 +38,37 @@ export async function POST(request: Request) {
     try {
       console.log(`Generating ${problemInfo.language} solution and analysis...`)
 
-      const response = await withTimeout(
-        axios.post(
-          "https://api.openai.com/v1/chat/completions",
-          {
-            model: "o3-mini",
-            reasoning_effort: "high",
-            response_format: { type: "json_object" },
-            messages: [
-              {
-                role: "system",
-                content: `You are a coding assistant that generates solutions and analyzes them for Leetcode-style questions only. Do not return anything if the problem is not a Leetcode-style question. You must return a JSON object with exactly these fields:
-{
-  "thoughts": [3 short, conversational thoughts about your solution approach, as if explaining to a teacher. It's important that you explain your thought process and reasoning for the solution, not just the solution itself, and make sure you talk through it progressively, as if you're arriving at the solution step by step, not as if you're explaining the solution itself. Only talk about the code and the logic, do not mention the fact that every line of code is commented.],
-  "code": "The complete ${
-    problemInfo.language ?? "python"
-  } solution as a string. Make it optimal, legible, and include inline comments after every line. Only write the function, not the test cases or an example of how to use it.",
-  "time_complexity": "Must start with big-O notation (e.g., O(n)) followed by a brief explanation of why",
-  "space_complexity": "Must start with big-O notation (e.g., O(n)) followed by a brief explanation of why"
-}`
-              },
-              {
-                role: "user",
-                content: `Generate a solution and analysis for this problem:
+      const openai = new OpenAI({ apiKey: openaiApiKey })
+
+      const completion = await withTimeout(
+        openai.beta.chat.completions.parse({
+          model: "gpt-4o-2024-08-06",
+          messages: [
+            {
+              role: "system",
+              content: `You are a coding assistant that generates solutions and analyzes them. For each field in your response:
+- thoughts: Provide 3 short, conversational thoughts about your solution approach, as if explaining to a teacher. Explain your thought process progressively, as if arriving at the solution step by step. Focus on the code and logic only.
+- code: Write the complete ${
+                problemInfo.language ?? "python"
+              } solution. Make it optimal, legible, and include inline comments after every line. Only write the function, not test cases.
+- time_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
+- space_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why`
+            },
+            {
+              role: "user",
+              content: `Generate a solution and analysis for this problem:
 
 Problem Statement: ${problemInfo.problem_statement ?? "None"}
 Input Format: ${problemInfo.input_format?.description ?? "None"}
 Output Format: ${problemInfo.output_format?.description ?? "None"}
 Test Cases: ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
-              }
-            ]
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${openaiApiKey}`
             }
-          }
-        )
+          ],
+          response_format: zodResponseFormat(SolutionResponse, "solution")
+        })
       )
 
-      if (!response.data?.choices?.[0]?.message?.content) {
-        throw new Error("Invalid response from OpenAI API")
-      }
-
-      const result = SolutionResponse.parse(
-        JSON.parse(response.data.choices[0].message.content)
-      )
+      const result = completion.choices[0].message.parsed
 
       return NextResponse.json(result)
     } catch (error: any) {
