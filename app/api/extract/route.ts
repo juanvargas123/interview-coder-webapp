@@ -3,7 +3,6 @@ import { NextResponse } from "next/server"
 import OpenAI from "openai"
 import { z } from "zod"
 import { withTimeout } from "../config"
-import { verifyAuth } from "../auth"
 
 export const maxDuration = 300
 
@@ -14,15 +13,6 @@ const ExtractResponse = z.object({
 
 export async function POST(request: Request) {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth()
-    if ("error" in authResult) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      )
-    }
-
     const { imageDataList } = await request.json()
 
     if (!imageDataList || !Array.isArray(imageDataList)) {

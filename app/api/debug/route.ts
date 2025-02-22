@@ -3,7 +3,6 @@ import { NextResponse } from "next/server"
 import OpenAI from "openai"
 import { zodResponseFormat } from "openai/helpers/zod"
 import { withTimeout } from "../config"
-import { verifyAuth } from "../auth"
 import { extractCodeFromImages } from "./extract"
 import { z } from "zod"
 
@@ -18,15 +17,6 @@ const DebugResponse = z.object({
 
 export async function POST(request: Request) {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth()
-    if ("error" in authResult) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      )
-    }
-
     console.log("Starting POST request processing...")
     const { imageDataList, problemInfo } = await request.json()
 
