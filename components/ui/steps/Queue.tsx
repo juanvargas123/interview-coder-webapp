@@ -82,12 +82,23 @@ export default function Queue() {
   return (
     <div
       ref={contentRef}
-      className="bg-transparent w-full max-w-[600px] lg:max-w-[800px] mx-auto relative  lg:min-h-[180px] aspect-video"
+      className="bg-transparent w-full max-w-[500px] lg:max-w-[650px] mx-auto relative  lg:min-h-[180px] aspect-video"
     >
+      {/* Background Image */}
       <div className="absolute inset-0">
+        <Image
+          src="/fake-screenshot.jpg"
+          alt="Background screenshot"
+          fill
+          className="object-cover rounded-lg"
+        />
+      </div>
+
+      {/* Overlay Content - Positioned in top-left */}
+      <div className="absolute top-4 left-4">
         {showScreenshot && (
           <div
-            className={`absolute left-4 bottom-[70px] w-[90px] h-[50.625px] lg:w-[180px] lg:h-[101.25px] bg-gray-800 rounded-lg shadow-2xl border border-white transition-opacity duration-200 ${
+            className={`relative w-[90px] h-[50.625px] lg:w-[180px] lg:h-[101.25px] bg-gray-800 rounded-xl shadow-2xl border border-white transition-opacity duration-200 ${
               isHovered ? "opacity-50" : "opacity-100"
             }`}
           >
@@ -95,7 +106,7 @@ export default function Queue() {
               src="/fake-screenshot.jpg"
               alt="Screenshot preview"
               fill
-              className="rounded-lg object-cover"
+              className="rounded-xl object-cover"
             />
             {isHovered && (
               <div
@@ -115,66 +126,45 @@ export default function Queue() {
           </div>
         )}
 
-        <div className="absolute bottom-4 left-4">
-          <div className="min-w-fit scale-90 lg:scale-100 origin-bottom-left">
-            <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-4 flex items-center gap-4 whitespace-nowrap">
-              {/* Show/Hide */}
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] leading-none">Show/Hide</span>
-                <div className="flex gap-1">
-                  <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
-                    ⌘
-                  </button>
-                  <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
-                    B
-                  </button>
-                </div>
+        {/* Toolbar positioned below screenshot */}
+        <div className="min-w-fit scale-90 lg:scale-100 origin-bottom-left">
+          <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-4 flex items-center gap-4 whitespace-nowrap">
+            {/* Screenshot */}
+            <div className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors">
+              <span className="text-[11px] leading-none truncate">
+                {showScreenshot ? "Screenshot" : "Take first screenshot"}
+              </span>
+              <div className="flex gap-1">
+                <button className="bg-white/10 rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
+                  ⌘
+                </button>
+                <button className="bg-white/10 rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
+                  H
+                </button>
               </div>
-
-              {/* Screenshot */}
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] leading-none truncate">
-                  {showScreenshot ? "Screenshot" : "Take first screenshot"}
-                </span>
-                <div className="flex gap-1">
-                  <button
-                    className={`${
-                      isHighlighted ? "bg-white/30" : "bg-white/10"
-                    } transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70`}
-                  >
-                    ⌘
-                  </button>
-                  <button
-                    className={`${
-                      isHighlighted ? "bg-white/30" : "bg-white/10"
-                    } transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70`}
-                  >
-                    H
-                  </button>
-                </div>
-              </div>
-
-              {/* Solve Command */}
-              {showScreenshot && (
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] leading-none">Solve</span>
-                  <div className="flex gap-1">
-                    <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
-                      ⌘
-                    </button>
-                    <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-[5px] px-1.5 py-1 text-[11px] leading-none text-white/70">
-                      ↵
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="mx-2 h-4 bg-white/20" />
-
-              <QueueCommands
-                onTooltipVisibilityChange={handleTooltipVisibilityChange}
-              />
             </div>
+
+            {/* Solve Command */}
+            {showScreenshot && (
+              <div className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors">
+                <span className="text-[11px] leading-none">Solve</span>
+                <div className="flex gap-1">
+                  <button className="bg-white/10 rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
+                    ⌘
+                  </button>
+                  <button className="bg-white/10 rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
+                    ↵
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Separator */}
+            <div className="mx-2 h-4 w-px bg-white/20" />
+
+            <QueueCommands
+              onTooltipVisibilityChange={handleTooltipVisibilityChange}
+            />
           </div>
         </div>
       </div>
