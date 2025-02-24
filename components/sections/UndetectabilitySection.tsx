@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 
 // Create motion components
 const MotionDiv = motion.div
@@ -41,9 +42,11 @@ const ScreenshareAnimation = () => {
         }}
         className="w-full"
       >
-        <img
+        <Image
           src="/undetectability/screenshare.png"
           alt="Screen sharing"
+          width={1920}
+          height={1080}
           className="w-full"
         />
       </MotionDiv>
@@ -54,9 +57,11 @@ const ScreenshareAnimation = () => {
 const ThoughtsImage = () => {
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-white/10 bg-black/50">
-      <img
+      <Image
         src="/undetectability/thoughts.png"
         alt="Solution reasoning"
+        width={1920}
+        height={1080}
         className="w-full"
       />
     </div>
@@ -143,7 +148,6 @@ const FeatureCard = ({
             </div>
           ) : (
             <div className="h-[120px] w-full rounded-lg border border-white/10 bg-black/50">
-              {/* Placeholder for your video */}
               <div className="w-full h-full flex items-center justify-center text-[#FFFF00]/50 text-xs">
                 Demo Video
               </div>
@@ -297,7 +301,7 @@ const ReasoningDemo = () => (
     >
       <div className="bg-zinc-800 rounded-lg p-4 border border-white/10">
         <pre className="text-xs text-[#FFFF00]">
-          // First, we initialize our dynamic programming array
+          {`// First, we initialize our dynamic programming array`}
         </pre>
         <pre className="text-xs text-gray-300">
           const dp = new Array(n + 1).fill(0);
@@ -305,14 +309,14 @@ const ReasoningDemo = () => (
       </div>
       <div className="bg-zinc-800 rounded-lg p-4 border border-white/10">
         <pre className="text-xs text-[#FFFF00]">
-          // Base cases for the first two numbers
+          {`// Base cases for the first two numbers`}
         </pre>
         <pre className="text-xs text-gray-300">dp[1] = 1;</pre>
         <pre className="text-xs text-gray-300">dp[2] = 2;</pre>
       </div>
       <div className="bg-zinc-800 rounded-lg p-4 border border-white/10">
         <pre className="text-xs text-[#FFFF00]">
-          // For each step, we can either take 1 or 2 steps
+          {`// For each step, we can either take 1 or 2 steps`}
         </pre>
         <pre className="text-xs text-gray-300">
           {"for (let i = 3; i <= n; i++) {"}
