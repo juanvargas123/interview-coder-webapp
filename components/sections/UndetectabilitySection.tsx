@@ -1,18 +1,18 @@
 "use client"
 
-import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
 import {
+  ArrowRight,
+  Brain,
+  Command,
   Eye,
   Monitor,
-  Brain,
-  MousePointer,
-  Command,
-  ArrowRight
+  MousePointer
 } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useState } from "react"
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
+import { useState } from "react"
 
 // Create motion components
 const MotionDiv = motion.div
