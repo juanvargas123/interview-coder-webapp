@@ -184,7 +184,7 @@ export default function HelpCenterContent() {
 
                     <li>
                       Configure your language preferences (Python, Java,
-                      Javascript, Golang, Ruby, C++, and Swift) in the{" "}
+                      Javascript, Golang, Ruby, C++, SQL, and Swift) in the{" "}
                       <Link href="/settings" className="underline">
                         settings
                       </Link>{" "}

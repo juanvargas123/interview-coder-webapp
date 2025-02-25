@@ -12,6 +12,7 @@ export async function extractCodeFromImages(
     | "java"
     | "cpp"
     | "kotlin"
+    | "sql"
     | "swift" = "python"
 ) {
   console.log("Starting code extraction from images...")

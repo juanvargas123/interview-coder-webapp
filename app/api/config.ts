@@ -40,6 +40,7 @@ export interface ProblemInfo {
     | "java"
     | "cpp"
     | "kotlin"
+    | "sql"
     | "swift" // Optional programming language, defaults to python
   problem_statement?: string
   input_format?: {
