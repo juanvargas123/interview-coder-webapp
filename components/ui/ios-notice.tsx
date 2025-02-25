@@ -1,10 +1,9 @@
 "use client"
-
-import { useState, useEffect } from "react"
+import { Mail, X } from "lucide-react"
+import { useState } from "react"
 import { Button } from "./button"
-import { X, Mail, Repeat } from "lucide-react"
-import { track, ANALYTICS_EVENTS, getUserProperties } from "@/lib/mixpanel"
-import { motion, AnimatePresence } from "framer-motion"
+
+import { AnimatePresence, motion } from "framer-motion"
 
 export function IOSNotice() {
   const [isVisible, setIsVisible] = useState(false)
@@ -13,35 +12,9 @@ export function IOSNotice() {
   const [emailSent, setEmailSent] = useState(false)
   const [error, setError] = useState("")
 
-  useEffect(() => {
-    // Check if user is on iOS using getUserProperties
-    const checkUserProperties = async () => {
-      const properties = await getUserProperties()
-      console.log("User properties:", properties)
-
-      // Check if user is on iOS
-      const isIOS = properties && properties["$os"] === "iOS"
-      console.log("Is iOS?", isIOS, "OS:", properties?.["$os"])
-
-      if (isIOS) {
-        const hasShownNotice = localStorage.getItem("hasShownIOSNotice")
-        console.log("Has shown notice before:", hasShownNotice)
-
-        if (!hasShownNotice) {
-          console.log("Showing iOS notice")
-          setIsVisible(true)
-          track(ANALYTICS_EVENTS.IOS_NOTICE_SHOWN)
-        }
-      }
-    }
-
-    checkUserProperties()
-  }, [])
-
   const closeBanner = () => {
     setIsVisible(false)
     localStorage.setItem("hasShownIOSNotice", "true")
-    track(ANALYTICS_EVENTS.IOS_NOTICE_CLOSED)
   }
 
   const sendEmailReminder = async () => {
@@ -70,7 +43,6 @@ export function IOSNotice() {
 
       setEmailSent(true)
       setError("")
-      track(ANALYTICS_EVENTS.IOS_EMAIL_REMINDER_SENT, { email })
 
       setTimeout(() => {
         closeBanner()
@@ -79,13 +51,6 @@ export function IOSNotice() {
       console.error("Failed to send email:", error)
       setError("Failed to send email. Please try again.")
     }
-  }
-
-  const showHandoffSteps = () => {
-    alert(
-      "To use Handoff:\n1. Make sure both devices are signed in to iCloud\n2. Enable Handoff on your Mac and iPhone\n3. Your Mac should appear in the app switcher on your iPhone"
-    )
-    track(ANALYTICS_EVENTS.IOS_HANDOFF_STEPS_SHOWN)
   }
 
   if (!isVisible) return null

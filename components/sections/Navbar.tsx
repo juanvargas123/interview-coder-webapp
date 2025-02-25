@@ -253,16 +253,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium">
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/apple.svg"
-                  alt="Apple"
-                  width={16}
-                  height={16}
-                  className="w-4 h-4"
-                />
-                Download
-              </div>
+              <div className="flex items-center gap-2">Download</div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -272,11 +263,11 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
           >
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-arm64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-arm64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
-                  src="/apple.svg"
+                  src="/apple-white.svg"
                   alt="Apple"
                   width={16}
                   height={16}
@@ -287,17 +278,33 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-x64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-x64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
-                  src="/apple.svg"
+                  src="/apple-white.svg"
                   alt="Apple"
                   width={16}
                   height={16}
                   className="w-4 h-4"
                 />
                 Download for Mac (Intel)
+              </Link>
+            </DropdownMenuItem>
+            <div className="h-px bg-white/10 mx-3 my-1" />
+            <DropdownMenuItem asChild>
+              <Link
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview.Coder-Windows-1.0.15.exe"
+                className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
+              >
+                <Image
+                  src="/windows_white.svg"
+                  alt="Windows"
+                  width={16}
+                  height={16}
+                  className="w-4 h-4"
+                />
+                Download for Windows
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -504,7 +511,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                           <div className="space-y-2 mt-2">
                             <Button variant="default" className="w-full">
                               <Link
-                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-arm64.dmg"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-arm64.dmg"
                                 className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image
@@ -519,7 +526,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                             </Button>
                             <Button variant="default" className="w-full">
                               <Link
-                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-x64.dmg"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-x64.dmg"
                                 className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image
@@ -532,19 +539,20 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                                 Download for Mac (Intel)
                               </Link>
                             </Button>
-                            <Button variant="highlight" className="w-full">
+
+                            <Button variant="default" className="w-full">
                               <Link
-                                href="/waitlist"
-                                className="flex items-center gap-2 justify-center w-full bg-secondary hover:bg-secondary/90 text-white transition-all px-4 py-1.5 text-sm font-medium rounded-md"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview.Coder-Windows-1.0.15.exe"
+                                className="flex items-center justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image
-                                  src="/windows.svg"
+                                  src="/windows_black.svg"
                                   alt="Windows"
                                   width={16}
                                   height={16}
                                   className="w-4 h-4"
                                 />
-                                Windows Waitlist
+                                Download for Windows
                               </Link>
                             </Button>
                           </div>

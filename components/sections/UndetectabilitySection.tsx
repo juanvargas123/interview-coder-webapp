@@ -26,7 +26,7 @@ interface FeatureCardProps {
 
 const ScreenshareAnimation = () => {
   return (
-    <div className="relative w-full overflow-hidden rounded-lg border border-white/10 bg-black/50">
+    <div className="relative md:w-2/3 mx-auto overflow-hidden rounded-lg border border-white/10 bg-black/50">
       <MotionDiv
         initial={{ scale: 1, x: 0, y: 0 }}
         animate={{
@@ -80,7 +80,7 @@ const WebcamVideo = () => {
 
 const ActiveTabVideo = () => {
   return (
-    <div className="relative w-full rounded-lg border border-white/10 bg-black/50">
+    <div className="relative md:w-3/4 mx-auto rounded-lg border border-white/10 bg-black/50">
       <video autoPlay loop muted playsInline className="w-full">
         <source src="/undetectability/active.mp4" type="video/mp4" />
       </video>
@@ -333,7 +333,7 @@ const UndetectabilitySection = () => {
 
   return (
     <section className="relative py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-6 lg:px-8">
         <GlowingLine />
         <div className="mx-auto max-w-2xl text-center mb-16">
           <h2 className="text-2xl font-bold tracking-tight white-gradient sm:text-3xl">

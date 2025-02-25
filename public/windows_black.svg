@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(4, 4)">
+    <!-- Top left square -->
+    <rect x="0" y="0" width="7" height="7" fill="#000000" rx="1"/>
+    <!-- Top right square -->
+    <rect x="8" y="0" width="7" height="7" fill="#000000" rx="1"/>
+    <!-- Bottom left square -->
+    <rect x="0" y="8" width="7" height="7" fill="#000000" rx="1"/>
+    <!-- Bottom right square -->
+    <rect x="8" y="8" width="7" height="7" fill="#000000" rx="1"/>
+  </g>
+</svg> 

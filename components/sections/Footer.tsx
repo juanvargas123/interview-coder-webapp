@@ -86,33 +86,54 @@ export function Footer() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="text-black gap-2 text-sm font-medium h-10 bg-primary hover:bg-primary/90 w-fit">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">Download</div>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[280px] bg-[#1A1A1A] backdrop-blur-lg border-white/10 rounded-xl py-2 space-y-1">
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-arm64.dmg"
+                      className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
+                    >
                       <Image
-                        src="/apple.svg"
+                        src="/apple-white.svg"
                         alt="Apple"
                         width={16}
                         height={16}
                         className="w-4 h-4"
                       />
-                      Download
-                    </div>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-arm64.dmg"
-                      className="w-full"
-                    >
                       Download for Mac (Apple Silicon)
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-x64.dmg"
-                      className="w-full"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-x64.dmg"
+                      className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
                     >
+                      <Image
+                        src="/apple-white.svg"
+                        alt="Apple"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
                       Download for Mac (Intel)
+                    </Link>
+                  </DropdownMenuItem>
+                  <div className="h-px bg-white/10 mx-3 my-1" />
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview.Coder-Windows-1.0.15.exe"
+                      className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
+                    >
+                      <Image
+                        src="/windows_white.svg"
+                        alt="Windows"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      Download for Windows
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

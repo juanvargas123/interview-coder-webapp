@@ -10,7 +10,6 @@ import {
   Session
 } from "@supabase/auth-helpers-nextjs"
 import { useUser } from "@/lib/hooks/use-user"
-import { track, ANALYTICS_EVENTS } from "@/lib/mixpanel"
 
 function CheckoutPageContent() {
   const { user, loading: userLoading, isSubscribed } = useUser()
@@ -132,11 +131,6 @@ function CheckoutPageContent() {
     validateToken()
   }, [searchParams, supabase])
 
-  useEffect(() => {
-    // Track checkout page view
-    track(ANALYTICS_EVENTS.CHECKOUT_PAGE_VIEW)
-  }, [])
-
   // Add this before other UI state checks
   if (!userLoading && !user && !searchParams.get("token")) {
     router.push("/signin")
@@ -241,9 +235,6 @@ function CheckoutPageContent() {
   }
 
   const handleCheckout = async () => {
-    // Track subscribe button click
-    track(ANALYTICS_EVENTS.SUBSCRIBE_BUTTON_CLICK)
-
     try {
       setLoading(true)
       const response = await fetch("/api/stripe/create-checkout", {

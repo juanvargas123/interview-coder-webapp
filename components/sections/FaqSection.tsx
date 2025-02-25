@@ -198,7 +198,7 @@ export function FaqSection() {
                 <DropdownMenuContent>
                   <DropdownMenuItem>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-arm64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-arm64.dmg"
                       className="w-full"
                     >
                       Download for Mac (Apple Silicon)
@@ -206,7 +206,7 @@ export function FaqSection() {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.14/Interview-Coder-x64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-x64.dmg"
                       className="w-full"
                     >
                       Download for Mac (Intel)
@@ -218,7 +218,10 @@ export function FaqSection() {
                 variant="outline"
                 className="gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] border-neutral-700 hover:bg-neutral-800"
               >
-                <Link href="/waitlist" className="flex items-center gap-2">
+                <Link
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview.Coder-Windows-1.0.15.exe"
+                  className="flex items-center gap-2"
+                >
                   <Image
                     src="/windows.svg"
                     alt="Windows"
@@ -226,7 +229,7 @@ export function FaqSection() {
                     height={16}
                     className="w-4 h-4"
                   />
-                  Join Windows waitlist
+                  Download for Windows
                 </Link>
               </Button>
             </div>
