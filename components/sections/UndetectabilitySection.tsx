@@ -26,7 +26,7 @@ interface FeatureCardProps {
 
 const ScreenshareAnimation = () => {
   return (
-    <div className="relative md:w-2/3 mx-auto overflow-hidden rounded-lg border border-white/10 bg-black/50">
+    <div className="relative mx-auto overflow-hidden rounded-lg border border-white/10 bg-black/50">
       <MotionDiv
         initial={{ scale: 1, x: 0, y: 0 }}
         animate={{
