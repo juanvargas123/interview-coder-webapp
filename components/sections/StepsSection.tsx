@@ -24,8 +24,21 @@ const steps = [
     id: "interview",
     subtitle: "Capture the Problem",
     title: "Start taking screenshots",
-    description:
-      "Use ⌘ + H to capture the problem. Up to 5 screenshots will be saved and shown on the application."
+    description: (
+      <span>
+        Use ⌘ + H to capture the problem. Up to 5 screenshots will be saved and
+        shown on the application. We use{" "}
+        <Link
+          href="https://www.npmjs.com/package/screenshot-desktop"
+          target="_blank"
+          className="text-[#4F46E5] hover:underline"
+        >
+          screenshot-desktop
+        </Link>{" "}
+        on Electron to capture the screen, which is undetectable by the browser,
+        which uses screenshot detection APIs like getDisplayMedia.
+      </span>
+    )
   },
   {
     id: "solutions",

@@ -80,7 +80,7 @@ const WebcamVideo = () => {
 
 const ActiveTabVideo = () => {
   return (
-    <div className="relative md:w-3/4 mx-auto rounded-lg border border-white/10 bg-black/50">
+    <div className="relative mx-auto rounded-lg border border-white/10 bg-black/50">
       <video autoPlay loop muted playsInline className="w-full">
         <source src="/undetectability/active.mp4" type="video/mp4" />
       </video>
@@ -345,37 +345,33 @@ const UndetectabilitySection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FeatureCard
             icon={<Monitor className="w-6 h-6" />}
             title="Screen Sharing Detection"
             description="Our app is completely invisible to screen sharing software and screenshots on platforms like Zoom, Google Meet, Hackerrank, and Coderpad."
+            className="h-full"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 grid-rows-1">
-            <div className="h-full">
-              <FeatureCard
-                icon={<Brain className="w-6 h-6" />}
-                title="Solution Reasoning"
-                description="Every line of code comes with detailed comments and natural thought process explanations, helping you articulate your solution approach convincingly."
-                className="h-full"
-              />
-            </div>
+          <FeatureCard
+            icon={<Brain className="w-6 h-6" />}
+            title="Solution Reasoning"
+            description="Every line of code comes with detailed comments and natural thought process explanations, helping you articulate your solution approach convincingly."
+            className="h-full"
+          />
 
-            <div className="h-full">
-              <FeatureCard
-                icon={<Eye className="w-6 h-6" />}
-                title="Webcam Monitoring"
-                description="Use ⌘ + arrow keys to move the app over your coding area, keeping your eyes naturally focused on the screen during webcam monitoring."
-                className="h-full"
-              />
-            </div>
-          </div>
+          <FeatureCard
+            icon={<Eye className="w-6 h-6" />}
+            title="Webcam Monitoring"
+            description="Use ⌘ + arrow keys to move the app over your coding area, keeping your eyes naturally focused on the screen during webcam monitoring."
+            className="h-full"
+          />
 
           <FeatureCard
             icon={<MousePointer className="w-6 h-6" />}
             title="Active Tab Detection"
             description="Toggle visibility with ⌘ + B while maintaining cursor focus and active tab state, making it undetectable by platform monitoring."
+            className="h-full"
           />
         </div>
       </div>
