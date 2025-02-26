@@ -379,7 +379,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                 >
                   <div>
                     <Link
-                      href="/#subscription"
+                      href="/checkout"
                       className="text-[#989898] hover:text-white transition-colors text-sm"
                     >
                       <span className="">Subscription</span>
@@ -429,7 +429,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
               >
                 <div className="px-6 py-4 space-y-4">
                   <Link
-                    href="/#subscription"
+                    href="/checkout"
                     className="block text-[#989898] hover:text-white transition-colors text-sm"
                   >
                     Subscription
