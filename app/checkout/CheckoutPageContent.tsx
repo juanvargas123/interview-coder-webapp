@@ -213,7 +213,7 @@ export default function CheckoutPageContent() {
       if (!response.ok) {
         setCouponError(data.error || "Invalid coupon code")
         setValidCoupon(null)
-        setTotal(20.0)
+        setTotal(60.0)
         return
       }
 
@@ -222,9 +222,9 @@ export default function CheckoutPageContent() {
 
       // Calculate new total
       if (data.coupon.percent_off) {
-        setTotal(20 * (1 - data.coupon.percent_off / 100))
+        setTotal(60 * (1 - data.coupon.percent_off / 100))
       } else if (data.coupon.amount_off) {
-        setTotal(Math.max(0, 20 - data.coupon.amount_off / 100))
+        setTotal(Math.max(0, 60 - data.coupon.amount_off / 100))
       }
     } catch (error) {
       console.error("Error:", error)
