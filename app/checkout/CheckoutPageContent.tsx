@@ -29,7 +29,7 @@ export default function CheckoutPageContent() {
     percent_off?: number | null
     amount_off?: number | null
   } | null>(null)
-  const [total, setTotal] = useState(20.0)
+  const [total, setTotal] = useState(60.0)
 
   useEffect(() => {
     // Get initial session
