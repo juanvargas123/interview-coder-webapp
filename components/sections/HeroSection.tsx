@@ -70,7 +70,7 @@ export const HeroSection = () => {
             <DropdownMenuContent>
               <DropdownMenuItem>
                 <Link
-                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-arm64.dmg"
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview-Coder-arm64.dmg"
                   className="w-full"
                 >
                   Download for Mac (Apple Silicon)
@@ -78,7 +78,7 @@ export const HeroSection = () => {
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
-                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-x64.dmg"
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview-Coder-x64.dmg"
                   className="w-full"
                 >
                   Download for Mac (Intel)
@@ -88,7 +88,7 @@ export const HeroSection = () => {
           </DropdownMenu>
           <Button variant="highlight" className="w-full sm:w-auto px-6 py-2">
             <Link
-              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview.Coder-Windows-1.0.16.exe"
+              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview.Coder-Windows-1.0.17.exe"
               className="flex items-center gap-2"
             >
               <Image

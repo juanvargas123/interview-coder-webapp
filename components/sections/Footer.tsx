@@ -92,7 +92,7 @@ export function Footer() {
                 <DropdownMenuContent className="w-[280px] bg-[#1A1A1A] backdrop-blur-lg border-white/10 rounded-xl py-2 space-y-1">
                   <DropdownMenuItem asChild>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-arm64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview-Coder-arm64.dmg"
                       className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
                     >
                       <Image
@@ -107,7 +107,7 @@ export function Footer() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-x64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview-Coder-x64.dmg"
                       className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
                     >
                       <Image
@@ -123,7 +123,7 @@ export function Footer() {
                   <div className="h-px bg-white/10 mx-3 my-1" />
                   <DropdownMenuItem asChild>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview.Coder-Windows-1.0.16.exe"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview.Coder-Windows-1.0.17.exe"
                       className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
                     >
                       <Image
