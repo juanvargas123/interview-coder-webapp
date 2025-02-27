@@ -16,7 +16,7 @@ const faqs = [
   {
     question: "Is Interview Coder free?",
     answer:
-      "No, it's $40 a month. In exchange, you get access to the absolute latest models, including o1, Claude, and Deepseek."
+      "No, it's $40 a month. In exchange, you get access to the absolute latest models, including o3-mini-high."
   },
   {
     question: "How is it undetectable?",

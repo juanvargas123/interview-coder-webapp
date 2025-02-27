@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     try {
       const completion = await withTimeout(
         openai.chat.completions.create({
-          model: "gpt-4o-mini",
+          model: "gpt-4o",
           response_format: { type: "json_object" },
           messages: [
             {
