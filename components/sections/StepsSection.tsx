@@ -26,7 +26,7 @@ const steps = [
     title: "Start taking screenshots",
     description: (
       <span>
-        Use ⌘ + H to capture the problem. Up to 5 screenshots will be saved and
+        Use ⌘ + H to capture the problem. Up to 2 screenshots will be saved and
         shown on the application. We use{" "}
         <Link
           href="https://www.npmjs.com/package/screenshot-desktop"
