@@ -56,7 +56,7 @@ export const PriceIncreaseBanner = ({
         </div>
         <span>
           left before price increases to{" "}
-          <span className="font-semibold">$40/month</span>
+          <span className="font-semibold">$60/month</span>
         </span>
         <button
           onClick={onDismiss}

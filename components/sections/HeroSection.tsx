@@ -18,7 +18,7 @@ export const HeroSection = () => {
       <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px]  mb-8">
         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FFFF00_0%,transparent_50%,#FFFF00_100%)]" />
         <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-          We just launched Windows!
+          So easy even worker 17 can use it
         </span>
       </button>
       <div className="container relative z-10 px-4 text-center max-w-3xl mx-auto">
@@ -41,7 +41,8 @@ export const HeroSection = () => {
             fontWeight: 500
           }}
         >
-          <span className="highlighter-gradient">Invisible</span> AI for
+          Interview Coder is an{" "}
+          <span className="highlighter-gradient">invisible</span> AI for
           technical interviews.
         </motion.h1>
 
@@ -69,7 +70,7 @@ export const HeroSection = () => {
             <DropdownMenuContent>
               <DropdownMenuItem>
                 <Link
-                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-arm64.dmg"
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-arm64.dmg"
                   className="w-full"
                 >
                   Download for Mac (Apple Silicon)
@@ -77,7 +78,7 @@ export const HeroSection = () => {
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
-                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-x64.dmg"
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-x64.dmg"
                   className="w-full"
                 >
                   Download for Mac (Intel)
@@ -87,7 +88,7 @@ export const HeroSection = () => {
           </DropdownMenu>
           <Button variant="highlight" className="w-full sm:w-auto px-6 py-2">
             <Link
-              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview.Coder-Windows-1.0.15.exe"
+              href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview.Coder-Windows-1.0.16.exe"
               className="flex items-center gap-2"
             >
               <Image

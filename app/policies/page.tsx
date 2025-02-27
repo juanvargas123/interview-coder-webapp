@@ -78,7 +78,7 @@ export default function PoliciesPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-neutral-300">
-                Our service is priced at $40 USD per month. The subscription
+                Our service is priced at $60 USD per month. The subscription
                 includes:
               </p>
               <ul className="list-disc pl-6 text-neutral-300 space-y-2">

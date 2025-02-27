@@ -263,7 +263,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
           >
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-arm64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-arm64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
@@ -278,7 +278,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-x64.dmg"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-x64.dmg"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
@@ -294,7 +294,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
             <div className="h-px bg-white/10 mx-3 my-1" />
             <DropdownMenuItem asChild>
               <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview.Coder-Windows-1.0.15.exe"
+                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview.Coder-Windows-1.0.16.exe"
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
               >
                 <Image
@@ -317,8 +317,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
     <>
       <div
         className={cn(
-          "fixed left-0 top-0 w-full z-50 flex justify-center pt-2 md:pt-0 transition-all duration-300",
-          showBanner ? "mt-[34px]" : "mt-0"
+          "fixed left-0 top-0 w-full z-50 flex justify-center pt-2 md:pt-0 transition-all duration-300"
         )}
       >
         <div
@@ -379,14 +378,6 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                 >
                   <div>
                     <Link
-                      href="/checkout"
-                      className="text-[#989898] hover:text-white transition-colors text-sm"
-                    >
-                      <span className="">Subscription</span>
-                    </Link>
-                  </div>
-                  <div>
-                    <Link
                       href="/#proof"
                       className="text-[#989898] hover:text-white transition-colors text-sm"
                     >
@@ -428,12 +419,6 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                 className="absolute  left-0 right-0 top-14 z-50 md:hidden border-t border-white/10 bg-black/90 backdrop-blur-xl rounded-b-2xl shadow-lg"
               >
                 <div className="px-6 py-4 space-y-4">
-                  <Link
-                    href="/checkout"
-                    className="block text-[#989898] hover:text-white transition-colors text-sm"
-                  >
-                    Subscription
-                  </Link>
                   <Link
                     href="/#proof"
                     className="block text-[#989898] hover:text-white transition-colors text-sm"
@@ -511,7 +496,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                           <div className="space-y-2 mt-2">
                             <Button variant="default" className="w-full">
                               <Link
-                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-arm64.dmg"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-arm64.dmg"
                                 className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image
@@ -526,7 +511,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                             </Button>
                             <Button variant="default" className="w-full">
                               <Link
-                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview-Coder-x64.dmg"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview-Coder-x64.dmg"
                                 className="flex items-center gap-2 justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image
@@ -542,7 +527,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
 
                             <Button variant="default" className="w-full">
                               <Link
-                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.15/Interview.Coder-Windows-1.0.15.exe"
+                                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.16/Interview.Coder-Windows-1.0.16.exe"
                                 className="flex items-center justify-center w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium rounded-md"
                               >
                                 <Image

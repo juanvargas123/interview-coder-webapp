@@ -364,7 +364,7 @@ export const StepsSection = () => {
                             href="/checkout"
                             className="flex items-center gap-2"
                           >
-                            Subscribe Today ($40/month)
+                            Subscribe Today ($60/month)
                             <svg
                               className="ml-2 w-5 h-5 transform transition-transform group-hover:translate-x-1"
                               fill="none"

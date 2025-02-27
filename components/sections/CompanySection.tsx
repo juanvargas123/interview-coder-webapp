@@ -57,7 +57,7 @@ export const CompanySection = () => {
     <TooltipProvider delayDuration={300}>
       <div className="flex flex-col items-center justify-center py-12 lg:py-20">
         <div className="text-center mb-12 space-y-4">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white white-gradient">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white white-gradient py-2">
             Works on Everything
           </h2>
           <p className="text-lg leading-8 text-[#999999]">
@@ -98,7 +98,8 @@ export const CompanySection = () => {
             ))}
           </div>
           <p className="text-center text-sm text-gray-500 mt-8 px-4">
-            * Undetectability may not work with some versions of MacOS. See our{" "}
+            * Undetectability may not work with some versions of MacOS. THIS IS
+            NOT REFUNDABLE. See our{" "}
             <Link
               href="/help?section=shows-when-sharing"
               className="underline hover:text-gray-400 transition-colors"

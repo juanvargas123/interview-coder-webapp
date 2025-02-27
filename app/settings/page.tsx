@@ -8,13 +8,12 @@ import { UserHeader } from "@/components/settings/user-header"
 import { SubscriptionActionModal } from "@/components/SubscriptionActionModal"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { useUser } from "@/lib/hooks/use-user"
 import { supabase } from "@/lib/supabase/client"
 import { getCardBrandIcon } from "@/lib/utils"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Lock, Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 interface PaymentMethod {
   id: string
