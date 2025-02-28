@@ -67,7 +67,7 @@ export function IOSNotice() {
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
           <div className="flex-1">
             <p className="text-sm font-medium text-white">
-              🚀 Now using O3-mini-high! Get the Mac app for the best experience
+              🚀 Now using claude-3.7! Get the Mac app for the best experience
             </p>
           </div>
 

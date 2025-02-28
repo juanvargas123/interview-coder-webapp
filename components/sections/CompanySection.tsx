@@ -61,7 +61,7 @@ export const CompanySection = () => {
             Works on Everything
           </h2>
           <p className="text-lg leading-8 text-[#999999]">
-            Works on all interviewing platforms used by companies.
+            Invisible to all screen-recording softwares.
           </p>
         </div>
 

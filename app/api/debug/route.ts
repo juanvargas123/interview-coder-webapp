@@ -1,7 +1,6 @@
 // app/api/debug/route.ts
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
-import { zodResponseFormat } from "openai/helpers/zod"
+import Anthropic from "@anthropic-ai/sdk"
 import { withTimeout } from "../config"
 import { extractCodeFromImages } from "./extract"
 import { z } from "zod"
@@ -30,10 +29,10 @@ export async function POST(request: Request) {
       )
     }
 
-    const openaiApiKey = process.env.OPENAI_API_KEY
-    if (!openaiApiKey) {
+    const anthropicApiKey = process.env.ANTHROPIC_API_KEY
+    if (!anthropicApiKey) {
       return NextResponse.json(
-        { error: "OpenAI API key is not configured" },
+        { error: "Anthropic API key is not configured" },
         { status: 500 }
       )
     }
@@ -43,44 +42,69 @@ export async function POST(request: Request) {
       console.log("Extracting code from images...")
       const extractedCode = await extractCodeFromImages(
         imageDataList,
-        openaiApiKey,
+        process.env.ANTHROPIC_API_KEY, // Still using OpenAI for code extraction
         problemInfo.language
       )
       console.log("Code extracted successfully")
       console.log("Starting code analysis...")
       console.log("Extracted code length:", extractedCode?.length ?? 0)
 
-      const openai = new OpenAI({ apiKey: openaiApiKey })
+      const anthropic = new Anthropic({
+        apiKey: anthropicApiKey
+      })
 
-      const completion = await withTimeout(
-        openai.beta.chat.completions.parse({
-          model: "o3-mini",
-          reasoning_effort: "high",
-          messages: [
-            {
-              role: "system",
-              content: `You are a code analyzer that optimizes and debugs code. For each field in your response:
+      const systemPrompt = `You are a code analyzer that optimizes and debugs code. For each field in your response:
 - new_code: Provide an optimized or corrected version of the ${problemInfo.language} code, with comments explaining the changes. Do not add any example usages of how to use it or examples of how to use it. You should only return the code and explanatory comments.
 - thoughts: Provide 3 short, conversational thoughts about what you changed, explaining your debugging process and analysis as if walking through your thought process with another developer
 - time_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
-- space_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why`
-            },
-            {
-              role: "user",
-              content: `Analyze, debug, and optimize this code:
+- space_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
+
+Your response must be in valid JSON format with the following structure:
+{
+  "new_code": "string",
+  "thoughts": ["string", "string", "string"],
+  "time_complexity": "string",
+  "space_complexity": "string"
+}`
+
+      const userPrompt = `Analyze, debug, and optimize this code:
 
 ${extractedCode}
 
 Additional Problem Context:
 ${problemInfo.problem_statement ?? "Not available"}`
-            }
-          ],
-          response_format: zodResponseFormat(DebugResponse, "debug")
+
+      const response = await withTimeout(
+        anthropic.messages.create({
+          model: "claude-3-7-sonnet-20250219",
+          max_tokens: 4000,
+          system: systemPrompt,
+          messages: [{ role: "user", content: userPrompt }]
         })
       )
 
-      const result = completion.choices[0].message.parsed
-      return NextResponse.json(result)
+      // Parse the JSON response from Claude's message content
+      if (
+        !response.content ||
+        !Array.isArray(response.content) ||
+        response.content.length === 0
+      ) {
+        throw new Error("Invalid response format from Anthropic API")
+      }
+
+      // Find the text content block
+      const textBlock = response.content.find((block) => block.type === "text")
+      if (!textBlock || typeof textBlock.text !== "string") {
+        throw new Error("No text content in Anthropic API response")
+      }
+
+      const responseContent = textBlock.text
+      const result = JSON.parse(responseContent)
+
+      // Validate the response against our schema
+      const parsedResult = DebugResponse.parse(result)
+
+      return NextResponse.json(parsedResult)
     } catch (error: any) {
       console.error("Error in API request:", {
         message: error.message,
@@ -92,7 +116,7 @@ ${problemInfo.problem_statement ?? "Not available"}`
         return NextResponse.json(
           {
             error:
-              "Please close this window and re-enter a valid OpenAI API key."
+              "Please close this window and re-enter a valid Anthropic API key."
           },
           { status: 401 }
         )

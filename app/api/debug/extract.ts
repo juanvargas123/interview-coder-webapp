@@ -1,5 +1,43 @@
-import OpenAI from "openai"
+import { Anthropic } from "@anthropic-ai/sdk"
 import { withTimeout } from "../config"
+
+// Define types based on Anthropic's SDK structure
+type ImageContentBlock = {
+  type: "image"
+  source: {
+    type: "base64"
+    media_type: "image/jpeg" | "image/png" | "image/gif" | "image/webp"
+    data: string
+  }
+}
+
+type TextContentBlock = {
+  type: "text"
+  text: string
+}
+
+type ContentBlock = ImageContentBlock | TextContentBlock
+
+// Helper function to detect image type from base64 data
+function detectImageType(
+  base64Data: string
+): "image/jpeg" | "image/png" | "image/gif" | "image/webp" {
+  // Get the first few characters of the data to determine format
+  const prefix = base64Data.substring(0, 30).toLowerCase()
+
+  if (prefix.startsWith("/9j/")) {
+    return "image/jpeg"
+  } else if (prefix.includes("png")) {
+    return "image/png"
+  } else if (prefix.includes("gif")) {
+    return "image/gif"
+  } else if (prefix.includes("webp")) {
+    return "image/webp"
+  }
+
+  // Default to PNG if we can't determine the type
+  return "image/png"
+}
 
 export async function extractCodeFromImages(
   imageDataList: string[],
@@ -22,36 +60,36 @@ export async function extractCodeFromImages(
   }
 
   // Process images for inclusion in prompt
-  const imageContents = imageDataList.map((imageData) => ({
-    type: "image_url" as const,
-    image_url: {
-      url: `data:image/jpeg;base64,${imageData}`
+  const imageContents: ContentBlock[] = imageDataList.map((imageData) => ({
+    type: "image",
+    source: {
+      type: "base64",
+      media_type: detectImageType(imageData),
+      data: imageData
     }
   }))
 
-  const openai = new OpenAI({ apiKey })
+  const anthropic = new Anthropic({ apiKey })
 
   try {
     const completion = await withTimeout(
-      openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content: `Extract all relevant information from the provided images. Important notes:
+      anthropic.messages.create({
+        model: "claude-3-5-sonnet-20241022",
+        max_tokens: 4000,
+        system: `Extract all relevant information from the provided images. Important notes:
 1. Extract all visible ${language} code, maintaining exact indentation and formatting
 2. Combine code from multiple images if present 
 3. Include all visible comments
 4. If there are any visible problem statements or question text, include those as well
 5. Do not add any improvements or modifications
 6. Do not add any markdown formatting
-7. Return only the exact code and text seen in the images`
-          },
+7. Return only the exact code and text seen in the images`,
+        messages: [
           {
             role: "user",
             content: [
               {
-                type: "text" as const,
+                type: "text",
                 text: "Extract the code and any relevant text from these images."
               },
               ...imageContents
@@ -63,14 +101,23 @@ export async function extractCodeFromImages(
 
     console.log("Received extraction response")
 
-    if (!completion.choices[0]?.message?.content) {
-      throw new Error("Invalid response from OpenAI API")
+    if (
+      !completion.content ||
+      !Array.isArray(completion.content) ||
+      completion.content.length === 0
+    ) {
+      throw new Error("Invalid response from Anthropic API")
     }
 
-    // Clean any potential markdown formatting
-    const extractedCode = completion.choices[0].message.content
-      .replace(/^```[\w]*\n/, "")
-      .replace(/\n```$/, "")
+    // Extract the content - Claude typically doesn't use markdown by default
+    // but we'll keep the cleaning logic just in case
+    const textContent = completion.content.find((item) => item.type === "text")
+    if (!textContent || typeof textContent.text !== "string") {
+      throw new Error("No text content in Anthropic API response")
+    }
+
+    const extractedCode =
+      textContent.text?.replace(/^```[\w]*\n/, "").replace(/\n```$/, "") || ""
 
     return extractedCode
   } catch (error: any) {
@@ -81,11 +128,11 @@ export async function extractCodeFromImages(
     })
 
     if (error.response?.status === 401) {
-      throw new Error("Please provide a valid OpenAI API key")
+      throw new Error("Please provide a valid Anthropic API key")
     }
     if (error.response?.status === 429) {
       throw new Error(
-        "API Key out of credits. Please refill your OpenAI API credits and try again."
+        "API Key out of credits. Please check your Anthropic API limits and try again."
       )
     }
     throw error

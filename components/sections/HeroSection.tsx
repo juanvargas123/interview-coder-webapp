@@ -42,8 +42,8 @@ export const HeroSection = () => {
           }}
         >
           Interview Coder is an{" "}
-          <span className="highlighter-gradient">invisible</span> AI for
-          technical interviews.
+          <span className="highlighter-gradient">invisible</span> AI to solve
+          any coding problem.
         </motion.h1>
 
         <motion.div

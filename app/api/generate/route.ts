@@ -1,7 +1,6 @@
 // app/api/generate/route.ts
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
-import { zodResponseFormat } from "openai/helpers/zod"
+import Anthropic from "@anthropic-ai/sdk"
 import { withTimeout, type ProblemInfo } from "../config"
 import { z } from "zod"
 
@@ -21,15 +20,14 @@ export async function POST(request: Request) {
     const problemInfo = (await request.json()) as ProblemInfo
     console.log("Received problem info:", {
       hasStatement: !!problemInfo.problem_statement,
-
       numTestCases: problemInfo.test_cases?.length
     })
 
-    const openaiApiKey = process.env.OPENAI_API_KEY
-    if (!openaiApiKey) {
-      console.log("OpenAI API key is not configured")
+    const anthropicApiKey = process.env.ANTHROPIC_API_KEY
+    if (!anthropicApiKey) {
+      console.log("Anthropic API key is not configured")
       return NextResponse.json(
-        { error: "OpenAI API key is not configured" },
+        { error: "Anthropic API key is not configured" },
         { status: 500 }
       )
     }
@@ -37,38 +35,47 @@ export async function POST(request: Request) {
     try {
       console.log(`Generating ${problemInfo.language} solution and analysis...`)
 
-      const openai = new OpenAI({ apiKey: openaiApiKey })
+      const anthropic = new Anthropic({
+        apiKey: anthropicApiKey
+      })
 
-      const completion = await withTimeout(
-        openai.beta.chat.completions.parse({
-          model: "o3-mini",
-          reasoning_effort: "high",
-          messages: [
-            {
-              role: "system",
-              content: `You are a coding assistant that generates solutions and analyzes them. For each field in your response:
+      const systemPrompt = `You are a coding assistant that generates solutions and analyzes them. For each field in your response:
 - thoughts: Provide 3 short, conversational thoughts about your solution approach, as if explaining to a teacher. Explain your thought process progressively, as if arriving at the solution step by step. Focus on the code and logic only.
 - code: Write the complete ${
-                problemInfo.language ?? "python"
-              } solution. Make it optimal, legible, and include inline comments after every line. Only write the function, not test cases.
+        problemInfo.language ?? "python"
+      } solution. Make it optimal, legible, and include inline comments after every line. Only write the function, not test cases.
 - time_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
-- space_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why`
-            },
-            {
-              role: "user",
-              content: `Generate a solution and analysis for this problem:
+- space_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
+
+Your response must be in the following JSON format:
+{
+  "thoughts": ["thought1", "thought2", "thought3"],
+  "code": "your complete code solution",
+  "time_complexity": "O(X) followed by explanation",
+  "space_complexity": "O(X) followed by explanation"
+}
+Make sure your response is valid JSON.`
+
+      const userPrompt = `Generate a solution and analysis for this problem:
 
 Problem Statement: ${problemInfo.problem_statement ?? "None"}
 Input Format: ${problemInfo.input_format?.description ?? "None"}
 Output Format: ${problemInfo.output_format?.description ?? "None"}
 Test Cases: ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
-            }
-          ],
-          response_format: zodResponseFormat(SolutionResponse, "solution")
+
+      const response = await withTimeout(
+        anthropic.messages.create({
+          model: "claude-3-7-sonnet-20250219",
+          max_tokens: 4000,
+          system: systemPrompt,
+          messages: [{ role: "user", content: userPrompt }]
         })
       )
 
-      const result = completion.choices[0].message.parsed
+      // Parse the JSON response from the content
+      const content =
+        response.content[0].type === "text" ? response.content[0].text : ""
+      const result = JSON.parse(content) as z.infer<typeof SolutionResponse>
 
       return NextResponse.json(result)
     } catch (error: any) {
@@ -82,7 +89,7 @@ Test Cases: ${JSON.stringify(problemInfo.test_cases ?? [], null, 2)}`
         return NextResponse.json(
           {
             error:
-              "Please close this window and re-enter a valid OpenAI API key."
+              "Please close this window and re-enter a valid Anthropic API key."
           },
           { status: 401 }
         )
