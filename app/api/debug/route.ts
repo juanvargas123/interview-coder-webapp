@@ -53,13 +53,17 @@ export async function POST(request: Request) {
         apiKey: anthropicApiKey
       })
 
-      const systemPrompt = `You are a code analyzer that optimizes and debugs code. For each field in your response:
+      const systemPrompt = `You are a code analyzer that optimizes and debugs code. 
+
+Your response MUST be a valid JSON object and nothing else. DO NOT include any introduction, explanation, or conclusion outside the JSON structure.
+
+For each field in your response:
 - new_code: Provide an optimized or corrected version of the ${problemInfo.language} code, with comments explaining the changes. Do not add any example usages of how to use it or examples of how to use it. You should only return the code and explanatory comments.
 - thoughts: Provide 3 short, conversational thoughts about what you changed, explaining your debugging process and analysis as if walking through your thought process with another developer
 - time_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
 - space_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
 
-Your response must be in valid JSON format with the following structure:
+Your response must be EXACTLY in this JSON format and nothing else:
 {
   "new_code": "string",
   "thoughts": ["string", "string", "string"],
@@ -99,12 +103,30 @@ ${problemInfo.problem_statement ?? "Not available"}`
       }
 
       const responseContent = textBlock.text
-      const result = JSON.parse(responseContent)
 
-      // Validate the response against our schema
-      const parsedResult = DebugResponse.parse(result)
+      // Attempt to extract JSON from the response by looking for a JSON structure
+      let jsonStr = responseContent
+      const jsonMatch = responseContent.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        jsonStr = jsonMatch[0]
+      }
 
-      return NextResponse.json(parsedResult)
+      try {
+        // Try to parse the extracted JSON
+        const result = JSON.parse(jsonStr)
+
+        // Validate the response against our schema
+        const parsedResult = DebugResponse.parse(result)
+
+        return NextResponse.json(parsedResult)
+      } catch (jsonError) {
+        console.error("JSON parsing error:", jsonError)
+        throw new Error(
+          "Failed to parse JSON response from Claude. Received: " +
+            responseContent.substring(0, 100) +
+            "..."
+        )
+      }
     } catch (error: any) {
       console.error("Error in API request:", {
         message: error.message,
