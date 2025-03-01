@@ -175,10 +175,10 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
     if (user) {
       return (
         <>
-          <GitHubStarsButton
+          {/* <GitHubStarsButton
             githubData={githubData}
             isLoading={githubLoading}
-          />
+          /> */}
           {!isSubscribed && (
             <Button
               onClick={() => router.push("/checkout")}
@@ -243,7 +243,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
 
     return (
       <>
-        <GitHubStarsButton githubData={githubData} isLoading={githubLoading} />
+        {/* <GitHubStarsButton githubData={githubData} isLoading={githubLoading} /> */}
         <Link
           href="/signin"
           className="text-[#989898] hover:text-white transition-colors text-sm"
@@ -437,10 +437,10 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
 
                   {!loading && (
                     <div className="pt-2 border-t border-white/10 w-fit">
-                      <GitHubStarsButton
+                      {/* <GitHubStarsButton
                         githubData={githubData}
                         isLoading={githubLoading}
-                      />
+                      /> */}
                       {user ? (
                         <>
                           {!isSubscribed && (
