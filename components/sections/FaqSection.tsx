@@ -219,7 +219,7 @@ export function FaqSection() {
                 className="gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] border-neutral-700 hover:bg-neutral-800"
               >
                 <Link
-                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview.Coder-Windows-1.0.17.exe"
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview.Coder-Windows-1.0.18.exe"
                   className="flex items-center gap-2"
                 >
                   <Image

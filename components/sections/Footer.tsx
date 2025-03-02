@@ -123,7 +123,7 @@ export function Footer() {
                   <div className="h-px bg-white/10 mx-3 my-1" />
                   <DropdownMenuItem asChild>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview.Coder-Windows-1.0.17.exe"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview.Coder-Windows-1.0.18.exe"
                       className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
                     >
                       <Image
