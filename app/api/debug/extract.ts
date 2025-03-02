@@ -46,6 +46,7 @@ export async function extractCodeFromImages(
     | "python"
     | "javascript"
     | "golang"
+    | "r"
     | "ruby"
     | "java"
     | "cpp"

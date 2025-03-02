@@ -24,38 +24,26 @@ async function fetchUserAndStatus(): Promise<{
     return { user: null, isSubscribed: false, isOnWaitlist: false }
   }
 
-  // Get subscription status
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("status, cancel_at, current_period_end, language")
-    .eq("user_id", session.user.id)
-    .single()
-
-  // Get waitlist status - check both email and user_id
-  console.log("Checking waitlist for:", session.user.email, session.user.id)
-  const { data: waitlistEntry } = await supabase
-    .from("waitlist")
-    .select("id")
-    .eq("email", session.user.email)
-    .maybeSingle()
-  console.log("Waitlist entry by email:", waitlistEntry)
-
-  let finalWaitlistEntry = waitlistEntry
-  if (!waitlistEntry) {
-    const { data: waitlistEntryById } = await supabase
+  // Get subscription and waitlist status in parallel
+  const [subscriptionResult, waitlistResult] = await Promise.all([
+    supabase
+      .from("subscriptions")
+      .select("status, cancel_at, current_period_end, language")
+      .eq("user_id", session.user.id)
+      .single(),
+    supabase
       .from("waitlist")
       .select("id")
-      .eq("user_id", session.user.id)
+      .or(`email.eq.${session.user.email},user_id.eq.${session.user.id}`)
       .maybeSingle()
-    console.log("Waitlist entry by id:", waitlistEntryById)
-    finalWaitlistEntry = waitlistEntryById
-  }
+  ])
 
+  const subscription = subscriptionResult.data
   const isSubscribed =
     subscription?.status === "active" &&
     new Date(subscription.cancel_at) >= new Date()
 
-  const isOnWaitlist = !!finalWaitlistEntry
+  const isOnWaitlist = !!waitlistResult.data
 
   return {
     user: { ...session.user, isSubscribed, isOnWaitlist },
@@ -70,8 +58,12 @@ export function useUser() {
   const { data, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: fetchUserAndStatus,
-    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
-    refetchInterval: 1000 * 60 * 5 // Refetch every 5 minutes
+    staleTime: 1000 * 60 * 15, // Consider data fresh for 15 minutes
+    gcTime: 1000 * 60 * 30, // Keep in cache for 30 minutes
+    refetchInterval: 1000 * 60 * 15, // Refetch every 15 minutes
+    refetchOnMount: false, // Don't refetch on every mount
+    refetchOnWindowFocus: true, // Still refetch on window focus for important updates
+    retry: 2 // Retry failed requests twice
   })
 
   useEffect(() => {

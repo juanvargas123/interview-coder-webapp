@@ -45,7 +45,7 @@ const faqs = [
   {
     question: "What programming languages are supported?",
     answer:
-      "Python, Golang, SQL, Ruby, Java, Javascript, C++, Kotlin, and Swift. You can edit your preferred langauge in the app or in your settings."
+      "Python, Golang, R, SQL, Ruby, Java, Javascript, C++, Kotlin, and Swift. You can edit your preferred langauge in the app or in your settings."
   },
   {
     question: "I'm experiencing a bug, what should I do",
@@ -198,7 +198,7 @@ export function FaqSection() {
                 <DropdownMenuContent>
                   <DropdownMenuItem>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview-Coder-arm64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview-Coder-arm64.dmg"
                       className="w-full"
                     >
                       Download for Mac (Apple Silicon)
@@ -206,7 +206,7 @@ export function FaqSection() {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link
-                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview-Coder-x64.dmg"
+                      href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview-Coder-x64.dmg"
                       className="w-full"
                     >
                       Download for Mac (Intel)
@@ -219,7 +219,7 @@ export function FaqSection() {
                 className="gap-2 text-sm font-medium h-10 w-[280px] md:w-[320px] border-neutral-700 hover:bg-neutral-800"
               >
                 <Link
-                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.17/Interview.Coder-Windows-1.0.17.exe"
+                  href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview.Coder-Windows-1.0.17.exe"
                   className="flex items-center gap-2"
                 >
                   <Image

@@ -36,6 +36,7 @@ export interface ProblemInfo {
     | "python"
     | "javascript"
     | "golang"
+    | "r"
     | "ruby"
     | "java"
     | "cpp"

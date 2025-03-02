@@ -375,6 +375,7 @@ export default function SettingsPage() {
                                   <option value="javascript">JavaScript</option>
                                   <option value="java">Java</option>
                                   <option value="golang">Golang</option>
+                                  <option value="golang">R</option>
                                   <option value="ruby">Ruby</option>
                                   <option value="cpp">C++</option>
                                   <option value="kotlin">Kotlin</option>
