@@ -29,7 +29,37 @@ function CheckoutPageContent() {
     percent_off?: number | null
     amount_off?: number | null
   } | null>(null)
-  const [total, setTotal] = useState(60.0)
+  
+  // Add subscription type state
+  const [subscriptionType, setSubscriptionType] = useState<'monthly' | 'annual'>('monthly')
+  
+  // Define prices for both subscription types
+  const prices = {
+    monthly: 60.0,
+    annual: 300.0 // 12 months at $60 would be $720, so this is ~$121 savings
+  }
+  
+  // Set initial total based on subscription type
+  const [total, setTotal] = useState(prices.monthly)
+  
+  // Update total when subscription type changes
+  useEffect(() => {
+    // Reset the total when switching plans
+    if (subscriptionType === 'monthly') {
+      setTotal(prices.monthly)
+    } else {
+      setTotal(prices.annual)
+    }
+    
+    // Reapply coupon if one is active
+    if (validCoupon) {
+      if (validCoupon.percent_off) {
+        setTotal(prices[subscriptionType] * (1 - validCoupon.percent_off / 100))
+      } else if (validCoupon.amount_off) {
+        setTotal(Math.max(0, prices[subscriptionType] - validCoupon.amount_off / 100))
+      }
+    }
+  }, [subscriptionType, validCoupon])
 
   useEffect(() => {
     // Get initial session
@@ -213,18 +243,18 @@ function CheckoutPageContent() {
       if (!response.ok) {
         setCouponError(data.error || "Invalid coupon code")
         setValidCoupon(null)
-        setTotal(20.0)
+        setTotal(prices[subscriptionType])
         return
       }
 
       setValidCoupon(data.coupon)
       setCouponError("")
 
-      // Calculate new total
+      // Calculate new total based on current subscription type
       if (data.coupon.percent_off) {
-        setTotal(20 * (1 - data.coupon.percent_off / 100))
+        setTotal(prices[subscriptionType] * (1 - data.coupon.percent_off / 100))
       } else if (data.coupon.amount_off) {
-        setTotal(Math.max(0, 20 - data.coupon.amount_off / 100))
+        setTotal(Math.max(0, prices[subscriptionType] - data.coupon.amount_off / 100))
       }
     } catch (error) {
       console.error("Error:", error)
@@ -243,7 +273,8 @@ function CheckoutPageContent() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          couponId: validCoupon?.id
+          couponId: validCoupon?.id,
+          subscriptionType: subscriptionType
         })
       })
 
@@ -265,7 +296,7 @@ function CheckoutPageContent() {
 
   return (
     <div className="min-h-screen bg-black">
-      <Navbar />
+      <Navbar showBanner={false} />
       <div className="max-w-3xl mx-auto px-4 pt-28 pb-12">
         <div className="space-y-8">
           {/* Pricing details */}
@@ -274,8 +305,44 @@ function CheckoutPageContent() {
               <h2 className="text-base lg:text-lg font-medium text-[#999999] mb-2">
                 Subscribe to Interview Coder
               </h2>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">
-                $60 / month
+              
+              {/* Subscription type toggle */}
+              <div className="flex flex-col space-y-4 mb-6">
+                <div className="text-4xl lg:text-5xl font-bold">
+                  {subscriptionType === 'monthly' ? (
+                    "$60 / month"
+                  ) : (
+                    "$300 / year"
+                  )}
+                </div>
+                
+                <div className="flex items-center space-x-4 mt-4">
+                  <div className="flex items-center p-1 bg-black/40 border border-white/10 rounded-lg">
+                    <button
+                      onClick={() => setSubscriptionType('monthly')}
+                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                        subscriptionType === 'monthly'
+                          ? 'bg-white/10 text-white'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      Monthly
+                    </button>
+                    <button
+                      onClick={() => setSubscriptionType('annual')}
+                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                        subscriptionType === 'annual'
+                          ? 'bg-white/10 text-white'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      Annual
+                      <span className="ml-2 text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">
+                        Save ~$420
+                      </span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -284,7 +351,7 @@ function CheckoutPageContent() {
                 <span className="text-sm lg:text-base">Subscription</span>
                 <div className="text-right">
                   <div className="text-xs lg:text-sm text-[#999999]">
-                    $60/month
+                    {subscriptionType === 'monthly' ? '$60/month' : '$300/year'}
                   </div>
                 </div>
               </div>

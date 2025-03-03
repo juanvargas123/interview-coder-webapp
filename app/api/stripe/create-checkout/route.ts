@@ -5,7 +5,7 @@ import Stripe from "stripe"
 
 export async function POST(req: Request) {
   try {
-    const { couponId } = await req.json()
+    const { couponId, subscriptionType = 'monthly' } = await req.json()
     const supabase = createClient()
     const {
       data: { session }
@@ -18,8 +18,13 @@ export async function POST(req: Request) {
     const userId = session.user.id
     const email = session.user.email
 
-    if (!process.env.STRIPE_PRICE_ID) {
-      console.error("Missing STRIPE_PRICE_ID environment variable")
+    // Check for appropriate price ID based on subscription type
+    const priceId = subscriptionType === 'annual' 
+      ? process.env.STRIPE_ANNUAL_PRICE_ID 
+      : process.env.STRIPE_PRICE_ID;
+
+    if (!priceId) {
+      console.error(`Missing ${subscriptionType === 'annual' ? 'STRIPE_ANNUAL_PRICE_ID' : 'STRIPE_PRICE_ID'} environment variable`)
       return NextResponse.json(
         { error: "Stripe configuration error" },
         { status: 500 }
@@ -83,9 +88,7 @@ export async function POST(req: Request) {
         const coupon = await stripe.coupons.retrieve(couponId)
         // Check if the coupon is valid for the current price
         if (coupon.applies_to?.products?.length) {
-          const price = await stripe.prices.retrieve(
-            process.env.STRIPE_PRICE_ID
-          )
+          const price = await stripe.prices.retrieve(priceId)
           if (!coupon.applies_to.products.includes(price.product as string)) {
             return NextResponse.json(
               { error: "This coupon cannot be applied to the current plan" },
@@ -107,7 +110,8 @@ export async function POST(req: Request) {
       // Debug log before creating checkout session
       console.log('Creating checkout session with metadata:', {
         user_id: userId,
-        fp_tid: fpTid
+        fp_tid: fpTid,
+        subscription_type: subscriptionType
       });
       
       const checkoutSession = await stripe.checkout.sessions.create({
@@ -117,7 +121,7 @@ export async function POST(req: Request) {
         payment_method_types: ["card"],
         line_items: [
           {
-            price: process.env.STRIPE_PRICE_ID,
+            price: priceId,
             quantity: 1
           }
         ],
@@ -129,6 +133,7 @@ export async function POST(req: Request) {
         // Add First Promoter tracking ID to metadata using the correct field name
         metadata: {
           user_id: userId,
+          subscription_type: subscriptionType,
           ...(fpTid ? { fp_tid: fpTid } : {})
         }
       })
