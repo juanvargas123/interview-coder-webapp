@@ -18,6 +18,8 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "../ui/badge"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { AffiliateLink } from "../AffiliateLink"
 
 async function fetchUserAndSubscription() {
   const {
@@ -179,6 +181,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
             githubData={githubData}
             isLoading={githubLoading}
           /> */}
+          <AffiliateLink />
           {!isSubscribed && (
             <Button
               onClick={() => router.push("/checkout")}
@@ -244,71 +247,16 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
     return (
       <>
         {/* <GitHubStarsButton githubData={githubData} isLoading={githubLoading} /> */}
+        <AffiliateLink />
         <Link
           href="/signin"
-          className="text-[#989898] hover:text-white transition-colors text-sm"
+          className="text-[#989898] hover:text-white transition-colors text-sm ml-4"
         >
           Sign in
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="bg-primary hover:bg-primary/90 text-black transition-all px-4 py-1.5 text-sm font-medium">
-              <div className="flex items-center gap-2">Download</div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[280px] bg-[#1A1A1A] backdrop-blur-lg border-white/10 rounded-xl py-2 space-y-1 md:w-auto"
-            align="end"
-            sideOffset={8}
-          >
-            <DropdownMenuItem asChild>
-              <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview-Coder-arm64.dmg"
-                className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
-              >
-                <Image
-                  src="/apple-white.svg"
-                  alt="Apple"
-                  width={16}
-                  height={16}
-                  className="w-4 h-4"
-                />
-                Download for Mac (Apple Silicon)
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview-Coder-x64.dmg"
-                className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
-              >
-                <Image
-                  src="/apple-white.svg"
-                  alt="Apple"
-                  width={16}
-                  height={16}
-                  className="w-4 h-4"
-                />
-                Download for Mac (Intel)
-              </Link>
-            </DropdownMenuItem>
-            <div className="h-px bg-white/10 mx-3 my-1" />
-            <DropdownMenuItem asChild>
-              <Link
-                href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview.Coder-Windows-1.0.18.exe"
-                className="w-full flex items-center gap-2 px-3 py-2.5 text-[#ABABAB] hover:text-white"
-              >
-                <Image
-                  src="/windows_white.svg"
-                  alt="Windows"
-                  width={16}
-                  height={16}
-                  className="w-4 h-4"
-                />
-                Download for Windows
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Link href="/signup">
+          <Button>Sign up</Button>
+        </Link>
       </>
     )
   }
@@ -376,23 +324,20 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                     justifyContent: "center"
                   }}
                 >
-                  <div>
+                  <div className="hidden md:flex items-center gap-6">
                     <Link
-                      href="/#proof"
-                      className="text-[#989898] hover:text-white transition-colors text-sm"
+                      href="/proof"
+                      className="text-[#989898] hover:text-white transition-colors text-sm flex items-center gap-1.5"
                     >
                       Proof
-                      <Badge variant="highlight" className="ml-2">
-                        NEW
-                      </Badge>
+                    </Link>
+                    <Link
+                      href="/help"
+                      className="text-[#989898] hover:text-white transition-colors text-sm"
+                    >
+                      Help Center
                     </Link>
                   </div>
-                  <Link
-                    href="/help"
-                    className="text-[#989898] hover:text-white transition-colors text-sm"
-                  >
-                    Help Center
-                  </Link>
                 </div>
               </div>
 
@@ -420,21 +365,19 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
               >
                 <div className="px-6 py-4 space-y-4">
                   <Link
-                    href="/#proof"
-                    className="block text-[#989898] hover:text-white transition-colors text-sm"
+                    href="/proof"
+                    className="text-[#989898] hover:text-white transition-colors text-sm flex items-center gap-1.5"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Proof
-                    <Badge variant="highlight" className="ml-2">
-                      NEW
-                    </Badge>
                   </Link>
                   <Link
                     href="/help"
-                    className="block text-[#989898] hover:text-white transition-colors text-sm"
+                    className="text-[#989898] hover:text-white transition-colors text-sm"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Help Center
                   </Link>
-
                   {!loading && (
                     <div className="pt-2 border-t border-white/10 w-fit">
                       {/* <GitHubStarsButton
