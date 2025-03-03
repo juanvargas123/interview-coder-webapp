@@ -265,6 +265,29 @@ export async function POST(req: Request) {
           // Determine initial credits and plan based on subscription type
           let initialCredits = 50; // Default for monthly subscription
           let planType = "pro"; // Default plan type
+          
+          // Log subscription details for debugging
+          console.log("Subscription details:", {
+            id: subscription.id,
+            priceId: subscription.items.data[0]?.price?.id,
+            annualPriceId: process.env.STRIPE_ANNUAL_PRICE_ID,
+            interval: subscription.items.data[0]?.price?.recurring?.interval
+          });
+          
+          // Check if this is an annual subscription by looking at the price ID or interval
+          const priceId = subscription.items.data[0]?.price?.id;
+          const interval = subscription.items.data[0]?.price?.recurring?.interval;
+
+          console.log("Subscription interval:", interval);
+          console.log("Price ID:", priceId);
+          
+          if (priceId === process.env.STRIPE_ANNUAL_PRICE_ID || interval === 'year') {
+            initialCredits = 600; // 12 months × 50 credits = 600 credits for annual
+            planType = "annual"; // Set plan type to annual
+            console.log("Annual subscription detected, assigning 600 initial credits and annual plan");
+          } else {
+            console.log("Monthly subscription detected, assigning 50 initial credits and pro plan");
+          }
 
           const { error: subscriptionError } = await supabase
             .from("subscriptions")

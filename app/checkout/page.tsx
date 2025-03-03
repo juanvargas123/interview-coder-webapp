@@ -297,141 +297,194 @@ function CheckoutPageContent() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar showBanner={false} />
-      <div className="max-w-3xl mx-auto px-4 pt-28 pb-12">
-        <div className="space-y-8">
-          {/* Pricing details */}
-          <div>
-            <div className="mb-8">
-              <h2 className="text-base lg:text-lg font-medium text-[#999999] mb-2">
-                Subscribe to Interview Coder
-              </h2>
-              
-              {/* Subscription type toggle */}
-              <div className="flex flex-col space-y-4 mb-6">
-                <div className="text-4xl lg:text-5xl font-bold">
-                  {subscriptionType === 'monthly' ? (
-                    "$60 / month"
-                  ) : (
-                    "$300 / year"
-                  )}
+      <div className="max-w-5xl mx-auto px-4 pt-28 pb-12">
+        <div className="mb-8">
+          <h2 className="text-base lg:text-lg font-medium text-[#999999] mb-2">
+            Subscribe to Interview Coder
+          </h2>
+          <div className="text-4xl lg:text-5xl font-bold mb-6">
+            Choose your plan
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Monthly subscription card */}
+          <div className="bg-[#111111] border border-primary rounded-xl p-6">
+            <div className="flex flex-col h-full">
+              <div className="mb-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold">Monthly</h3>
+                    <p className="text-gray-400 text-sm mt-1">Billed monthly</p>
+                  </div>
+                  <div className="text-2xl font-bold">$60<span className="text-sm font-normal text-gray-400">/month</span></div>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6 mt-6 pt-4 border-t border-white/10">
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-sm lg:text-base">Subscription</span>
+                  <div className="text-right">
+                    <div className="text-sm lg:text-base text-white">$60/month</div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center py-3 border-t border-white/10">
+                  <span className="text-sm lg:text-base">Subtotal</span>
+                  <span className="text-sm lg:text-base">$60.00</span>
+                </div>
+
+                <div className="flex justify-between items-center py-3 border-t border-white/10">
+                  <span className="text-sm lg:text-base">Tax</span>
+                  <span className="text-sm lg:text-base">$0.00</span>
                 </div>
                 
-                <div className="flex items-center space-x-4 mt-4">
-                  <div className="flex items-center p-1 bg-black/40 border border-white/10 rounded-lg">
-                    <button
-                      onClick={() => setSubscriptionType('monthly')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                        subscriptionType === 'monthly'
-                          ? 'bg-white/10 text-white'
-                          : 'text-gray-400 hover:text-white'
-                      }`}
-                    >
-                      Monthly
-                    </button>
-                    <button
-                      onClick={() => setSubscriptionType('annual')}
-                      className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                        subscriptionType === 'annual'
-                          ? 'bg-white/10 text-white'
-                          : 'text-gray-400 hover:text-white'
-                      }`}
-                    >
-                      Annual
-                      <span className="ml-2 text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">
-                        Save ~$420
-                      </span>
-                    </button>
-                  </div>
+                <div className="flex justify-between items-center py-3 border-t border-white/10">
+                  <span className="text-sm lg:text-base font-medium">Total due today</span>
+                  <span className="text-sm lg:text-base font-medium">$60.00</span>
                 </div>
-              </div>
-            </div>
-
-            <div className="space-y-6 mb-8">
-              <div className="flex justify-between items-center py-4 border-t border-white/10">
-                <span className="text-sm lg:text-base">Subscription</span>
-                <div className="text-right">
-                  <div className="text-xs lg:text-sm text-[#999999]">
-                    {subscriptionType === 'monthly' ? '$60/month' : '$300/year'}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center py-4 border-t border-white/10">
-                <span className="text-sm lg:text-base">Subtotal</span>
-                <span className="text-sm lg:text-base">
-                  ${total.toFixed(2)}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center py-4 border-t border-white/10">
-                <span className="text-sm lg:text-base">Tax</span>
-                <span className="text-sm lg:text-base">$0.00</span>
-              </div>
-              {validCoupon && (
-                <div className="flex justify-between items-center py-4 border-t border-white/10">
-                  <span className="text-sm lg:text-base">Discount</span>
-                  <div className="text-right text-emerald-400 text-sm lg:text-base">
-                    {validCoupon.percent_off
-                      ? `-${validCoupon.percent_off}%`
-                      : validCoupon.amount_off
-                      ? `-$${(validCoupon.amount_off / 100).toFixed(2)}`
-                      : null}
-                  </div>
-                </div>
-              )}
-              <div className="flex justify-between items-center py-4 border-t border-white/10">
-                <span className="text-sm lg:text-base">Total due today</span>
-                <span className="text-sm lg:text-base">
-                  ${total.toFixed(2)}
-                </span>
               </div>
 
               {/* Coupon section */}
-              <div className="py-4 border-t border-white/10">
+              <div className="mb-6">
                 <div className="flex items-center gap-2">
                   <Input
                     type="text"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value.trim())}
+                    value={subscriptionType === 'monthly' ? couponCode : ''}
+                    onChange={(e) => {
+                      setSubscriptionType('monthly');
+                      setCouponCode(e.target.value.trim());
+                    }}
                     placeholder="Have a coupon code?"
-                    className="bg-black/50 border-gray-800 rounded-full h-[50px] text-sm lg:text-base placeholder:text-gray-500"
+                    className="bg-black/50 border-gray-800 rounded-md h-[40px] text-sm lg:text-base placeholder:text-gray-500"
                   />
                   <Button
-                    onClick={validateCoupon}
-                    disabled={loading || !couponCode}
+                    onClick={() => {
+                      setSubscriptionType('monthly');
+                      validateCoupon();
+                    }}
+                    disabled={loading || !(subscriptionType === 'monthly' && couponCode)}
                     variant="outline"
-                    className="whitespace-nowrap text-sm lg:text-base"
+                    className="whitespace-nowrap text-sm lg:text-base h-[40px]"
                   >
                     Apply
                   </Button>
                 </div>
-                {couponError && (
+                {subscriptionType === 'monthly' && couponError && (
                   <p className="text-red-400 text-xs lg:text-sm mt-2">
                     {couponError}
                   </p>
                 )}
-                {validCoupon && (
+                {subscriptionType === 'monthly' && validCoupon && (
                   <p className="text-emerald-400 text-xs lg:text-sm mt-2">
                     Coupon applied successfully!
                   </p>
                 )}
               </div>
+
+              <Button
+                onClick={() => {
+                  setSubscriptionType('monthly');
+                  handleCheckout();
+                }}
+                disabled={loading}
+                className="w-full bg-primary hover:bg-primary/90 text-black px-4 py-3 text-sm lg:text-base font-semibold disabled:opacity-50 rounded-md mt-auto"
+              >
+                {subscriptionType === 'monthly' && loading ? "Processing..." : "Subscribe"}
+              </Button>
             </div>
           </div>
 
-          {/* Checkout button */}
-          <div className="bg-transparent border border-gray-700 p-8 rounded-xl">
-            <Button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="w-full bg-primary hover:bg-primary/90 text-black transition-all px-4 py-3 text-sm lg:text-base font-semibold disabled:opacity-50"
-            >
-              {loading ? "Processing..." : "Subscribe with Stripe"}
-            </Button>
-            <p className="text-xs lg:text-sm text-gray-400 mt-4 text-center">
-              You will be redirected to Stripe to complete your purchase
-              securely.
-            </p>
+          {/* Annual subscription card */}
+          <div className="bg-[#111111] border border-primary rounded-xl p-6">
+            <div className="flex flex-col h-full">
+              <div className="mb-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold">
+                      Annual
+                      <span className="ml-2 text-xs bg-primary/30 text-primary px-2 py-1 rounded-full inline-block shadow-[0_0_10px_rgba(255,255,0,0.3)]">
+                        Save ~$420
+                      </span>
+                    </h3>
+                    <p className="text-gray-400 text-sm mt-1">Billed yearly</p>
+                  </div>
+                  <div className="text-2xl font-bold">$300<span className="text-sm font-normal text-gray-400">/year</span></div>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6 mt-6 pt-4 border-t border-white/10">
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-sm lg:text-base">Subscription</span>
+                  <div className="text-right">
+                    <div className="text-sm lg:text-base text-white">$300/year</div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center py-3 border-t border-white/10">
+                  <span className="text-sm lg:text-base">Subtotal</span>
+                  <span className="text-sm lg:text-base">$300.00</span>
+                </div>
+
+                <div className="flex justify-between items-center py-3 border-t border-white/10">
+                  <span className="text-sm lg:text-base">Tax</span>
+                  <span className="text-sm lg:text-base">$0.00</span>
+                </div>
+                
+                <div className="flex justify-between items-center py-3 border-t border-white/10">
+                  <span className="text-sm lg:text-base font-medium">Total due today</span>
+                  <span className="text-sm lg:text-base font-medium">$300.00</span>
+                </div>
+              </div>
+
+              {/* Coupon section */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    value={subscriptionType === 'annual' ? couponCode : ''}
+                    onChange={(e) => {
+                      setSubscriptionType('annual');
+                      setCouponCode(e.target.value.trim());
+                    }}
+                    placeholder="Have a coupon code?"
+                    className="bg-black/50 border-gray-800 rounded-md h-[40px] text-sm lg:text-base placeholder:text-gray-500"
+                  />
+                  <Button
+                    onClick={() => {
+                      setSubscriptionType('annual');
+                      validateCoupon();
+                    }}
+                    disabled={loading || !(subscriptionType === 'annual' && couponCode)}
+                    variant="outline"
+                    className="whitespace-nowrap text-sm lg:text-base h-[40px]"
+                  >
+                    Apply
+                  </Button>
+                </div>
+                {subscriptionType === 'annual' && couponError && (
+                  <p className="text-red-400 text-xs lg:text-sm mt-2">
+                    {couponError}
+                  </p>
+                )}
+                {subscriptionType === 'annual' && validCoupon && (
+                  <p className="text-emerald-400 text-xs lg:text-sm mt-2">
+                    Coupon applied successfully!
+                  </p>
+                )}
+              </div>
+
+              <Button
+                onClick={() => {
+                  setSubscriptionType('annual');
+                  handleCheckout();
+                }}
+                disabled={loading}
+                className="w-full bg-primary hover:bg-primary/90 text-black px-4 py-3 text-sm lg:text-base font-semibold disabled:opacity-50 rounded-md mt-auto"
+              >
+                {subscriptionType === 'annual' && loading ? "Processing..." : "Subscribe"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

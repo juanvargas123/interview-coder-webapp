@@ -326,7 +326,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                 >
                   <div className="hidden md:flex items-center gap-6">
                     <Link
-                      href="/proof"
+                      href="/#proof"
                       className="text-[#989898] hover:text-white transition-colors text-sm flex items-center gap-1.5"
                     >
                       Proof
@@ -365,7 +365,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
               >
                 <div className="px-6 py-4 space-y-4">
                   <Link
-                    href="/proof"
+                    href="/#proof"
                     className="text-[#989898] hover:text-white transition-colors text-sm flex items-center gap-1.5"
                     onClick={() => setMobileMenuOpen(false)}
                   >
