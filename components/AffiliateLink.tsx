@@ -5,7 +5,7 @@ import { Coins } from 'lucide-react';
 export function AffiliateLink() {
   return (
     <Link 
-      href="https://interviewcoder.firstpromoter.com/affiliate-portal/signup?campaignId=29631"
+      href="https://interviewcoder.firstpromoter.com/login"
       target="_blank"
       rel="noopener noreferrer"
       className="flex items-center gap-2 px-4 py-2 rounded-[14px] border border-primary/70 bg-black/40 hover:bg-black/60 transition-colors shadow-[0_0_15px_rgba(255,255,0,0.3)]"
