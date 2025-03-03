@@ -7,48 +7,36 @@ import { useEffect } from "react"
 
 export interface ExtendedUser extends User {
   isSubscribed?: boolean
-  isOnWaitlist?: boolean
   preferred_language?: string
 }
 
 async function fetchUserAndStatus(): Promise<{
   user: ExtendedUser | null
   isSubscribed: boolean
-  isOnWaitlist: boolean
 }> {
   const {
     data: { session }
   } = await supabase.auth.getSession()
 
   if (!session) {
-    return { user: null, isSubscribed: false, isOnWaitlist: false }
+    return { user: null, isSubscribed: false }
   }
 
-  // Get subscription and waitlist status in parallel
-  const [subscriptionResult, waitlistResult] = await Promise.all([
-    supabase
-      .from("subscriptions")
-      .select("status, cancel_at, current_period_end, language")
-      .eq("user_id", session.user.id)
-      .single(),
-    supabase
-      .from("waitlist")
-      .select("id")
-      .or(`email.eq.${session.user.email},user_id.eq.${session.user.id}`)
-      .maybeSingle()
-  ])
+  // Get subscription status
+  const subscriptionResult = await supabase
+    .from("subscriptions")
+    .select("status, cancel_at, current_period_end, language")
+    .eq("user_id", session.user.id)
+    .single()
 
   const subscription = subscriptionResult.data
   const isSubscribed =
     subscription?.status === "active" &&
     new Date(subscription.cancel_at) >= new Date()
 
-  const isOnWaitlist = !!waitlistResult.data
-
   return {
-    user: { ...session.user, isSubscribed, isOnWaitlist },
-    isSubscribed,
-    isOnWaitlist
+    user: { ...session.user, isSubscribed },
+    isSubscribed
   }
 }
 
@@ -87,48 +75,9 @@ export function useUser() {
     }
   }, [queryClient])
 
-  const joinWaitlist = async (email: string) => {
-    // Validate email format
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return { success: false, message: "Invalid email format" }
-    }
-
-    // Check if email is already on waitlist
-    const { data: existingEntry } = await supabase
-      .from("waitlist")
-      .select("id")
-      .eq("email", email)
-      .single()
-
-    if (existingEntry) {
-      return { success: true, message: "You're already on the waitlist!" }
-    }
-
-    const { error } = await supabase.from("waitlist").insert([
-      {
-        email,
-        user_id: data?.user?.id || null
-      }
-    ])
-    if (error) {
-      // Check if it's a unique constraint violation (duplicate email)
-      if (error.code === "23505" || error.message?.includes("duplicate")) {
-        return { success: true, message: "You're already on the waitlist!" }
-      }
-      // For other errors, throw generic error
-      throw new Error("Failed to join waitlist")
-    }
-
-    // Invalidate and refetch user data
-    queryClient.invalidateQueries({ queryKey: ["user"] })
-    return { success: true, message: null }
-  }
-
   return {
     user: data?.user ?? null,
     isSubscribed: data?.isSubscribed ?? false,
-    isOnWaitlist: data?.isOnWaitlist ?? false,
-    loading: isLoading,
-    joinWaitlist
+    loading: isLoading
   }
 }

@@ -42,36 +42,6 @@ async function fetchGitHubStars() {
   return data.stargazers_count
 }
 
-const GitHubStarsButton = ({
-  githubData,
-  isLoading
-}: {
-  githubData: number | undefined
-  isLoading: boolean
-}) => {
-  if (isLoading) {
-    return <Skeleton className="h-6 w-[80px] mr-4" />
-  }
-
-  return (
-    <Link
-      href="https://github.com/ibttf/interview-coder"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="rounded-full flex items-center gap-2 text-[#989898] hover:text-white transition-colors px-3 py-1.5 hover:bg-white/10"
-    >
-      <Image
-        src="/github.svg"
-        alt="GitHub"
-        width={20}
-        height={20}
-        className="w-5 h-5"
-      />
-      <span className="text-sm">{githubData || 911}</span>
-    </Link>
-  )
-}
-
 interface NavbarProps {
   showBanner?: boolean
 }

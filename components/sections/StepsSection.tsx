@@ -1,16 +1,14 @@
 "use client"
 import { motion } from "framer-motion"
-import { useState, useEffect } from "react"
-import { useUser } from "@/lib/hooks/use-user"
+import { useEffect, useState } from "react"
 
-import { HowToUseHeader } from "./HowToUseHeader"
-import SubscribePage from "../ui/steps/subscribePage"
+import Link from "next/link"
+import { Button } from "../ui/button"
+import DebugView from "../ui/steps/DebugView"
 import Queue from "../ui/steps/Queue"
 import SolutionsView from "../ui/steps/SolutionsView"
-import DebugView from "../ui/steps/DebugView"
-import { Button } from "../ui/button"
-import Link from "next/link"
-import Image from "next/image"
+import SubscribePage from "../ui/steps/subscribePage"
+import { HowToUseHeader } from "./HowToUseHeader"
 
 const steps = [
   {
@@ -58,7 +56,6 @@ const steps = [
 
 export const StepsSection = () => {
   const [pathCoords, setPathCoords] = useState({ x1: 90, x2: 95 })
-  const { user } = useUser()
 
   useEffect(() => {
     const handleResize = () => {

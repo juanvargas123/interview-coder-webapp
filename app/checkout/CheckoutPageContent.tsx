@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function CheckoutPageContent() {
-  const { user, loading: userLoading, isSubscribed } = useUser()
+  const { user, loading: userLoading } = useUser()
   const router = useRouter()
   const [tokenData, setTokenData] = useState<{ user_id: string } | null>(null)
   const [session, setSession] = useState<Session | null>(null)
