@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe/client"
 import { createClient } from "@/lib/supabase/server"
 import Stripe from "stripe"
+import { FP_COOKIE_NAME } from "@/lib/firstpromoter/client"
 
 export async function POST(req: Request) {
   try {
@@ -34,6 +35,17 @@ export async function POST(req: Request) {
       )
     }
 
+    // Get First Promoter tracking ID from cookies
+    let fpTid: string | undefined;
+    const cookieHeader = req.headers.get('cookie');
+    if (cookieHeader) {
+      const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
+      const fpCookie = cookies.find(cookie => cookie.startsWith(`${FP_COOKIE_NAME}=`));
+      if (fpCookie) {
+        fpTid = fpCookie.split('=')[1];
+      }
+    }
+
     // Get or create customer
     let customerId: string
     try {
@@ -47,7 +59,9 @@ export async function POST(req: Request) {
         const customer = await stripe.customers.create({
           email: email,
           metadata: {
-            userId: userId
+            userId: userId,
+            // Add First Promoter tracking ID to customer metadata
+            ...(fpTid ? { fp_tid: fpTid } : {})
           }
         })
         customerId = customer.id
@@ -102,7 +116,12 @@ export async function POST(req: Request) {
           ? { discounts: [{ coupon: couponId }] }
           : { allow_promotion_codes: true }),
         success_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/settings?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/`
+        cancel_url: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/`,
+        // Add First Promoter tracking ID to metadata using the correct field name
+        metadata: {
+          user_id: userId,
+          ...(fpTid ? { fp_tid: fpTid } : {})
+        }
       })
 
       return NextResponse.json({ url: checkoutSession.url })

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import { ReactQueryProvider } from "@/lib/react-query/provider"
 import { Analytics } from "@vercel/analytics/react"
 import mixpanel from 'mixpanel-browser'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -22,6 +23,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script id="first-promoter-script" strategy="afterInteractive">
+          {`(function(w){w.fpr=w.fpr||function(){w.fpr.q = w.fpr.q||[];w.fpr.q[arguments[0]=='set'?'unshift':'push'](arguments);};})(window);
+          fpr("init", {cid:"4z8yt1oa"}); fpr("click");`}
+        </Script>
+        <Script src="https://cdn.firstpromoter.com/fpr.js" strategy="afterInteractive" />
+      </head>
       <body className={inter.className}>
         <ReactQueryProvider>
           {children}
