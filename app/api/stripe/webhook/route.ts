@@ -262,15 +262,31 @@ export async function POST(req: Request) {
             subscriptionId
           )
 
-          // Determine initial credits based on subscription type
+          // Determine initial credits and plan based on subscription type
           let initialCredits = 50; // Default for monthly subscription
+          let planType = "pro"; // Default plan type
           
-          // Check if this is an annual subscription by looking at the price ID
-          if (subscription.items.data[0].price.id === process.env.STRIPE_ANNUAL_PRICE_ID) {
-            initialCredits = 600; // 12 months × 50 credits = 600 credits for annual
-            console.log("Annual subscription detected, assigning 600 initial credits");
+          // Log subscription details for debugging
+          console.log("Subscription details:", {
+            id: subscription.id,
+            priceId: subscription.items.data[0]?.price?.id,
+            annualPriceId: process.env.STRIPE_ANNUAL_PRICE_ID,
+            interval: subscription.items.data[0]?.price?.recurring?.interval
+          });
+          
+          // Check if this is an annual subscription by looking at the price ID or interval
+          const priceId = subscription.items.data[0]?.price?.id;
+          const interval = subscription.items.data[0]?.price?.recurring?.interval;
+
+          console.log("Subscription interval:", interval);
+          console.log("Price ID:", priceId);
+          
+          if (priceId === process.env.STRIPE_ANNUAL_PRICE_ID || interval === 'year') {
+            initialCredits = 1000; // 12 months × 50 credits = 600 credits for annual
+            planType = "annual"; // Set plan type to annual
+            console.log("Annual subscription detected, assigning 600 initial credits and annual plan");
           } else {
-            console.log("Monthly subscription detected, assigning 50 initial credits");
+            console.log("Monthly subscription detected, assigning 50 initial credits and pro plan");
           }
 
           const { error: subscriptionError } = await supabase
@@ -278,7 +294,7 @@ export async function POST(req: Request) {
             .upsert({
               user_id: userId,
               status: subscription.status,
-              plan: "pro",
+              plan: planType, // Use the determined plan type
               credits: initialCredits, // Use the determined initial credits
               current_period_start: new Date(
                 subscription.current_period_start * 1000
