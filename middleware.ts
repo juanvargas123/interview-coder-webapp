@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
-import { FP_COOKIE_NAME, getFpCookieExpiryDate } from "@/lib/firstpromoter/client"
 
 export async function middleware(request: NextRequest) {
   // Enforce HTTPS in production only, and never for localhost
@@ -25,15 +24,13 @@ export async function middleware(request: NextRequest) {
   // If affiliate code exists in URL, save it as a cookie
   // First Promoter will automatically set _fprom_tid cookie, but we'll handle it here as a fallback
   if (fpRef) {
-    const expiryDate = getFpCookieExpiryDate();
-    response.cookies.set({
-      name: FP_COOKIE_NAME,
-      value: fpRef,
-      expires: expiryDate,
-      path: '/',
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    });
+    // Set expiration date for 90 days
+    const expiryDate = new Date();
+    expiryDate.setTime(expiryDate.getTime() + 90 * 24 * 60 * 60 * 1000);
+    
+    // We don't need to set the cookie manually as First Promoter's script will handle it
+    // This is just for debugging purposes
+    console.log('First Promoter referral code detected:', fpRef);
   }
 
   // Add security headers to help prevent various attacks

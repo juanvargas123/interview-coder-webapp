@@ -3,17 +3,10 @@ import axios from 'axios';
 // First Promoter cookie name (this should match what First Promoter uses)
 export const FP_COOKIE_NAME = '_fprom_tid';
 
-// Default cookie expiration in days (adjust as needed)
-export const FP_COOKIE_EXPIRY_DAYS = 90;
+// This file is kept for reference but most functionality is now handled by First Promoter's script
+// We're letting First Promoter handle cookie setting and conversion tracking automatically
 
-// Function to get cookie expiration date
-export const getFpCookieExpiryDate = () => {
-  const date = new Date();
-  date.setTime(date.getTime() + FP_COOKIE_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
-  return date;
-};
-
-// Function to track a conversion with First Promoter
+// Function to track a conversion with First Promoter API (if needed for custom tracking)
 export const trackConversion = async ({
   email,
   amount,

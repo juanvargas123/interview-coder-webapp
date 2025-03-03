@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe/client"
 import { createClient } from "@/lib/supabase/server"
 import Stripe from "stripe"
-import { FP_COOKIE_NAME } from "@/lib/firstpromoter/client"
 
 export async function POST(req: Request) {
   try {
@@ -40,9 +39,13 @@ export async function POST(req: Request) {
     const cookieHeader = req.headers.get('cookie');
     if (cookieHeader) {
       const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
-      const fpCookie = cookies.find(cookie => cookie.startsWith(`${FP_COOKIE_NAME}=`));
+      const fpCookie = cookies.find(cookie => cookie.startsWith('_fprom_tid='));
       if (fpCookie) {
         fpTid = fpCookie.split('=')[1];
+        console.log('Found First Promoter tracking ID:', fpTid); // Debug log
+      } else {
+        console.log('First Promoter tracking ID cookie not found'); // Debug log
+        console.log('Available cookies:', cookies); // Debug all cookies
       }
     }
 
@@ -101,6 +104,12 @@ export async function POST(req: Request) {
 
     // Create Stripe checkout session
     try {
+      // Debug log before creating checkout session
+      console.log('Creating checkout session with metadata:', {
+        user_id: userId,
+        fp_tid: fpTid
+      });
+      
       const checkoutSession = await stripe.checkout.sessions.create({
         customer: customerId,
         client_reference_id: userId,
