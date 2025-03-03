@@ -2,8 +2,11 @@
 import React from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 export function HowToUseHeader() {
+  const { t } = useLanguage()
+  
   return (
     <div>
       <motion.h2
@@ -16,7 +19,7 @@ export function HowToUseHeader() {
         }}
         className="mt-32  mb-10 text-4xl lg:text-5xl font-bold tracking-tight leading-[1.1] max-w-4xl mx-auto text-center"
       >
-        How to Use Interview Coder
+        {t('steps.howToUse')}
       </motion.h2>
       <motion.h3
         initial={{ opacity: 0, y: 50 }}
@@ -28,7 +31,7 @@ export function HowToUseHeader() {
         }}
         className="text-center text-lg leading-8 text-[#999999]"
       >
-        For an in-depth tutorial on setting it up, visit our{" "}
+        {t('steps.howToUseSubtitle')}{" "}
         <Link
           href="/help"
           className="underline hover:text-gray-700  transition-colors"

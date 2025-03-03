@@ -1,3 +1,4 @@
+"use client"
 import {
   Tooltip,
   TooltipContent,
@@ -5,6 +6,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import Link from "next/link"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 const companyLogos = [
   {
@@ -53,15 +55,17 @@ const companyLogos = [
 ]
 
 export const CompanySection = () => {
+  const { t, language } = useLanguage()
+  
   return (
     <TooltipProvider delayDuration={300}>
       <div className="flex flex-col items-center justify-center py-12 lg:py-20">
         <div className="text-center mb-12 space-y-4">
           <h2 className="text-4xl lg:text-5xl font-bold text-white white-gradient py-2">
-            Works on Everything
+            {t('company.title')}
           </h2>
           <p className="text-lg leading-8 text-[#999999]">
-            Invisible to all screen-recording softwares.
+            {t('company.subtitle')}
           </p>
         </div>
 
@@ -98,15 +102,30 @@ export const CompanySection = () => {
             ))}
           </div>
           <p className="text-center text-sm text-gray-500 mt-8 px-4">
-            * Undetectability may not work with some versions of MacOS. THIS IS
-            NOT REFUNDABLE. See our{" "}
-            <Link
-              href="/help?section=shows-when-sharing"
-              className="underline hover:text-gray-400 transition-colors"
-            >
-              notice
-            </Link>{" "}
-            for more details.
+            {/* Split the disclaimer text to properly handle the notice link */}
+            {language === 'en' ? (
+              <>
+                {t('company.disclaimer')}{" "}
+                <Link
+                  href="/help?section=shows-when-sharing"
+                  className="underline hover:text-gray-400 transition-colors"
+                >
+                  notice
+                </Link>{" "}
+                for more details.
+              </>
+            ) : (
+              <>
+                * अदृश्यता कुछ MacOS संस्करणों के साथ काम नहीं कर सकती है। यह वापसी योग्य नहीं है। अधिक जानकारी के लिए हमारी{" "}
+                <Link
+                  href="/help?section=shows-when-sharing"
+                  className="underline hover:text-gray-400 transition-colors"
+                >
+                  सूचना
+                </Link>{" "}
+                देखें।
+              </>
+            )}
           </p>
         </div>
       </div>

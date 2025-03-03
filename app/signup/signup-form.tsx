@@ -7,8 +7,10 @@ import Image from "next/image"
 import Navbar from "@/components/sections/Navbar"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 export default function SignUpForm() {
+  const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -21,7 +23,7 @@ export default function SignUpForm() {
 
   const validatePassword = (value: string) => {
     if (value.length < 6) {
-      setPasswordError("Password must be at least 6 characters")
+      setPasswordError(t('auth.passwordMinLength'))
       return false
     }
     setPasswordError("")
@@ -67,8 +69,8 @@ export default function SignUpForm() {
 
       router.push(next || "/")
     } catch (error) {
-      console.error("Error signing up:", error)
-      setError("Something went wrong, try again later")
+      console.error("Error signing up with email:", error)
+      setError(t('auth.errorSigningUp'))
       setShake(true)
       setTimeout(() => setShake(false), 500)
     } finally {
@@ -118,7 +120,7 @@ export default function SignUpForm() {
               className="rounded-full"
             />
             <h2 className="text-2xl font-semibold text-white">
-              Create your account
+              {t('auth.createAccount')}
             </h2>
 
             <div className="w-full max-w-sm space-y-4">
@@ -154,7 +156,7 @@ export default function SignUpForm() {
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-black px-2 text-[#989898]">
-                    Or continue with email
+                    {t('auth.orContinueWithEmail')}
                   </span>
                 </div>
               </div>
@@ -163,7 +165,7 @@ export default function SignUpForm() {
                 <div className="space-y-1">
                   <input
                     type="email"
-                    placeholder="Email address"
+                    placeholder={t('auth.emailAddress')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={cn(
@@ -182,7 +184,7 @@ export default function SignUpForm() {
                 <div className="space-y-1">
                   <input
                     type="password"
-                    placeholder="Password"
+                    placeholder={t('auth.password')}
                     value={password}
                     onChange={handlePasswordChange}
                     className={cn(
@@ -203,7 +205,7 @@ export default function SignUpForm() {
                   disabled={isLoading || !email || !password || !!passwordError}
                   className="relative w-full px-4 py-3 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium auth-button"
                 >
-                  {isLoading ? "Creating account..." : "Create account"}
+                  {isLoading ? t('auth.creatingAccount') : t('auth.createAccountBtn')}
                 </button>
               </form>
 
@@ -212,7 +214,7 @@ export default function SignUpForm() {
                 className="block w-full border border-white/10 rounded-2xl p-4 hover:bg-[#1A1A1A] transition-colors group"
               >
                 <p className="text-center text-sm text-[#989898]">
-                  Already have an account? Sign in →
+                  {t('auth.alreadyHaveAccount')}
                 </p>
               </Link>
             </div>

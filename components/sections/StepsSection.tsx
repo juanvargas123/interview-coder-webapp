@@ -2,6 +2,7 @@
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { useUser } from "@/lib/hooks/use-user"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 import { HowToUseHeader } from "./HowToUseHeader"
 import SubscribePage from "../ui/steps/subscribePage"
@@ -12,53 +13,41 @@ import { Button } from "../ui/button"
 import Link from "next/link"
 import Image from "next/image"
 
-const steps = [
-  {
-    id: "api-key",
-    subtitle: "Get Started",
-    title: "Subscribe to Interview Coder",
-    description:
-      "Make an account and subscribe to Interview Coder. Get instant access to our AI-powered interview solution generator."
-  },
-  {
-    id: "interview",
-    subtitle: "Capture the Problem",
-    title: "Start taking screenshots",
-    description: (
-      <span>
-        Use ⌘ + H to capture the problem. Up to 2 screenshots will be saved and
-        shown on the application. We use{" "}
-        <Link
-          href="https://www.npmjs.com/package/screenshot-desktop"
-          target="_blank"
-          className="text-[#4F46E5] hover:underline"
-        >
-          screenshot-desktop
-        </Link>{" "}
-        on Electron to capture the screen, which is undetectable by the browser,
-        which uses screenshot detection APIs like getDisplayMedia.
-      </span>
-    )
-  },
-  {
-    id: "solutions",
-    subtitle: "Solve",
-    title: "Get your solutions",
-    description:
-      "Once you've captured your screenshots, press ⌘ + ↵ to generate solutions. We'll analyze the problem and provide a solution with detailed explanations."
-  },
-  {
-    id: "debug",
-    subtitle: "Debug and Optimize",
-    title: "Debug your solutions",
-    description:
-      "If the solutions are incorrect or you need an optimization, take extra screenshots of your code with ⌘ + H. Press ⌘ + ↵ again and we'll debug and optimize your code, with before and after comparisons."
-  }
-]
-
 export const StepsSection = () => {
   const [pathCoords, setPathCoords] = useState({ x1: 90, x2: 95 })
   const { user } = useUser()
+  const { t } = useLanguage()
+  const [currentStep, setCurrentStep] = useState(0)
+  const [apiKey, setApiKey] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const steps = [
+    {
+      id: "api-key",
+      subtitle: t('steps.step1.subtitle'),
+      title: t('steps.step1.title'),
+      description: t('steps.step1.description')
+    },
+    {
+      id: "interview",
+      subtitle: t('steps.step2.subtitle'),
+      title: t('steps.step2.title'),
+      description: t('steps.step2.description')
+    },
+    {
+      id: "solutions",
+      subtitle: t('steps.step3.subtitle'),
+      title: t('steps.step3.title'),
+      description: t('steps.step3.description')
+    },
+    {
+      id: "debug",
+      subtitle: t('steps.step4.subtitle'),
+      title: t('steps.step4.title'),
+      description: t('steps.step4.description')
+    }
+  ]
 
   useEffect(() => {
     const handleResize = () => {
@@ -74,14 +63,28 @@ export const StepsSection = () => {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  const handleApiKeySubmit = (apiKey: string) => {
-    // Handle API key submission
-    console.log("API key submitted")
+  const handleApiKeySubmit = () => {
+    setIsLoading(true)
+    setTimeout(() => {
+      setIsLoading(false)
+      setCurrentStep(1)
+    }, 1000)
   }
 
   return (
     <>
-      <HowToUseHeader />
+      <div className="relative py-24">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 tracking-tight">
+              <span className="white-gradient font-inter">{t('steps.howToUse')}</span>
+            </h2>
+            <p className="text-neutral-400 max-w-2xl mx-auto">
+              {t('steps.howToUseSubtitle')}
+            </p>
+          </div>
+        </div>
+      </div>
 
       <section className="relative lg:pl-0 pl-6">
         {steps.map((step, index) => (
@@ -401,7 +404,9 @@ export const StepsSection = () => {
                     }`}
                   >
                     {index === 0 ? (
-                      <SubscribePage />
+                      <SubscribePage
+                        onSubmit={handleApiKeySubmit}
+                      />
                     ) : index === 1 ? (
                       <Queue />
                     ) : index === 2 ? (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 interface QueueCommandsProps {
   onTooltipVisibilityChange: (visible: boolean, height: number) => void
@@ -7,6 +8,7 @@ interface QueueCommandsProps {
 const QueueCommands: React.FC<QueueCommandsProps> = ({
   onTooltipVisibilityChange
 }) => {
+  const { t } = useLanguage()
   const [isTooltipVisible, setIsTooltipVisible] = useState(false)
   const tooltipRef = useRef<HTMLDivElement>(null)
 
@@ -42,12 +44,12 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
         <div ref={tooltipRef} className="absolute top-full right-0 mt-2 w-80">
           <div className="p-3 text-xs bg-gray-900 backdrop-blur-md rounded-lg border border-white/10 text-white/90 shadow-lg">
             <div className="space-y-4">
-              <h3 className="font-medium truncate">Keyboard Shortcuts</h3>
+              <h3 className="font-medium truncate">{t('queueCommands.keyboardShortcuts')}</h3>
               <div className="space-y-3">
                 {/* Toggle Command */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="truncate">Toggle Window</span>
+                    <span className="truncate">{t('queueCommands.toggleWindow')}</span>
                     <div className="flex gap-1 flex-shrink-0">
                       <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
                         ⌘
@@ -58,13 +60,13 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                     </div>
                   </div>
                   <p className="text-[10px] leading-relaxed text-white/70 truncate">
-                    Show or hide this window.
+                    {t('queueCommands.toggleWindowDesc')}
                   </p>
                 </div>
                 {/* Screenshot Command */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="truncate">Take Screenshot</span>
+                    <span className="truncate">{t('queueCommands.takeScreenshot')}</span>
                     <div className="flex gap-1 flex-shrink-0">
                       <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
                         ⌘
@@ -75,16 +77,14 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                     </div>
                   </div>
                   <p className="text-[10px] leading-relaxed text-white/70 truncate">
-                    Take a screenshot of the problem description. The tool will
-                    extract and analyze the problem. The 5 latest screenshots
-                    are saved.
+                    {t('queueCommands.takeScreenshotDesc')}
                   </p>
                 </div>
 
                 {/* Solve Command */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="truncate">Solve Problem</span>
+                    <span className="truncate">{t('queueCommands.solveProblem')}</span>
                     <div className="flex gap-1 flex-shrink-0">
                       <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
                         ⌘
@@ -95,7 +95,7 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                     </div>
                   </div>
                   <p className="text-[10px] leading-relaxed text-white/70 truncate">
-                    Generate a solution based on the current problem.
+                    {t('queueCommands.solveProblemDesc')}
                   </p>
                 </div>
               </div>

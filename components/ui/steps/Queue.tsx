@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react"
 import QueueCommands from "./QueueCommands"
 import Image from "next/image"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 export default function Queue() {
+  const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
   const [solution, setSolution] = useState("")
   const [error, setError] = useState("")
@@ -88,7 +90,7 @@ export default function Queue() {
       <div className="absolute inset-0">
         <Image
           src="/fake-screenshot.jpg"
-          alt="Background screenshot"
+          alt={t('steps.backgroundScreenshot')}
           fill
           className="object-cover rounded-lg"
         />
@@ -104,7 +106,7 @@ export default function Queue() {
           >
             <Image
               src="/fake-screenshot.jpg"
-              alt="Screenshot preview"
+              alt={t('steps.backgroundScreenshot')}
               fill
               className="rounded-xl object-cover"
             />
@@ -132,7 +134,7 @@ export default function Queue() {
             {/* Screenshot */}
             <div className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors">
               <span className="text-[11px] leading-none truncate">
-                {showScreenshot ? "Screenshot" : "Take first screenshot"}
+                {showScreenshot ? t('queue.screenshot') : t('steps.takeFirstScreenshot')}
               </span>
               <div className="flex gap-1">
                 <button className="bg-white/10 rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
@@ -147,7 +149,7 @@ export default function Queue() {
             {/* Solve Command */}
             {showScreenshot && (
               <div className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors">
-                <span className="text-[11px] leading-none">Solve</span>
+                <span className="text-[11px] leading-none">{t('queue.solve')}</span>
                 <div className="flex gap-1">
                   <button className="bg-white/10 rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
                     ⌘

@@ -1,3 +1,4 @@
+"use client"
 import { AnimatedKeyboard } from "@/components/ui/AnimatedKeyboard"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -11,48 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-
-const faqs = [
-  {
-    question: "Is Interview Coder free?",
-    answer:
-      "No, it's $60 a month. In exchange, you get access to the absolute latest models, including o3-mini-high."
-  },
-  {
-    question: "How is it undetectable?",
-    answer: `
-      <div>
-        Our software is designed to be completely undetectable to interviewers:
-        <ul class="list-none space-y-2 mt-2">
-          <li>• Invisible to Zoom (≤6.16) and any browser-based screen recording software</li>
-          <li>• Undetectable global keyboard commands that can't be detected as input by the browser</li>
-          <li>• Thoughts to read aloud that sound human and can explain your process</li>
-          <li>• Moveable screen using cmd + arrow keys so your eyes aren't looking away from the solution as you write your code.</li>
-        </ul>
-        <div class="mt-4">
-          <a target="_blank" href="https://www.linkedin.com/posts/neel-shanmugam_technical-interviews-for-software-engineering-activity-7275781351046299648-tCRy?utm_source=share&utm_medium=member_desktop">
-            <span class="underline">Here</span>'s a demo.
-          </a>
-        </div>
-        </div>
-      </div>
-    `
-  },
-  {
-    question: "Is it suitable for all skill levels?",
-    answer: "Yes."
-  },
-  {
-    question: "What programming languages are supported?",
-    answer:
-      "Python, Golang, R, SQL, Ruby, Java, Javascript, C++, Kotlin, and Swift. You can edit your preferred langauge in the app or in your settings."
-  },
-  {
-    question: "I'm experiencing a bug, what should I do",
-    answer:
-      "9 times out of 10, you can uninstall and reinstall the app from this website. If that doesn't work, please email us at <a href='mailto:churlee12@gmail.com'>churlee12@gmail.com</a> and we'll get back to you within 24 hours."
-  }
-]
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 function FaqItem({
   question,
@@ -124,16 +84,40 @@ function FaqItem({
 
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const { t } = useLanguage()
+  
+  const faqs = [
+    {
+      question: t('faq.questions.q1.question'),
+      answer: t('faq.questions.q1.answer')
+    },
+    {
+      question: t('faq.questions.q2.question'),
+      answer: t('faq.questions.q2.answer')
+    },
+    {
+      question: t('faq.questions.q3.question'),
+      answer: t('faq.questions.q3.answer')
+    },
+    {
+      question: t('faq.questions.q4.question'),
+      answer: t('faq.questions.q4.answer')
+    },
+    {
+      question: t('faq.questions.q5.question'),
+      answer: t('faq.questions.q5.answer')
+    }
+  ]
 
   return (
     <section className="py-24 relative">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4 tracking-tight">
-            <span className="white-gradient font-inter">Common Questions</span>
+            <span className="white-gradient font-inter">{t('faq.title')}</span>
           </h2>
           <p className="text-neutral-400 max-w-2xl mx-auto">
-            Everything you need to know about Interview Coder.
+            {t('faq.subtitle')}
           </p>
         </div>
 
@@ -152,11 +136,11 @@ export function FaqSection() {
         {/* Help Center Link */}
         <div className="text-center mt-8">
           <p className="text-neutral-500">
-            Have more questions? Visit our{" "}
+            {t('faq.helpCenterPrefix')}{" "}
             <Link href="/help" className="text-primary hover:underline">
-              help center
+              {t('faq.helpCenterLink')}
             </Link>{" "}
-            for detailed guides and support.
+            {t('faq.helpCenterSuffix')}
           </p>
         </div>
 
@@ -173,10 +157,10 @@ export function FaqSection() {
           <div className="">
             <div className="space-y-4">
               <h2 className="text-4xl font-bold tracking-tight">
-                Take the short way.
+                {t('cta.title')}
               </h2>
               <p className="text-neutral-400">
-                Download and use Interview Coder today.
+                {t('cta.subtitle')}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
@@ -191,7 +175,7 @@ export function FaqSection() {
                         height={16}
                         className="w-4 h-4"
                       />
-                      Download for Mac
+                      {t('hero.downloadMac')}
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
@@ -201,7 +185,7 @@ export function FaqSection() {
                       href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview-Coder-arm64.dmg"
                       className="w-full"
                     >
-                      Download for Mac (Apple Silicon)
+                      {t('hero.macSilicon')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
@@ -209,7 +193,7 @@ export function FaqSection() {
                       href="https://github.com/ibttf/interview-coder/releases/download/v1.0.18/Interview-Coder-x64.dmg"
                       className="w-full"
                     >
-                      Download for Mac (Intel)
+                      {t('hero.macIntel')}
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -229,7 +213,7 @@ export function FaqSection() {
                     height={16}
                     className="w-4 h-4"
                   />
-                  Download for Windows
+                  {t('hero.downloadWindows')}
                 </Link>
               </Button>
             </div>

@@ -11,8 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 export function Footer() {
+  const { t } = useLanguage()
+  
   return (
     <footer className="border-t border-neutral-800 bg-neutral-900/50 backdrop-blur-sm">
       <div className="container mx-auto px-4 py-12">
@@ -33,8 +36,7 @@ export function Footer() {
             </div>
 
             <div className="text-neutral-500 text-sm">
-              Interview Coder is an undetectable desktop application to help you
-              pass your Leetcode interviews.
+              {t('footer.description')}
             </div>
 
             <div className="bg-neutral-900 border border-neutral-800 rounded-full px-4 py-2 flex items-center gap-2 w-fit">
@@ -43,50 +45,50 @@ export function Footer() {
                 <div className="absolute inset-0 w-2 h-2 bg-green-500 rounded-full animate-ping" />
               </div>
               <span className="text-neutral-400 text-sm">
-                All systems online
+                {t('footer.allSystemsOnline')}
               </span>
             </div>
           </div>
 
           {/* Middle Column - Support */}
           <div className="md:col-span-4 flex flex-col gap-4">
-            <h3 className="text-neutral-400 font-semibold">Support</h3>
+            <h3 className="text-neutral-400 font-semibold">{t('footer.support')}</h3>
             <div className="flex flex-col gap-2">
               <Link
                 href="/contact"
                 className="text-neutral-500 hover:text-neutral-300 text-sm"
               >
-                Contact Us
+                {t('footer.contact')}
               </Link>
               <Link
                 href="/policies"
                 className="text-neutral-500 hover:text-neutral-300 text-sm"
               >
-                Refund Policy
+                {t('footer.refundPolicy')}
               </Link>
               <Link
                 href="/policies"
                 className="text-neutral-500 hover:text-neutral-300 text-sm"
               >
-                Cancellation Policy
+                {t('footer.cancellationPolicy')}
               </Link>
               <Link
                 href="/policies"
                 className="text-neutral-500 hover:text-neutral-300 text-sm"
               >
-                Terms of Service
+                {t('footer.termsOfService')}
               </Link>
             </div>
           </div>
 
           {/* Right Column - Download */}
           <div className="md:col-span-4 flex flex-col gap-4">
-            <h3 className="text-neutral-400 font-semibold">Download</h3>
+            <h3 className="text-neutral-400 font-semibold">{t('footer.download')}</h3>
             <div className="flex flex-col gap-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="text-black gap-2 text-sm font-medium h-10 bg-primary hover:bg-primary/90 w-fit">
-                    <div className="flex items-center gap-2">Download</div>
+                    <div className="flex items-center gap-2">{t('footer.download')}</div>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[280px] bg-[#1A1A1A] backdrop-blur-lg border-white/10 rounded-xl py-2 space-y-1">
@@ -102,7 +104,7 @@ export function Footer() {
                         height={16}
                         className="w-4 h-4"
                       />
-                      Download for Mac (Apple Silicon)
+                      {t('hero.macSilicon')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -117,7 +119,7 @@ export function Footer() {
                         height={16}
                         className="w-4 h-4"
                       />
-                      Download for Mac (Intel)
+                      {t('hero.macIntel')}
                     </Link>
                   </DropdownMenuItem>
                   <div className="h-px bg-white/10 mx-3 my-1" />
@@ -133,7 +135,7 @@ export function Footer() {
                         height={16}
                         className="w-4 h-4"
                       />
-                      Download for Windows
+                      {t('hero.downloadWindows')}
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -145,7 +147,7 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center mt-12 pt-8 border-t border-neutral-800">
           <p className="text-neutral-500 text-sm mb-4 sm:mb-0">
-            © {new Date().getFullYear()} Interview Coder. All rights reserved.
+            {t('footer.allRightsReserved')}
           </p>
           <Link href="https://twitter.com/interviewcoder" target="_blank">
             <Image

@@ -4,6 +4,7 @@ import { ReactQueryProvider } from "@/lib/react-query/provider"
 import { Analytics } from "@vercel/analytics/react"
 import mixpanel from 'mixpanel-browser'
 import Script from 'next/script'
+import { LanguageProvider } from "@/lib/i18n/LanguageContext"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -37,7 +38,9 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ReactQueryProvider>
-          {children}
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
         </ReactQueryProvider>
         <Analytics />
       </body>

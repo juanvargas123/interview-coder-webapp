@@ -7,8 +7,10 @@ import Image from "next/image"
 import Navbar from "@/components/sections/Navbar"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 export default function SignInForm() {
+  const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -31,7 +33,7 @@ export default function SignInForm() {
       router.push(next || "/")
     } catch (error) {
       console.error("Error signing in with email:", error)
-      setError("Something went wrong, try again later")
+      setError(t('auth.errorSigningIn'))
       setShake(true)
       setTimeout(() => setShake(false), 500) // Remove shake class after animation
     } finally {
@@ -77,7 +79,7 @@ export default function SignInForm() {
               className="rounded-full"
             />
             <h2 className="text-2xl font-semibold text-white">
-              Log in to Interview Coder
+              {t('auth.loginToInterviewCoder')}
             </h2>
 
             <div className="w-full max-w-sm space-y-4">
@@ -113,7 +115,7 @@ export default function SignInForm() {
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-black px-2 text-[#989898]">
-                    Or continue with email
+                    {t('auth.orContinueWithEmail')}
                   </span>
                 </div>
               </div>
@@ -122,7 +124,7 @@ export default function SignInForm() {
                 <div className="space-y-1">
                   <input
                     type="email"
-                    placeholder="Email address"
+                    placeholder={t('auth.emailAddress')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={cn(
@@ -140,7 +142,7 @@ export default function SignInForm() {
                 </div>
                 <input
                   type="password"
-                  placeholder="Password"
+                  placeholder={t('auth.password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={cn(
@@ -157,7 +159,7 @@ export default function SignInForm() {
                   disabled={isLoading || !email || !password}
                   className="relative w-full px-4 py-3 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium auth-button"
                 >
-                  {isLoading ? "Signing in..." : "Sign in"}
+                  {isLoading ? t('auth.signingIn') : t('auth.signIn')}
                 </button>
               </form>
 
@@ -166,7 +168,7 @@ export default function SignInForm() {
                 className="block w-full border border-white/10 rounded-2xl p-4 hover:bg-[#1A1A1A] transition-colors group"
               >
                 <p className="text-center text-sm text-[#989898]">
-                  Don't have an account? Sign up →
+                  {t('auth.dontHaveAccount')}
                 </p>
               </Link>
             </div>

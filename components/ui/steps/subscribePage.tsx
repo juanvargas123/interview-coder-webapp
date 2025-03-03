@@ -1,8 +1,10 @@
 "use client"
 import { useState } from "react"
 import Link from "next/link"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
-const SubscribePage = () => {
+const SubscribePage = ({ onSubmit }: { onSubmit?: () => void }) => {
+  const { t } = useLanguage()
   const [error, setError] = useState<string | null>(null)
 
   return (
@@ -10,18 +12,17 @@ const SubscribePage = () => {
       <div className="w-full px-4 sm:px-6">
         <div className="text-center">
           <h2 className="text-xl sm:text-2xl font-bold text-white">
-            Welcome to Interview Coder
+            {t('subscribe.welcome')}
           </h2>
           <p className="text-gray-400 text-xs sm:text-sm mt-2 mb-4 sm:mb-6">
-            To continue using Interview Coder, you'll need to subscribe
-            ($60/month)
+            {t('subscribe.needToSubscribe')}
           </p>
 
           {/* Keyboard Shortcuts */}
           <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-2 sm:p-3 mb-4 sm:mb-6">
             <div className="flex items-center justify-between text-white/70 text-[10px] sm:text-xs">
               <div className="flex items-center gap-1 sm:gap-2">
-                <span className="text-white/40">Toggle Visibility</span>
+                <span className="text-white/40">{t('subscribe.toggleVisibility')}</span>
                 <div className="flex gap-1">
                   <kbd className="bg-white/[0.07] border border-white/[0.1] rounded-md px-1 sm:px-1.5 py-0.5 sm:py-1 text-[9px] sm:text-[10px] leading-none text-white/60">
                     ⌘
@@ -32,7 +33,7 @@ const SubscribePage = () => {
                 </div>
               </div>
               <div className="flex items-center gap-1 sm:gap-2">
-                <span className="text-white/40">Quit App</span>
+                <span className="text-white/40">{t('subscribe.quitApp')}</span>
                 <div className="flex gap-1">
                   <kbd className="bg-white/[0.07] border border-white/[0.1] rounded-md px-1 sm:px-1.5 py-0.5 sm:py-1 text-[9px] sm:text-[10px] leading-none text-white/60">
                     ⌘
@@ -49,8 +50,9 @@ const SubscribePage = () => {
           <Link
             href="/settings"
             className="w-full px-4 py-2.5 sm:py-3 bg-white text-black rounded-full font-medium hover:bg-white/90 transition-colors flex items-center justify-center gap-2 mb-4 sm:mb-6"
+            onClick={onSubmit}
           >
-            Subscribe
+            {t('subscribe.subscribeButton')}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="12"
@@ -88,7 +90,7 @@ const SubscribePage = () => {
                   <line x1="21" y1="12" x2="9" y2="12" />
                 </svg>
               </div>
-              Log Out
+              {t('subscribe.logOut')}
             </button>
           </div>
 
