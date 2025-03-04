@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "../ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { AffiliateLink } from "../AffiliateLink"
 import { LanguageToggle } from "../ui/LanguageToggle"
 import { useLanguage } from "@/lib/i18n/LanguageContext"
 
@@ -184,7 +183,6 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
             githubData={githubData}
             isLoading={githubLoading}
           /> */}
-          <AffiliateLink />
           <LanguageToggle />
           {!isSubscribed && (
             <Button
@@ -251,7 +249,6 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
     return (
       <>
         {/* <GitHubStarsButton githubData={githubData} isLoading={githubLoading} /> */}
-        <AffiliateLink />
         <LanguageToggle />
         <Link href="/signin">
           <Button variant="ghost" className="text-[#989898] hover:text-white">
