@@ -186,7 +186,7 @@ export const translations = {
 
     // Misc
     misc: {
-      easyWorker: "So easy even worker 17 can use it",
+      easyWorker: "still not patched",
       affiliate: "Affiliate",
       proof: "Proof",
       watchMe:
