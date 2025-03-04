@@ -13,6 +13,7 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 // Create motion components
 const MotionDiv = motion.div
@@ -69,6 +70,7 @@ const ThoughtsImage = () => {
 }
 
 const WebcamVideo = () => {
+  const { language } = useLanguage()
   return (
     <div className="relative w-full rounded-lg border border-white/10 bg-black/50">
       <video autoPlay loop muted playsInline className="w-full">
@@ -79,6 +81,7 @@ const WebcamVideo = () => {
 }
 
 const ActiveTabVideo = () => {
+  const { language } = useLanguage()
   return (
     <div className="relative mx-auto rounded-lg border border-white/10 bg-black/50">
       <video autoPlay loop muted playsInline className="w-full">
@@ -94,6 +97,8 @@ const FeatureCard = ({
   description,
   className
 }: FeatureCardProps) => {
+  const { language } = useLanguage()
+  
   return (
     <Link href="/help?section=undetectability">
       <MotionDiv
@@ -133,19 +138,14 @@ const FeatureCard = ({
 
         {/* Demo Section */}
         <div className="relative z-10 bg-black/30 p-4">
-          {title === "Screen Sharing Detection" ? (
+          {title.includes("Screen Sharing") || title.includes("स्क्रीन शेयरिंग") ? (
             <ScreenshareAnimation />
-          ) : title === "Solution Reasoning" ? (
+          ) : title.includes("Solution") || title.includes("समाधान") ? (
             <ThoughtsImage />
-          ) : title === "Webcam Monitoring" ||
-            title === "Active Tab Detection" ? (
-            <div className="w-full">
-              {title === "Webcam Monitoring" ? (
-                <WebcamVideo />
-              ) : (
-                <ActiveTabVideo />
-              )}
-            </div>
+          ) : title.includes("Webcam") || title.includes("वेबकैम") ? (
+            <WebcamVideo />
+          ) : title.includes("Tab") || title.includes("टैब") ? (
+            <ActiveTabVideo />
           ) : (
             <div className="h-[120px] w-full rounded-lg border border-white/10 bg-black/50">
               <div className="w-full h-full flex items-center justify-center text-[#FFFF00]/50 text-xs">
@@ -329,50 +329,64 @@ const ReasoningDemo = () => (
 )
 
 const UndetectabilitySection = () => {
-  const [activeDemo, setActiveDemo] = useState<string>("screen")
+  const [activeDemo, setActiveDemo] = useState<string | null>(null)
+  const { t } = useLanguage()
+
+  const features = [
+    {
+      id: "screen-sharing",
+      icon: <Monitor className="w-6 h-6" />,
+      title: t('undetectability.screenSharing'),
+      description: t('undetectability.screenSharingDesc'),
+      demo: <ScreenSharingDemo />
+    },
+    {
+      id: "reasoning",
+      icon: <Brain className="w-6 h-6" />,
+      title: t('undetectability.solutionReasoning'),
+      description: t('undetectability.solutionReasoningDesc'),
+      demo: <ReasoningDemo />
+    },
+    {
+      id: "webcam",
+      icon: <Eye className="w-6 h-6" />,
+      title: t('undetectability.webcamMonitoring'),
+      description: t('undetectability.webcamMonitoringDesc'),
+      demo: <WebcamDemo />
+    },
+    {
+      id: "tab",
+      icon: <Command className="w-6 h-6" />,
+      title: t('undetectability.activeTabDetection'),
+      description: t('undetectability.activeTabDetectionDesc'),
+      demo: <TabDemo />
+    }
+  ]
 
   return (
-    <section className="relative py-24">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
-        <GlowingLine />
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <h2 className="text-2xl font-bold tracking-tight white-gradient sm:text-3xl">
-            How is it undetectable?
+    <section className="py-24 relative">
+      <div className="container px-4 mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4 tracking-tight">
+            <span className="white-gradient font-inter">{t('undetectability.title')}</span>
           </h2>
-          <p className="mt-4 text-lg leading-8 text-[#999999]">
-            Interview Coder has the most robust undetectability features on the
-            planet.
+          <p className="text-neutral-400 max-w-2xl mx-auto">
+            {t('undetectability.subtitle')}
           </p>
         </div>
 
+        <GlowingLine />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FeatureCard
-            icon={<Monitor className="w-6 h-6" />}
-            title="Screen Sharing Detection"
-            description="Our app is completely invisible to screen sharing software and screenshots on platforms like Zoom, Google Meet, Hackerrank, and Coderpad."
-            className="h-full"
-          />
-
-          <FeatureCard
-            icon={<Brain className="w-6 h-6" />}
-            title="Solution Reasoning"
-            description="Every line of code comes with detailed comments and natural thought process explanations, helping you articulate your solution approach convincingly."
-            className="h-full"
-          />
-
-          <FeatureCard
-            icon={<Eye className="w-6 h-6" />}
-            title="Webcam Monitoring"
-            description="Use ⌘ + arrow keys to move the app over your coding area, keeping your eyes naturally focused on the screen during webcam monitoring."
-            className="h-full"
-          />
-
-          <FeatureCard
-            icon={<MousePointer className="w-6 h-6" />}
-            title="Active Tab Detection"
-            description="Toggle visibility with ⌘ + B while maintaining cursor focus and active tab state, making it undetectable by platform monitoring."
-            className="h-full"
-          />
+          {features.map((feature) => (
+            <FeatureCard
+              key={feature.id}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+              className="h-full"
+            />
+          ))}
         </div>
       </div>
     </section>

@@ -19,7 +19,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "../ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { AffiliateLink } from "../AffiliateLink"
+import { LanguageToggle } from "../ui/LanguageToggle"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 async function fetchUserAndSubscription() {
   const {
@@ -87,6 +88,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
   const router = useRouter()
   const [isSigningOut, setIsSigningOut] = useState(false)
   const queryClient = useQueryClient()
+  const { t } = useLanguage()
 
   const { data, isLoading: loading } = useQuery({
     queryKey: ["user-nav"],
@@ -181,14 +183,14 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
             githubData={githubData}
             isLoading={githubLoading}
           /> */}
-          <AffiliateLink />
+          <LanguageToggle />
           {!isSubscribed && (
             <Button
               onClick={() => router.push("/checkout")}
               className="relative"
             >
               <Lock className="w-4 h-4 mr-2 text-black" />
-              Subscribe
+              {t('nav.signup')}
             </Button>
           )}
           <DropdownMenu>
@@ -204,7 +206,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                   </Avatar>
                   {isSubscribed && (
                     <div className="absolute -top-1 -right-3 bg-primary text-black text-[10px] font-semibold px-1.5 rounded-full">
-                      PRO
+                      {t('misc.pro')}
                     </div>
                   )}
                 </div>
@@ -219,7 +221,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                   href="/settings"
                   className="cursor-pointer text-[#ABABAB] hover:text-white px-3 py-2.5"
                 >
-                  Settings
+                  {t('nav.settings')}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
@@ -227,7 +229,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                   href="/help"
                   className="cursor-pointer text-[#ABABAB] hover:text-white px-3 py-2.5"
                 >
-                  Help Center
+                  {t('nav.help')}
                 </Link>
               </DropdownMenuItem>
               <div className="h-px bg-white/10 mx-3 my-1" />
@@ -236,7 +238,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                 disabled={isSigningOut}
                 className="cursor-pointer text-[#FF4545] hover:text-red-400 px-3 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSigningOut ? "Signing out..." : "Log out"}
+                {isSigningOut ? t('nav.signingOut') : t('nav.logout')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -247,15 +249,16 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
     return (
       <>
         {/* <GitHubStarsButton githubData={githubData} isLoading={githubLoading} /> */}
-        <AffiliateLink />
-        <Link
-          href="/signin"
-          className="text-[#989898] hover:text-white transition-colors text-sm ml-4"
-        >
-          Sign in
+        <LanguageToggle />
+        <Link href="/signin">
+          <Button variant="ghost" className="text-[#989898] hover:text-white">
+            {t('nav.login')}
+          </Button>
         </Link>
         <Link href="/signup">
-          <Button>Sign up</Button>
+          <Button className="bg-primary text-black hover:bg-primary/90">
+            {t('nav.signup')}
+          </Button>
         </Link>
       </>
     )
@@ -329,13 +332,13 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                       href="/#proof"
                       className="text-[#989898] hover:text-white transition-colors text-sm flex items-center gap-1.5"
                     >
-                      Proof
+                      {t('misc.proof')}
                     </Link>
                     <Link
                       href="/help"
                       className="text-[#989898] hover:text-white transition-colors text-sm"
                     >
-                      Help Center
+                      {t('nav.help')}
                     </Link>
                   </div>
                 </div>
@@ -369,14 +372,14 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                     className="text-[#989898] hover:text-white transition-colors text-sm flex items-center gap-1.5"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Proof
+                    {t('misc.proof')}
                   </Link>
                   <Link
                     href="/help"
                     className="text-[#989898] hover:text-white transition-colors text-sm"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Help Center
+                    {t('nav.help')}
                   </Link>
                   {!loading && (
                     <div className="pt-2 border-t border-white/10 w-fit">
@@ -392,7 +395,7 @@ export default function Navbar({ showBanner = false }: NavbarProps) {
                               className="relative"
                             >
                               <Lock className="w-4 h-4 mr-2 text-black" />
-                              Subscribe
+                              {t('nav.signup')}
                             </Button>
                           )}
                           <div className="flex items-center gap-3 py-2">

@@ -1,8 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { Coins } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export function AffiliateLink() {
+  const { t } = useLanguage();
+  
   return (
     <Link 
       href="https://interviewcoder.firstpromoter.com/login"
@@ -12,7 +15,7 @@ export function AffiliateLink() {
       aria-label="Become an affiliate"
     >
       <Coins className="h-5 w-5 text-primary" strokeWidth={1.5} />
-      <span className="text-primary text-sm font-medium">Affiliate</span>
+      <span className="text-primary text-sm font-medium">{t('misc.affiliate')}</span>
     </Link>
   );
 } 

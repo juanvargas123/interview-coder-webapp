@@ -1,10 +1,12 @@
 "use client"
 import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 export const VideoSection = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const { t, language } = useLanguage()
 
   return (
     <section className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -30,23 +32,37 @@ export const VideoSection = () => {
                 textShadow: "0 0 20px rgba(255, 255, 255, 0.3)"
               }}
             >
-              <span className="white-gradient">Proof</span>
+              <span className="white-gradient">{t('misc.proof')}</span>
             </h2>
             <p className="text-md sm:text-lg text-[#999999]">
-              Watch me get an offer from Amazon using Interview Coder.
-              Throughout this whole video, you'll see me use Interview Coder for
-              both the OA and the final round.
+              {t('misc.watchMe')}
               <br />
               <br />
-              Skeptical? Watch the entire, uncut technical interview{" "}
-              <a
-                href="https://youtu.be/rcH813f5vCE"
-                target="_blank"
-                className="underline hover:text-gray-400 transition-colors"
-              >
-                here
-              </a>
-              .
+              {language === 'en' ? (
+                <>
+                  {t('misc.skeptical')}{" "}
+                  <a
+                    href="https://youtu.be/rcH813f5vCE"
+                    target="_blank"
+                    className="underline hover:text-gray-400 transition-colors"
+                  >
+                    here
+                  </a>
+                  .
+                </>
+              ) : (
+                <>
+                  संदेह है? यहां पूरा, अनकट तकनीकी साक्षात्कार देखें।{" "}
+                  <a
+                    href="https://youtu.be/rcH813f5vCE"
+                    target="_blank"
+                    className="underline hover:text-gray-400 transition-colors"
+                  >
+                    यहां
+                  </a>
+                  ।
+                </>
+              )}
             </p>
           </motion.div>
 
