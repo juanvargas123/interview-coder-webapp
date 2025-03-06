@@ -5,7 +5,7 @@ import { withTimeout } from "../config"
 import { extractCodeFromImages } from "./extract"
 import { z } from "zod"
 
-export const maxDuration = 300
+export const maxDuration = 60
 
 const DebugResponse = z.object({
   new_code: z.string(),

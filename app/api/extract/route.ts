@@ -4,7 +4,7 @@ import Anthropic from "@anthropic-ai/sdk"
 import { z } from "zod"
 import { withTimeout } from "../config"
 
-export const maxDuration = 300
+export const maxDuration = 60
 
 const ExtractResponse = z.object({
   problem_statement: z.string(),
