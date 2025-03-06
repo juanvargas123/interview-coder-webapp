@@ -2,7 +2,7 @@
 export const API_BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : "https://www.interviewcoder.co"
+    : ""
 
 export const TIMEOUT_DURATION = 300000 // 1 minute in milliseconds
 
@@ -33,16 +33,16 @@ export async function withTimeout<T>(
 
 export interface ProblemInfo {
   language?:
+    | "java"
     | "python"
     | "javascript"
     | "golang"
     | "r"
     | "ruby"
-    | "java"
     | "cpp"
     | "kotlin"
     | "sql"
-    | "swift" // Optional programming language, defaults to python
+    | "swift" 
   problem_statement?: string
   input_format?: {
     description?: string

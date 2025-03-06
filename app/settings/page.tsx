@@ -346,7 +346,7 @@ export default function SettingsPage() {
                                 <select
                                   className="mt-2 w-full max-w-xs bg-black/50 border border-gray-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                                   value={
-                                    subscription?.preferred_language || "python"
+                                    subscription?.preferred_language || "java"
                                   }
                                   onChange={async (e) => {
                                     try {

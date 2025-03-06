@@ -46,7 +46,7 @@ const DebugView = () => {
               <h3 className="text-sm font-medium text-white/90">Solution</h3>
               <div className="bg-[#1E1E1E] rounded-lg overflow-hidden">
                 <SyntaxHighlighter
-                  language="python"
+                  language="java"
                   style={oneDark}
                   customStyle={{
                     background: "transparent",

@@ -124,7 +124,7 @@ const SolutionsView = () => {
                     </h3>
                     <div className="bg-[#1E1E1E] rounded-lg overflow-hidden">
                       <SyntaxHighlighter
-                        language="python"
+                        language="java"
                         style={oneDark}
                         customStyle={{
                           background: "transparent",

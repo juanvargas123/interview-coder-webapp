@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       const systemPrompt = `You are a coding assistant that generates solutions and analyzes them. For each field in your response:
 - thoughts: Provide 3 short, conversational thoughts about your solution approach, as if explaining to a teacher. Explain your thought process progressively, as if arriving at the solution step by step. Focus on the code and logic only.
 - code: Write the complete ${
-        problemInfo.language ?? "python"
+        problemInfo.language ?? "java"
       } solution. Make it optimal, legible, and include inline comments after every line. Only write the function, not test cases.
 - time_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why
 - space_complexity: Start with big-O notation (e.g., O(n)) followed by a brief explanation of why

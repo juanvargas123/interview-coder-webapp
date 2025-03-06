@@ -43,16 +43,16 @@ export async function extractCodeFromImages(
   imageDataList: string[],
   apiKey: string,
   language:
-    | "python"
+    | "java"
     | "javascript"
     | "golang"
     | "r"
     | "ruby"
-    | "java"
+    | "python"
     | "cpp"
     | "kotlin"
     | "sql"
-    | "swift" = "python"
+    | "swift" = "java"
 ) {
   console.log("Starting code extraction from images...")
 
