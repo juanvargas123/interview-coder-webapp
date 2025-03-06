@@ -46,17 +46,18 @@ export async function POST(req: Request) {
     console.log("Using local development webhook secret")
   }
   // Production domains
-  else if (
-    hostname.includes("interviewcoder.net") ||
-    host?.includes("interviewcoder.net")
-  ) {
-    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_SECONDARY!
-    console.log("Using .NET webhook secret")
-  } else {
+  //else if (
+  //  hostname.includes("interviewcoder.net") ||
+  //  host?.includes("interviewcoder.net")
+  //) 
+  //{
+  //  webhookSecret = process.env.STRIPE_WEBHOOK_SECRET_SECONDARY!
+  //  console.log("Using .NET webhook secret")
+  //} else {
     // Default to .co for production
-    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
-    console.log("Using .CO webhook secret")
-  }
+  //  webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+  //  console.log("Using .CO webhook secret")
+  //}
 
   // Verify we have a webhook secret
   if (!webhookSecret) {
